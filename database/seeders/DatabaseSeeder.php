@@ -7,6 +7,7 @@ use App\Models\Account;
 use App\Models\Tenant;
 use App\Models\Order;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,16 +22,22 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test Property Management',
         ]);
 
-        // Create owner for first account
+        // Create owner for first account with known password
         $firstOwner = User::factory()->create([
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => 'test@example.com',
+            'first_name' => 'Spicer',
+            'last_name' => 'Matthews',
+            'email' => 'spicer@cloudmanic.com',
+            'password' => Hash::make('foobar'), // Set a known password
         ]);
         $firstAccount->users()->attach($firstOwner, ['is_owner' => true]);
 
-        // Create 5 additional users for first account
-        $firstAccountUsers = User::factory()->count(5)->create();
+        // Create 5 additional users for first account with known password
+        $firstAccountUsers = User::factory()
+            ->count(5)
+            ->state(function (array $attributes) {
+                return ['password' => Hash::make('password123')];
+            })
+            ->create();
         foreach ($firstAccountUsers as $user) {
             $firstAccount->users()->attach($user, ['is_owner' => false]);
         }
@@ -40,16 +47,22 @@ class DatabaseSeeder extends Seeder
             'name' => 'Second Property Management',
         ]);
 
-        // Create owner for second account
+        // Create owner for second account with known password
         $secondOwner = User::factory()->create([
             'first_name' => 'Second',
             'last_name' => 'Owner',
             'email' => 'second.owner@example.com',
+            'password' => Hash::make('password123'), // Set a known password
         ]);
         $secondAccount->users()->attach($secondOwner, ['is_owner' => true]);
 
-        // Create 5 additional users for second account
-        $secondAccountUsers = User::factory()->count(5)->create();
+        // Create 5 additional users for second account with known password
+        $secondAccountUsers = User::factory()
+            ->count(5)
+            ->state(function (array $attributes) {
+                return ['password' => Hash::make('password123')];
+            })
+            ->create();
         foreach ($secondAccountUsers as $user) {
             $secondAccount->users()->attach($user, ['is_owner' => false]);
         }
