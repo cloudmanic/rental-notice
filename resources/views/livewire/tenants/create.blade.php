@@ -3,6 +3,7 @@
         <div class="sm:flex-auto">
             <h1 class="text-2xl font-semibold text-gray-900">Add Tenant</h1>
             <p class="mt-2 text-sm text-gray-700">Create a new tenant record in your account.</p>
+            </p>
         </div>
     </div>
 
@@ -10,19 +11,21 @@
         <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <!-- Name Section -->
             <div class="sm:col-span-3">
-                <label for="first_name" class="block text-sm font-medium leading-6 text-gray-900">First name</label>
+                <label for="first_name" class="block text-sm font-medium leading-6 text-gray-900">First name <span
+                        class="text-red-600">*</span></label>
                 <div class="mt-2">
                     <input wire:model.live="first_name" type="text" id="first_name"
-                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('first_name') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
+                        class="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('first_name') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
                 </div>
                 @error('first_name') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
             </div>
 
             <div class="sm:col-span-3">
-                <label for="last_name" class="block text-sm font-medium leading-6 text-gray-900">Last name</label>
+                <label for="last_name" class="block text-sm font-medium leading-6 text-gray-900">Last name <span
+                        class="text-red-600">*</span></label>
                 <div class="mt-2">
                     <input wire:model.live="last_name" type="text" id="last_name"
-                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('last_name') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
+                        class="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('last_name') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
                 </div>
                 @error('last_name') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
             </div>
@@ -32,7 +35,7 @@
                 <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
                 <div class="mt-2">
                     <input wire:model.live="email" type="email" id="email"
-                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('email') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
+                        class="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('email') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
                 </div>
                 @error('email') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
             </div>
@@ -40,18 +43,19 @@
             <div class="sm:col-span-3">
                 <label for="phone" class="block text-sm font-medium leading-6 text-gray-900">Phone number</label>
                 <div class="mt-2">
-                    <input wire:model.live="phone" type="tel" id="phone" placeholder="(555) 555-5555"
-                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('phone') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
+                    <input wire:model.live="phone" type="tel" id="phone" placeholder="555-555-5555"
+                        class="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('phone') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
                 </div>
                 @error('phone') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
             </div>
 
             <!-- Address Section -->
             <div class="col-span-full">
-                <label for="address_1" class="block text-sm font-medium leading-6 text-gray-900">Street address</label>
+                <label for="address_1" class="block text-sm font-medium leading-6 text-gray-900">Street address <span
+                        class="text-red-600">*</span></label>
                 <div class="mt-2">
                     <input wire:model.live="address_1" type="text" id="address_1"
-                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('address_1') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
+                        class="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('address_1') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
                 </div>
                 @error('address_1') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
             </div>
@@ -63,34 +67,44 @@
                 </label>
                 <div class="mt-2">
                     <input wire:model.live="address_2" type="text" id="address_2"
-                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('address_2') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
+                        class="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('address_2') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
                 </div>
                 @error('address_2') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
             </div>
 
             <div class="sm:col-span-2 sm:col-start-1">
-                <label for="city" class="block text-sm font-medium leading-6 text-gray-900">City</label>
+                <label for="city" class="block text-sm font-medium leading-6 text-gray-900">City <span
+                        class="text-red-600">*</span></label>
                 <div class="mt-2">
                     <input wire:model.live="city" type="text" id="city"
-                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('city') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
+                        class="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('city') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
                 </div>
                 @error('city') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
             </div>
 
             <div class="sm:col-span-2">
-                <label for="state" class="block text-sm font-medium leading-6 text-gray-900">State</label>
-                <div class="mt-2">
-                    <input wire:model.live="state" type="text" id="state" maxlength="2" placeholder="CA"
-                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('state') ring-red-300 text-red-900 focus:ring-red-500 @enderror uppercase">
+                <div>
+                    <label for="state" class="block text-sm font-medium leading-6 text-gray-900">State <span
+                            class="text-red-600">*</span></label>
+                    <div class="mt-2">
+                        <select wire:model.live="state" id="state"
+                            class="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <option value="">Select a state</option>
+                            @foreach ($states as $abbr => $name)
+                            <option value="{{ $abbr }}">{{ $name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
                 @error('state') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
             </div>
 
             <div class="sm:col-span-2">
-                <label for="zip" class="block text-sm font-medium leading-6 text-gray-900">ZIP code</label>
+                <label for="zip" class="block text-sm font-medium leading-6 text-gray-900">ZIP code <span
+                        class="text-red-600">*</span></label>
                 <div class="mt-2">
                     <input wire:model.live="zip" type="text" id="zip" placeholder="12345"
-                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('zip') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
+                        class="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('zip') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
                 </div>
                 @error('zip') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
             </div>
