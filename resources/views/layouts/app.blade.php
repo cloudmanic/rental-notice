@@ -15,7 +15,21 @@
 <body class="font-sans antialiased h-full">
     <div class="min-h-full bg-gray-100 flex flex-col">
         @include('layouts._navigation')
-        @yield('content')
+        <div class="flex-1 bg-gray-50">
+            <div class="py-10">
+                <main>
+                    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                        <div class="px-4 py-8 sm:px-0">
+                            <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <div class="px-4 py-5 sm:p-6">
+                                    @yield('content')
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
         @include('layouts._footer')
     </div>
 </body>
