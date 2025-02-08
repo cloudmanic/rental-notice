@@ -113,12 +113,22 @@ class Create extends Component
         return $this->redirect(route('tenants.index'));
     }
 
+    /**
+     * Render the component.
+     *
+     * @return \Illuminate\View\View
+     */
     #[Layout('layouts.app')]
     public function render()
     {
         return view('livewire.tenants.create');
     }
 
+    /**
+     * Get the validation rules that apply to the component.
+     *
+     * @return array<string, string>
+     */
     public static function messages()
     {
         return [
