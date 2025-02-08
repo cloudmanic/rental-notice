@@ -10,6 +10,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 
 <body class="font-sans antialiased min-h-full flex flex-col">
@@ -23,7 +24,7 @@
                         <div class="px-4 sm:px-0">
                             <div class="bg-white overflow-hidden shadow rounded-lg">
                                 <div class="px-4 py-5 sm:p-6">
-                                    @yield('content')
+                                    {{ $slot }}
                                 </div>
                             </div>
                         </div>
@@ -33,6 +34,7 @@
         </div>
         @include('layouts._footer')
     </div>
+    @livewireScripts
 </body>
 
 </html>

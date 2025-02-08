@@ -1,12 +1,14 @@
 <?php
 
+use App\Livewire\Dashboard\Index as DashboardIndex;
+use App\Livewire\Notices\Index as NoticesIndex;
+use App\Livewire\Tenants\Index as TenantsIndex;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\NoticeController;
-use App\Http\Controllers\TenantController;
-use Illuminate\Support\Facades\Route;
+
 
 // Guest routes (not logged in)
 Route::middleware('guest')->group(function () {
@@ -29,15 +31,15 @@ Route::middleware('guest')->group(function () {
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {
+    // Logout Route
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::get('/', function () {
-        return view('dashboard.index');
-    })->name('dashboard');
+    // Dashboard Route
+    Route::get('/', DashboardIndex::class)->name('dashboard');
 
     // Notice Routes
-    Route::get('notices', [NoticeController::class, 'index'])->name('notices.index');
+    Route::get('notices', NoticesIndex::class)->name('notices.index');
 
     // Tenant Routes
-    Route::get('tenants', [TenantController::class, 'index'])->name('tenants.index');
+    Route::get('tenants', TenantsIndex::class)->name('tenants.index');
 });

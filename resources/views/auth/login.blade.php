@@ -9,7 +9,7 @@
             </h2>
             <p class="mt-2 text-center text-sm text-gray-600">
                 Or
-                <a href="{{ route('register') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                <a wire:navigate href="{{ route('register') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
                     create a new account
                 </a>
             </p>
@@ -46,7 +46,7 @@
                     </label>
                 </div>
                 <div class="text-sm">
-                    <a href="{{ route('password.request') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                    <a wire:navigate href="{{ route('password.request') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
                         Forgot your password?
                     </a>
                 </div>
