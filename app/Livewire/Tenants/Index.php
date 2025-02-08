@@ -22,6 +22,9 @@ class Index extends Component
     #[Url(history: true)]
     public string $sortDirection = 'asc';
 
+    /**
+     * Reset the search field.
+     */
     public function updatedSearch()
     {
         $this->resetPage();
@@ -40,6 +43,11 @@ class Index extends Component
             $this->sortField = $field;
             $this->sortDirection = 'asc';
         }
+    }
+
+    public function clearMessage()
+    {
+        session()->forget(['message', 'message-type']);
     }
 
     /**
@@ -69,7 +77,9 @@ class Index extends Component
             ->paginate(25);
 
         return view('livewire.tenants.index', [
-            'tenants' => $tenants
+            'tenants' => $tenants,
+            'message' => session('message'),
+            'messageType' => session('message-type')
         ]);
     }
 }
