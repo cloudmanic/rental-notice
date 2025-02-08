@@ -55,9 +55,16 @@ class User extends Authenticatable
         ];
     }
 
+    /* 
+    * Get the account that the user belongs to.
+    * For now we just return the first account as there will only be one account per user.
+    */
     public function account(): BelongsTo
     {
-        return $this->belongsTo(Account::class);
+        return $this->belongsTo(Account::class, 'account_id')
+            ->withDefault(function () {
+                return $this->accounts()->first();
+            });
     }
 
     public function accounts(): BelongsToMany
