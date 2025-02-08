@@ -21,6 +21,8 @@ class Edit extends Component
     public $state;
     public $zip;
 
+    public bool $showDeleteModal = false;
+
     /**
      * Mount the component.
      *
@@ -73,6 +75,26 @@ class Edit extends Component
         $this->tenant->update($validated);
 
         session()->flash('message', 'Tenant successfully updated.');
+        session()->flash('message-type', 'success');
+
+        $this->redirect(route('tenants.index'), navigate: true);
+    }
+
+    public function confirmDelete(): void
+    {
+        $this->showDeleteModal = true;
+    }
+
+    public function cancelDelete(): void
+    {
+        $this->showDeleteModal = false;
+    }
+
+    public function delete(): void
+    {
+        $this->tenant->delete();
+
+        session()->flash('message', 'Tenant successfully deleted.');
         session()->flash('message-type', 'success');
 
         $this->redirect(route('tenants.index'), navigate: true);
