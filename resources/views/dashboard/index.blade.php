@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
 <h3 class="text-lg leading-6 font-medium text-gray-900">Latest Activity</h3>
 <div class="border-t border-gray-200 mt-4">
