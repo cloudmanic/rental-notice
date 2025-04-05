@@ -155,5 +155,10 @@ class DatabaseSeeder extends Seeder
                 'agent_name' => $thirdOwner->full_name,
                 'agent_email' => $thirdOwner->email,
             ]);
+
+        // Seed agents for the accounts
+        $this->call([
+            AgentSeeder::class,
+        ]);
     }
 }
