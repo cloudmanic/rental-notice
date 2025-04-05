@@ -40,9 +40,9 @@ class Account extends Model
         return $this->hasMany(Tenant::class);
     }
 
-    public function orders(): HasMany
+    public function notices(): HasMany
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(Notice::class);
     }
 
     public static function validationRules(): array

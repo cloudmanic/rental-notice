@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Account;
 use App\Models\Tenant;
-use App\Models\Order;
+use App\Models\Notice;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -94,15 +94,15 @@ class DatabaseSeeder extends Seeder
             $thirdAccount->users()->attach($user, ['is_owner' => false]);
         }
 
-        // Create tenants and orders for first account
+        // Create tenants and notices for first account
         Tenant::factory()
             ->count(10)
             ->create([
                 'account_id' => $firstAccount->id,
             ]);
 
-        // Create orders for first account
-        Order::factory()
+        // Create notices for first account
+        Notice::factory()
             ->count(5)
             ->create([
                 'account_id' => $firstAccount->id,
@@ -112,7 +112,7 @@ class DatabaseSeeder extends Seeder
                 'agent_email' => $firstOwner->email,
             ]);
 
-        Order::factory()
+        Notice::factory()
             ->count(5)
             ->create([
                 'account_id' => $firstAccount->id,
@@ -122,14 +122,14 @@ class DatabaseSeeder extends Seeder
                 'agent_email' => $firstOwner->email,
             ]);
 
-        // Create some tenants and orders for second account too
+        // Create some tenants and notices for second account too
         Tenant::factory()
             ->count(5)
             ->create([
                 'account_id' => $secondAccount->id,
             ]);
 
-        Order::factory()
+        Notice::factory()
             ->count(3)
             ->create([
                 'account_id' => $secondAccount->id,
@@ -139,14 +139,14 @@ class DatabaseSeeder extends Seeder
                 'agent_email' => $secondOwner->email,
             ]);
 
-        // Create some tenants and orders for third account
+        // Create some tenants and notices for third account
         Tenant::factory()
             ->count(7)
             ->create([
                 'account_id' => $thirdAccount->id,
             ]);
 
-        Order::factory()
+        Notice::factory()
             ->count(4)
             ->create([
                 'account_id' => $thirdAccount->id,

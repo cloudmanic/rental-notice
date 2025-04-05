@@ -82,9 +82,9 @@ class User extends Authenticatable
             ->wherePivot('is_owner', true);
     }
 
-    public function orders(): HasMany
+    public function notices(): HasMany
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(Notice::class);
     }
 
     public function getFullNameAttribute(): string
