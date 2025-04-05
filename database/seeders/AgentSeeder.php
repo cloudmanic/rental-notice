@@ -26,7 +26,7 @@ class AgentSeeder extends Seeder
                 'city' => 'Portland',
                 'state' => 'OR',
                 'zip' => '97201',
-                'phone' => '(503) 555-1234',
+                'phone' => '503-555-1234',
                 'email' => 'john.smith@example.com',
             ]);
         }
@@ -41,7 +41,7 @@ class AgentSeeder extends Seeder
                 'city' => 'Seattle',
                 'state' => 'WA',
                 'zip' => '98101',
-                'phone' => '(206) 555-5678',
+                'phone' => '206-555-5678',
                 'email' => 'jane.doe@example.com',
             ]);
 
@@ -53,7 +53,7 @@ class AgentSeeder extends Seeder
                 'city' => 'Bellevue',
                 'state' => 'WA',
                 'zip' => '98004',
-                'phone' => '(425) 555-9012',
+                'phone' => '425-555-9012',
                 'email' => 'robert.johnson@example.com',
             ]);
         }

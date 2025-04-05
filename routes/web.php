@@ -50,4 +50,6 @@ Route::middleware('auth')->group(function () {
 
     // Agent Routes
     Route::get('agents', AgentsIndex::class)->name('agents.index');
+    Route::get('agents/create', App\Livewire\Agents\Create::class)->name('agents.create');
+    Route::get('agents/{agent}/edit', App\Livewire\Agents\Edit::class)->name('agents.edit');
 });

@@ -35,6 +35,12 @@
             <h1 class="text-2xl font-semibold text-gray-900">Agents</h1>
             <p class="mt-2 text-sm text-gray-700">A list of all your agents including their name and contact information.</p>
         </div>
+        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+            <a wire:navigate href="{{ route('agents.create') }}"
+                class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                Add Agent
+            </a>
+        </div>
     </div>
 
     <div class="mt-4 flex items-center justify-between gap-2">
@@ -210,6 +216,9 @@
                                         </span>
                                     </button>
                                 </th>
+                                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                    <span class="sr-only">Actions</span>
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 bg-white">
@@ -231,10 +240,14 @@
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                     {{ $agent->phone }}
                                 </td>
+                                <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                    <a wire:navigate href="{{ route('agents.edit', $agent) }}"
+                                        class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                </td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="4" class="px-3 py-8 text-center text-sm text-gray-500">
+                                <td colspan="5" class="px-3 py-8 text-center text-sm text-gray-500">
                                     <div class="flex flex-col items-center justify-center">
                                         <svg class="h-8 w-8 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">
