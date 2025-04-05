@@ -15,6 +15,11 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 
 // Guest routes (not logged in)
 Route::middleware('guest')->group(function () {
+    // Index route - Coming Soon
+    Route::get('/', function () {
+        return view('welcome')->with('message', 'Coming Soon');
+    })->name('home');
+
     Route::controller(LoginController::class)->group(function () {
         Route::get('login', 'show')->name('login');
         Route::post('login', 'authenticate');
@@ -38,7 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
     // Dashboard Route
-    Route::get('/', DashboardIndex::class)->name('dashboard');
+    Route::get('/dashboard', DashboardIndex::class)->name('dashboard');
 
     // Notice Routes
     Route::get('notices', NoticesIndex::class)->name('notices.index');
