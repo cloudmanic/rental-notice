@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\NoticeType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -13,6 +14,7 @@ class AccountFactory extends Factory
     {
         return [
             'name' => fake()->company() . ' Property Management',
+            'notice_type_plan_date' => NoticeType::getMostRecentPlanDate(),
         ];
     }
 }

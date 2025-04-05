@@ -13,6 +13,11 @@ class Account extends Model
 
     protected $fillable = [
         'name',
+        'notice_type_plan_date',
+    ];
+
+    protected $casts = [
+        'notice_type_plan_date' => 'date',
     ];
 
     public function users(): BelongsToMany
@@ -44,6 +49,7 @@ class Account extends Model
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'notice_type_plan_date' => ['nullable', 'date'],
         ];
     }
 
