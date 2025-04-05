@@ -5,6 +5,7 @@ use App\Livewire\Notices\Index as NoticesIndex;
 use App\Livewire\Tenants\Index as TenantsIndex;
 use App\Livewire\Tenants\Create as TenantsCreate;
 use App\Livewire\Tenants\Edit as TenantsEdit;
+use App\Livewire\Agents\Index as AgentsIndex;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -46,4 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::get('tenants', TenantsIndex::class)->name('tenants.index');
     Route::get('tenants/create', TenantsCreate::class)->name('tenants.create');
     Route::get('tenants/{tenant}/edit', TenantsEdit::class)->name('tenants.edit');
+
+    // Agent Routes
+    Route::get('agents', AgentsIndex::class)->name('agents.index');
 });
