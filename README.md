@@ -1,5 +1,12 @@
 # About Rental Notice
 
+## Setting Up The Database For Local Development
+
+The commands below will create the sqlite database, and seed it with test data.
+
+-   `php artisan migrate`
+-   `php artisan db:seed`
+
 ## Notice Type Pricing & Plan Dates
 
 Rental Notice uses a plan date system to manage pricing for notice types. This system allows for "grandfathered" pricing where early customers maintain their original pricing plans while newer customers are assigned to more recent pricing plans.

@@ -13,13 +13,33 @@ class NoticeTypeSeeder extends Seeder
         $noticeTypes = [
             [
                 'name' => '10-Day Notice of Termination for Nonpayment of Rent',
-                'price' => 50.00,
+                'price' => 15.00,
                 'plan_date' => Carbon::parse('2025-01-01'),
             ],
             [
                 'name' => '13-Day Termination for Nonpayment of Rent',
-                'price' => 50.00,
+                'price' => 15.00,
                 'plan_date' => Carbon::parse('2025-01-01'),
+            ],
+            [
+                'name' => '10-Day Notice of Termination for Nonpayment of Rent',
+                'price' => 20.00,
+                'plan_date' => Carbon::parse('2025-02-15'),
+            ],
+            [
+                'name' => '13-Day Termination for Nonpayment of Rent',
+                'price' => 20.00,
+                'plan_date' => Carbon::parse('2025-02-15'),
+            ],
+            [
+                'name' => '10-Day Notice of Termination for Nonpayment of Rent',
+                'price' => 25.00,
+                'plan_date' => Carbon::parse('2025-04-01'),
+            ],
+            [
+                'name' => '13-Day Termination for Nonpayment of Rent',
+                'price' => 25.00,
+                'plan_date' => Carbon::parse('2025-04-01'),
             ],
         ];
 

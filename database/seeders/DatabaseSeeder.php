@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Account;
 use App\Models\Tenant;
 use App\Models\Order;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -20,6 +21,7 @@ class DatabaseSeeder extends Seeder
         // Create first account and its users
         $firstAccount = Account::create([
             'name' => 'Test Property Management',
+            'notice_type_plan_date' => Carbon::parse('2025-01-01'),
         ]);
 
         // Create owner for first account with known password
@@ -67,6 +69,31 @@ class DatabaseSeeder extends Seeder
             $secondAccount->users()->attach($user, ['is_owner' => false]);
         }
 
+        // Create third account and its users
+        $thirdAccount = Account::create([
+            'name' => 'Third Property Management',
+        ]);
+
+        // Create owner for third account with known password
+        $thirdOwner = User::factory()->create([
+            'first_name' => 'Third',
+            'last_name' => 'Owner',
+            'email' => 'third.owner@example.com',
+            'password' => Hash::make('password123'), // Set a known password
+        ]);
+        $thirdAccount->users()->attach($thirdOwner, ['is_owner' => true]);
+
+        // Create 3 additional users for third account with known password
+        $thirdAccountUsers = User::factory()
+            ->count(3)
+            ->state(function (array $attributes) {
+                return ['password' => Hash::make('password123')];
+            })
+            ->create();
+        foreach ($thirdAccountUsers as $user) {
+            $thirdAccount->users()->attach($user, ['is_owner' => false]);
+        }
+
         // Create tenants and orders for first account
         Tenant::factory()
             ->count(10)
@@ -110,6 +137,23 @@ class DatabaseSeeder extends Seeder
                 'notice_type_id' => 1,
                 'agent_name' => $secondOwner->full_name,
                 'agent_email' => $secondOwner->email,
+            ]);
+
+        // Create some tenants and orders for third account
+        Tenant::factory()
+            ->count(7)
+            ->create([
+                'account_id' => $thirdAccount->id,
+            ]);
+
+        Order::factory()
+            ->count(4)
+            ->create([
+                'account_id' => $thirdAccount->id,
+                'user_id' => $thirdOwner->id,
+                'notice_type_id' => 3,
+                'agent_name' => $thirdOwner->full_name,
+                'agent_email' => $thirdOwner->email,
             ]);
     }
 }
