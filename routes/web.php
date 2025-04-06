@@ -2,6 +2,7 @@
 
 use App\Livewire\Dashboard\Index as DashboardIndex;
 use App\Livewire\Notices\Index as NoticesIndex;
+use App\Livewire\Notices\Create as NoticesCreate;
 use App\Livewire\Tenants\Index as TenantsIndex;
 use App\Livewire\Tenants\Create as TenantsCreate;
 use App\Livewire\Tenants\Edit as TenantsEdit;
@@ -47,7 +48,7 @@ Route::middleware('auth')->group(function () {
 
     // Notice Routes
     Route::get('notices', NoticesIndex::class)->name('notices.index');
-    Route::get('notices/create', TenantsCreate::class)->name('notices.create');
+    Route::get('notices/create', NoticesCreate::class)->name('notices.create');
 
     // Tenant Routes
     Route::get('tenants', TenantsIndex::class)->name('tenants.index');
