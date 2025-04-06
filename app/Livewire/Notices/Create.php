@@ -52,6 +52,19 @@ class Create extends Component
         'zip' => '',
     ];
 
+    // Tenant form properties
+    public $tenant = [
+        'first_name' => '',
+        'last_name' => '',
+        'email' => '',
+        'phone' => '',
+        'address_1' => '',
+        'address_2' => '',
+        'city' => '',
+        'state' => 'OR',
+        'zip' => '',
+    ];
+
     public $states;
 
     public $showTenantModal = false;
@@ -115,6 +128,13 @@ class Create extends Component
 
             // Check how many other charges were visible previously
             $this->countVisibleCharges();
+        }
+
+        // Restore tenant search data if available
+        if (session()->has('tenant_name') && session()->has('selected_tenant_id')) {
+            $this->searchTenant = session('tenant_name');
+            $this->selectedTenantId = session('selected_tenant_id');
+            $this->notice['tenant_id'] = session('selected_tenant_id');
         }
 
         // Check for flash messages from the previous request
@@ -358,6 +378,128 @@ class Create extends Component
             'payment_other_means' => isset($currentFormData['payment_other_means']) ? (bool)$currentFormData['payment_other_means'] : false,
             'include_all_other_occupents' => isset($currentFormData['include_all_other_occupents']) ? (bool)$currentFormData['include_all_other_occupents'] : false,
         ]);
+
+        // If we have a selected tenant, preserve that information too
+        if ($this->selectedTenantId) {
+            $tenant = Tenant::find($this->selectedTenantId);
+            if ($tenant) {
+                session()->flash('tenant_name', $tenant->full_name);
+                session()->flash('selected_tenant_id', $tenant->id);
+            }
+        }
+
+        // Redirect to notices.create - all data comes from session
+        return redirect()->route('notices.create');
+    }
+
+    /**
+     * Create a new tenant from the modal form.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function createTenant()
+    {
+        $accountId = Auth::user()->account->id;
+
+        $validatedData = $this->validate([
+            'tenant.first_name' => 'required|string|max:255',
+            'tenant.last_name' => 'required|string|max:255',
+            'tenant.email' => 'nullable|email|max:255',
+            'tenant.phone' => 'nullable|string|max:12|regex:/^\d{3}-\d{3}-\d{4}$/',
+            'tenant.address_1' => 'required|string|max:255',
+            'tenant.address_2' => 'nullable|string|max:255',
+            'tenant.city' => 'required|string|max:255',
+            'tenant.state' => 'required|string|size:2',
+            'tenant.zip' => 'required|string|max:10|regex:/^\d{5}(-\d{4})?$/',
+        ], [
+            'tenant.first_name.required' => 'The first name is required.',
+            'tenant.first_name.max' => 'The first name cannot exceed 255 characters.',
+            'tenant.last_name.required' => 'The last name is required.',
+            'tenant.last_name.max' => 'The last name cannot exceed 255 characters.',
+            'tenant.email.email' => 'Please enter a valid email address.',
+            'tenant.email.max' => 'The email address cannot exceed 255 characters.',
+            'tenant.phone.regex' => 'Please enter the phone number in the format XXX-XXX-XXXX.',
+            'tenant.phone.max' => 'The phone number cannot exceed 12 characters.',
+            'tenant.address_1.required' => 'The street address is required.',
+            'tenant.address_1.max' => 'The street address cannot exceed 255 characters.',
+            'tenant.address_2.max' => 'The additional address information cannot exceed 255 characters.',
+            'tenant.city.required' => 'The city is required.',
+            'tenant.city.max' => 'The city name cannot exceed 255 characters.',
+            'tenant.state.required' => 'The state is required.',
+            'tenant.state.size' => 'Please select a valid state from the dropdown.',
+            'tenant.zip.required' => 'The ZIP code is required.',
+            'tenant.zip.regex' => 'Please enter a valid ZIP code (e.g., 12345 or 12345-6789).',
+            'tenant.zip.max' => 'The ZIP code cannot exceed 10 characters.',
+        ]);
+
+        $tenant = new Tenant();
+        $tenant->account_id = Auth::user()->account->id;
+        $tenant->first_name = $validatedData['tenant']['first_name'];
+        $tenant->last_name = $validatedData['tenant']['last_name'];
+        $tenant->email = $validatedData['tenant']['email'];
+        $tenant->phone = $validatedData['tenant']['phone'];
+        $tenant->address_1 = $validatedData['tenant']['address_1'];
+        $tenant->address_2 = $validatedData['tenant']['address_2'];
+        $tenant->city = $validatedData['tenant']['city'];
+        $tenant->state = $validatedData['tenant']['state'];
+        $tenant->zip = $validatedData['tenant']['zip'];
+        $tenant->save();
+
+        // Track all the form data to preserve it after redirect
+        $currentFormData = $this->notice;
+
+        // Include the newly created tenant ID in the form data
+        $currentFormData['tenant_id'] = $tenant->id;
+        $this->notice['tenant_id'] = $tenant->id;
+
+        // Update the search field to show the tenant's name
+        $this->searchTenant = $tenant->full_name;
+        $this->selectedTenantId = $tenant->id;
+
+        // Create the flash message
+        session()->flash('message', 'Tenant added successfully.');
+        session()->flash('messageType', 'success');
+
+        // Store current form state in the session to preserve it across redirects
+        session()->flash('form_data', [
+            'notice_type_id' => $currentFormData['notice_type_id'] ?? '',
+            'agent_id' => $currentFormData['agent_id'] ?? '',
+            'tenant_id' => $tenant->id, // Explicitly set the new tenant ID
+            'past_due_rent' => $currentFormData['past_due_rent'] ?? 0,
+            'late_charges' => $currentFormData['late_charges'] ?? 0,
+            'other_1_title' => $currentFormData['other_1_title'] ?? '',
+            'other_1_price' => $currentFormData['other_1_price'] ?? 0,
+            'other_2_title' => $currentFormData['other_2_title'] ?? '',
+            'other_2_price' => $currentFormData['other_2_price'] ?? 0,
+            'other_3_title' => $currentFormData['other_3_title'] ?? '',
+            'other_3_price' => $currentFormData['other_3_price'] ?? 0,
+            'other_4_title' => $currentFormData['other_4_title'] ?? '',
+            'other_4_price' => $currentFormData['other_4_price'] ?? 0,
+            'other_5_title' => $currentFormData['other_5_title'] ?? '',
+            'other_5_price' => $currentFormData['other_5_price'] ?? 0,
+            'payment_other_means' => isset($currentFormData['payment_other_means']) ? (bool)$currentFormData['payment_other_means'] : false,
+            'include_all_other_occupents' => isset($currentFormData['include_all_other_occupents']) ? (bool)$currentFormData['include_all_other_occupents'] : false,
+        ]);
+
+        // We'll also store the tenant's name and ID directly in the session
+        // so we can restore it in the mount method
+        session()->flash('tenant_name', $tenant->full_name);
+        session()->flash('selected_tenant_id', $tenant->id);
+
+        $this->showTenantModal = false;
+
+        // Reset the tenant form for next use
+        $this->tenant = [
+            'first_name' => '',
+            'last_name' => '',
+            'email' => '',
+            'phone' => '',
+            'address_1' => '',
+            'address_2' => '',
+            'city' => '',
+            'state' => 'OR',
+            'zip' => '',
+        ];
 
         // Redirect to notices.create - all data comes from session
         return redirect()->route('notices.create');

@@ -357,23 +357,99 @@
                 </button>
             </div>
 
-            <!-- This is a placeholder that would have the tenant creation form -->
-            <div class="text-gray-500 mb-4">
-                <p>The tenant creation form would go here, similar to your existing tenant creation form.</p>
-                <p class="mt-2">For implementation, you would either include the tenant form directly or load a Livewire
-                    component here.</p>
-            </div>
+            <form wire:submit.prevent="createTenant" class="space-y-6">
+                <!-- Name Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="tenant-first-name" class="block text-sm font-medium text-gray-700">First Name</label>
+                        <input type="text" id="tenant-first-name" wire:model="tenant.first_name"
+                            class="mt-1 block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        @error('tenant.first_name') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
+                    </div>
 
-            <div class="mt-6 flex justify-end space-x-3">
-                <button wire:click="closeTenantModal"
-                    class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                    Cancel
-                </button>
-                <button
-                    class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
-                    Create Tenant
-                </button>
-            </div>
+                    <div>
+                        <label for="tenant-last-name" class="block text-sm font-medium text-gray-700">Last Name</label>
+                        <input type="text" id="tenant-last-name" wire:model="tenant.last_name"
+                            class="mt-1 block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        @error('tenant.last_name') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="tenant-email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="tenant-email" wire:model="tenant.email"
+                            class="mt-1 block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        @error('tenant.email') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div>
+                        <label for="tenant-phone" class="block text-sm font-medium text-gray-700">Phone (XXX-XXX-XXXX)</label>
+                        <input type="text" id="tenant-phone" wire:model="tenant.phone"
+                            class="mt-1 block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        @error('tenant.phone') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
+                    </div>
+                </div>
+
+                <!-- Address Line 1 -->
+                <div>
+                    <label for="tenant-address-1" class="block text-sm font-medium text-gray-700">Address Line 1</label>
+                    <input type="text" id="tenant-address-1" wire:model="tenant.address_1"
+                        class="mt-1 block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    @error('tenant.address_1') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
+                </div>
+
+                <!-- Address Line 2 -->
+                <div>
+                    <label for="tenant-address-2" class="block text-sm font-medium text-gray-700">Address Line 2 (Optional)</label>
+                    <input type="text" id="tenant-address-2" wire:model="tenant.address_2"
+                        class="mt-1 block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    @error('tenant.address_2') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
+                </div>
+
+                <!-- City -->
+                <div>
+                    <label for="tenant-city" class="block text-sm font-medium text-gray-700">City</label>
+                    <input type="text" id="tenant-city" wire:model="tenant.city"
+                        class="mt-1 block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    @error('tenant.city') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
+                </div>
+
+                <!-- State and ZIP in a grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- State -->
+                    <div>
+                        <label for="tenant-state" class="block text-sm font-medium text-gray-700">State</label>
+                        <select id="tenant-state" wire:model="tenant.state"
+                            class="mt-1 block w-full h-[38px] rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            @foreach($states as $abbr => $name)
+                            <option value="{{ $abbr }}">{{ $name }}</option>
+                            @endforeach
+                        </select>
+                        @error('tenant.state') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
+                    </div>
+
+                    <!-- ZIP -->
+                    <div>
+                        <label for="tenant-zip" class="block text-sm font-medium text-gray-700">ZIP Code</label>
+                        <input type="text" id="tenant-zip" wire:model="tenant.zip" placeholder="12345 or 12345-6789"
+                            class="mt-1 block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        @error('tenant.zip') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="button" wire:click="closeTenantModal"
+                        class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                        Create Tenant
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
