@@ -457,6 +457,15 @@ class Create extends Component
         $tenant->zip = $validatedData['tenant']['zip'];
         $tenant->save();
 
+        // Log the tenant creation activity during notice creation
+        ActivityService::log(
+            "{name} was added as a new tenant.",
+            $tenant->id,
+            null,
+            null,
+            'Tenant'
+        );
+
         // Add the new tenant to the selected tenants array
         $this->selectedTenants[] = [
             'id' => $tenant->id,

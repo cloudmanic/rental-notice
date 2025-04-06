@@ -8,6 +8,7 @@ use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Computed;
+use App\Services\ActivityService;
 
 class Create extends Component
 {
@@ -106,6 +107,15 @@ class Create extends Component
         $tenant->account_id = Auth::user()->account->id;
         $tenant->fill($validated);
         $tenant->save();
+
+        // Log the tenant creation activity
+        ActivityService::log(
+            "{name} was added as a new tenant.", 
+            $tenant->id,
+            null,
+            null,
+            'Tenant'
+        );
 
         session()->flash('message', 'Tenant added successfully.');
         session()->flash('message-type', 'success');

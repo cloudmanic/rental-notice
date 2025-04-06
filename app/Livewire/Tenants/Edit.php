@@ -6,6 +6,7 @@ use App\Models\Tenant;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Illuminate\Contracts\View\View;
+use App\Services\ActivityService;
 
 class Edit extends Component
 {
@@ -74,6 +75,15 @@ class Edit extends Component
 
         $this->tenant->update($validated);
 
+        // Log the tenant update activity
+        ActivityService::log(
+            "{name}'s information was updated.", 
+            $this->tenant->id,
+            null,
+            null,
+            'Tenant'
+        );
+
         session()->flash('message', 'Tenant successfully updated.');
         session()->flash('message-type', 'success');
 
@@ -92,7 +102,20 @@ class Edit extends Component
 
     public function delete(): void
     {
+        // Save tenant information before deletion
+        $tenantId = $this->tenant->id;
+        $tenantName = $this->tenant->full_name;
+        
         $this->tenant->delete();
+
+        // Log the tenant deletion activity
+        ActivityService::log(
+            "Tenant {$tenantName} was deleted.", 
+            null, // We don't use tenant_id since it's deleted
+            null,
+            null,
+            'Tenant'
+        );
 
         session()->flash('message', 'Tenant successfully deleted.');
         session()->flash('message-type', 'success');

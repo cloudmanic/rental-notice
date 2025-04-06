@@ -26,14 +26,19 @@
                             <p class="mt-1 text-sm text-gray-500 truncate">
                                 @php
                                     $description = $activity->description;
-                                    // For agents with placeholder - we check both event type and description pattern
-                                    if ($activity->type === 'Agent' && strpos($description, '{name}') !== false) {
-                                        if ($activity->agent_id && $activity->agent) {
-                                            // If agent relationship exists, use it
+                                    // Replace {name} placeholder for different entity types
+                                    if (strpos($description, '{name}') !== false) {
+                                        if ($activity->type === 'Agent' && $activity->agent_id && $activity->agent) {
+                                            // For agents
                                             $description = str_replace('{name}', $activity->agent->name, $description);
+                                        } elseif ($activity->type === 'Tenant' && $activity->tenant_id && $activity->tenant) {
+                                            // For tenants
+                                            $description = str_replace('{name}', $activity->tenant->full_name, $description);
+                                        } elseif ($activity->type === 'Notice' && $activity->notice_id && $activity->notice) {
+                                            // For notices (if needed)
+                                            $description = str_replace('{name}', "Notice #{$activity->notice->id}", $description);
                                         } else {
-                                            // If the agent record is gone, just remove the placeholder
-                                            // Note: For deleted agents we already put the name in the description
+                                            // If the record is gone or not handled, just remove the placeholder
                                             $description = str_replace('{name}', '', $description);
                                         }
                                     }
