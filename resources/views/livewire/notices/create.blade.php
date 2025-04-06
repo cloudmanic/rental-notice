@@ -181,11 +181,11 @@
                 @error('notice.late_charges') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
             </div>
 
-            <!-- Other Charges (5 sets) -->
-            @for ($i = 1; $i <= 5; $i++) <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="md:col-span-2">
-                    <label for="other_{{ $i }}_title" class="block text-sm font-medium text-gray-700 mb-1">
-                        Other Charge #{{ $i }} Title
+            <!-- Other Charges (Dynamic) -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <label class="block text-sm font-medium text-gray-700">
+                        Other Charges
                         <span class="ml-1 relative group">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 inline" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
@@ -194,34 +194,69 @@
                             </svg>
                             <div
                                 class="absolute z-10 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 bottom-full left-0">
-                                Optional: Enter a description for any additional charges (e.g., "Utility Payment",
-                                "Property Damage").
+                                Optional: Add additional charges such as utilities, property damage, or other fees.
                             </div>
                         </span>
                     </label>
-                    <input type="text" id="other_{{ $i }}_title" wire:model="notice.other_{{ $i }}_title"
-                        class="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        placeholder="(Optional) e.g., Utility Payment">
-                    @error("notice.other_{{ $i }}_title") <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
-                    @enderror
+                    @if($visibleCharges < 5)
+                        <button type="button" wire:click="addCharge"
+                        class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Add Charge
+                        </button>
+                        @endif
                 </div>
-                <div>
-                    <label for="other_{{ $i }}_price" class="block text-sm font-medium text-gray-700 mb-1">
-                        Amount
-                    </label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span class="text-gray-500 sm:text-sm">$</span>
-                        </div>
-                        <input type="number" step="0.01" id="other_{{ $i }}_price"
-                            wire:model="notice.other_{{ $i }}_price"
-                            class="block w-full rounded-md border-0 py-1.5 pl-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+
+                <!-- Dynamically show charge inputs based on visibleCharges property -->
+                @for ($i = 1; $i <= $visibleCharges; $i++)
+                    <div class="mb-3 grid grid-cols-1 md:grid-cols-10 gap-4 bg-gray-50 p-3 rounded-md relative">
+                    <div class="md:col-span-7">
+                        <label for="other_{{ $i }}_title" class="block text-sm font-medium text-gray-700 mb-1">
+                            Charge #{{ $i }} Title
+                        </label>
+                        <input type="text" id="other_{{ $i }}_title" wire:model="notice.other_{{ $i }}_title"
+                            class="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            placeholder="e.g., Utility Payment">
+                        @error("notice.other_{{ $i }}_title") <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                        @enderror
                     </div>
-                    @error("notice.other_{{ $i }}_price") <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
-                    @enderror
-                </div>
+                    <div class="md:col-span-2">
+                        <label for="other_{{ $i }}_price" class="block text-sm font-medium text-gray-700 mb-1">
+                            Amount
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="text-gray-500 sm:text-sm">$</span>
+                            </div>
+                            <input type="number" step="0.01" id="other_{{ $i }}_price"
+                                wire:model="notice.other_{{ $i }}_price"
+                                class="block w-full rounded-md border-0 py-1.5 pl-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        </div>
+                        @error("notice.other_{{ $i }}_price") <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="md:col-span-1 flex items-end justify-center pb-1">
+                        <button type="button" wire:click="removeCharge({{ $i }})"
+                            class="text-red-500 hover:text-red-700 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </div>
+            </div>
+            @endfor
+
+            @if($visibleCharges === 0)
+            <div class="text-center py-4 bg-gray-50 rounded-md">
+                <span class="text-gray-500">Click "Add Charge" to include additional charges</span>
+            </div>
+            @endif
     </div>
-    @endfor
 
     <!-- Additional Options -->
     <div class="mb-6 mt-8 space-y-4">
@@ -430,16 +465,16 @@
 @endif
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const flashMessage = document.getElementById('flash-message');
-    if (flashMessage) {
-        setTimeout(() => {
-            flashMessage.classList.add('opacity-0');
+    document.addEventListener('DOMContentLoaded', () => {
+        const flashMessage = document.getElementById('flash-message');
+        if (flashMessage) {
             setTimeout(() => {
-                flashMessage.remove();
-            }, 500);
-        }, 5000);
-    }
-});
+                flashMessage.classList.add('opacity-0');
+                setTimeout(() => {
+                    flashMessage.remove();
+                }, 500);
+            }, 5000);
+        }
+    });
 </script>
 </div>

@@ -33,6 +33,9 @@ class Create extends Component
         'include_all_other_occupents' => false,
     ];
 
+    // Track visible other charges
+    public $visibleCharges = 0;
+
     public $showMessage = false;
     public $message = '';
     public $messageType = 'success';
@@ -109,6 +112,9 @@ class Create extends Component
                     $this->notice[$key] = $value;
                 }
             }
+
+            // Check how many other charges were visible previously
+            $this->countVisibleCharges();
         }
 
         // Check for flash messages from the previous request
@@ -117,6 +123,49 @@ class Create extends Component
             $this->messageType = session('messageType', 'success');
             $this->showMessage = true;
         }
+    }
+
+    // Count how many other charges are currently visible based on filled data
+    public function countVisibleCharges()
+    {
+        $this->visibleCharges = 0;
+        for ($i = 1; $i <= 5; $i++) {
+            if (!empty($this->notice["other_{$i}_title"]) || $this->notice["other_{$i}_price"] > 0) {
+                $this->visibleCharges = $i;
+            }
+        }
+    }
+
+    // Add another charge field
+    public function addCharge()
+    {
+        if ($this->visibleCharges < 5) {
+            $this->visibleCharges++;
+        }
+    }
+
+    // Remove a charge field
+    public function removeCharge($index)
+    {
+        // Clear the data for this charge
+        $this->notice["other_{$index}_title"] = '';
+        $this->notice["other_{$index}_price"] = 0;
+
+        // Shift all charges above this one down
+        for ($i = $index; $i < 5; $i++) {
+            if ($i < 5) {
+                $this->notice["other_{$i}_title"] = $this->notice["other_" . ($i + 1) . "_title"];
+                $this->notice["other_{$i}_price"] = $this->notice["other_" . ($i + 1) . "_price"];
+            }
+        }
+
+        // Clear the last charge if we've shifted everything down
+        if ($this->visibleCharges == 5) {
+            $this->notice["other_5_title"] = '';
+            $this->notice["other_5_price"] = 0;
+        }
+
+        $this->visibleCharges--;
     }
 
     public function openTenantModal()
