@@ -23,6 +23,7 @@ class Activity extends Model
         'notice_id',
         'agent_id',
         'description',
+        'event',
     ];
 
     /**

@@ -30,6 +30,7 @@ class ActivityFactory extends Factory
             'notice_id' => null,
             'agent_id' => null,
             'description' => $this->faker->sentence(),
+            'event' => 'Account', // Default event type
             'created_at' => $this->faker->dateTimeBetween('-1 month', 'now'),
         ];
     }
@@ -48,6 +49,7 @@ class ActivityFactory extends Factory
             return [
                 'tenant_id' => $tenant->id,
                 'description' => ucfirst($action) . ' tenant: ' . $tenant->name,
+                'event' => 'Tenant',
             ];
         });
     }
@@ -78,6 +80,7 @@ class ActivityFactory extends Factory
                 'account_id' => $account->id,
                 'notice_id' => $notice->id,
                 'description' => ucfirst($action) . ' notice #' . $notice->id,
+                'event' => 'Notice',
             ];
         });
     }
@@ -96,6 +99,7 @@ class ActivityFactory extends Factory
             return [
                 'agent_id' => $agent->id,
                 'description' => ucfirst($action) . ' agent: ' . $agent->name,
+                'event' => 'Agent',
             ];
         });
     }
@@ -113,6 +117,7 @@ class ActivityFactory extends Factory
             return [
                 'user_id' => null,
                 'description' => 'System ' . $action,
+                'event' => 'System',
             ];
         });
     }
@@ -131,6 +136,7 @@ class ActivityFactory extends Factory
             return [
                 'account_id' => $account->id,
                 'description' => 'Account ' . $account->name . ' ' . $action,
+                'event' => 'Account',
             ];
         });
     }

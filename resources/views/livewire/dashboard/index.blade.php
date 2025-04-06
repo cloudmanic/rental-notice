@@ -24,7 +24,21 @@
                                 </span>
                             </div>
                             <p class="mt-1 text-sm text-gray-500 truncate">
-                                {{ $activity->description }}
+                                @php
+                                    $description = $activity->description;
+                                    // For agents with placeholder - we check both event type and description pattern
+                                    if ($activity->type === 'Agent' && strpos($description, '{name}') !== false) {
+                                        if ($activity->agent_id && $activity->agent) {
+                                            // If agent relationship exists, use it
+                                            $description = str_replace('{name}', $activity->agent->name, $description);
+                                        } else {
+                                            // If the agent record is gone, just remove the placeholder
+                                            // Note: For deleted agents we already put the name in the description
+                                            $description = str_replace('{name}', '', $description);
+                                        }
+                                    }
+                                @endphp
+                                {{ $description }}
                             </p>
                         </div>
                         <div>

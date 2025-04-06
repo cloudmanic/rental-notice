@@ -57,6 +57,7 @@ class ActivityServiceTest extends TestCase
         $this->assertNull($activity->tenant_id);
         $this->assertNull($activity->notice_id);
         $this->assertNull($activity->agent_id);
+        $this->assertEquals('Account', $activity->event);
     }
 
     #[Test]
@@ -69,6 +70,7 @@ class ActivityServiceTest extends TestCase
 
         $this->assertEquals($description, $activity->description);
         $this->assertEquals($tenant->id, $activity->tenant_id);
+        $this->assertEquals('Tenant', $activity->event);
     }
 
     #[Test]
@@ -87,6 +89,7 @@ class ActivityServiceTest extends TestCase
 
         $this->assertEquals($description, $activity->description);
         $this->assertEquals($notice->id, $activity->notice_id);
+        $this->assertEquals('Notice', $activity->event);
     }
 
     #[Test]
@@ -99,5 +102,16 @@ class ActivityServiceTest extends TestCase
 
         $this->assertEquals($description, $activity->description);
         $this->assertEquals($agent->id, $activity->agent_id);
+        $this->assertEquals('Agent', $activity->event);
+    }
+    
+    #[Test]
+    public function it_logs_activity_with_custom_event()
+    {
+        $description = 'System notification';
+        $activity = ActivityService::log($description, null, null, null, 'System');
+        
+        $this->assertEquals($description, $activity->description);
+        $this->assertEquals('System', $activity->event);
     }
 }

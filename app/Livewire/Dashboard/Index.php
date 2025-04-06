@@ -13,13 +13,19 @@ class Index extends Component
     use WithPagination;
 
     /**
-     * Determine the type of activity based on which ID is populated.
+     * Determine the type of activity based on event column or which ID is populated.
      *
      * @param Activity $activity
      * @return string
      */
     protected function determineActivityType(Activity $activity): string
     {
+        // If the event column is already set, use it
+        if ($activity->event) {
+            return $activity->event;
+        }
+        
+        // Fall back to the old logic for backward compatibility
         if ($activity->tenant_id) {
             return 'Tenant';
         } elseif ($activity->notice_id) {

@@ -52,6 +52,7 @@ class IndexTest extends TestCase
             'tenant_id' => Tenant::factory()->create(['account_id' => $this->account->id])->id,
             'notice_id' => null,
             'agent_id' => null,
+            'event' => 'Tenant', // Set the event explicitly
         ]);
 
         $type = $this->callDetermineActivityType($activity);
@@ -76,6 +77,7 @@ class IndexTest extends TestCase
             'tenant_id' => null,
             'notice_id' => $notice->id,
             'agent_id' => null,
+            'event' => 'Notice', // Set the event explicitly
         ]);
 
         $type = $this->callDetermineActivityType($activity);
@@ -92,6 +94,7 @@ class IndexTest extends TestCase
             'tenant_id' => null,
             'notice_id' => null,
             'agent_id' => Agent::factory()->create(['account_id' => $this->account->id])->id,
+            'event' => 'Agent', // Set the event explicitly
         ]);
 
         $type = $this->callDetermineActivityType($activity);
@@ -108,6 +111,7 @@ class IndexTest extends TestCase
             'tenant_id' => null,
             'notice_id' => null,
             'agent_id' => null,
+            'event' => 'System', // Set the event explicitly
         ]);
 
         $type = $this->callDetermineActivityType($activity);
@@ -124,6 +128,7 @@ class IndexTest extends TestCase
             'tenant_id' => null,
             'notice_id' => null,
             'agent_id' => null,
+            'event' => 'Account', // Set the event explicitly
         ]);
 
         $type = $this->callDetermineActivityType($activity);

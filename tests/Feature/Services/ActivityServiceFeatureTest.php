@@ -124,6 +124,33 @@ class ActivityServiceFeatureTest extends TestCase
         $response->assertSee($description);
         $response->assertSee('Agent');
     }
+    
+    #[Test]
+    public function it_logs_agent_creation_with_placeholder()
+    {
+        // Create an agent
+        $agent = Agent::factory()->create([
+            'account_id' => $this->account->id,
+            'name' => 'Agent Smith'
+        ]);
+
+        // Log the agent creation activity with {name} placeholder
+        $description = "{name} was added as a new agent.";
+        ActivityService::log($description, null, null, $agent->id);
+
+        // Check that the activity was logged correctly with the placeholder
+        $this->assertDatabaseHas('activities', [
+            'account_id' => $this->account->id,
+            'user_id' => $this->user->id,
+            'agent_id' => $agent->id,
+            'description' => $description
+        ]);
+
+        // Check that the activity appears on the dashboard with the placeholder replaced
+        $response = $this->get(route('dashboard'));
+        $this->assertStringNotContainsString('{name}', $response->getContent());
+        $this->assertStringContainsString('Agent Smith was added as a new agent.', $response->getContent());
+    }
 
     #[Test]
     public function it_logs_multiple_activities_and_displays_them_in_order()

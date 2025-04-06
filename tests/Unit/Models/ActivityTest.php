@@ -28,6 +28,7 @@ class ActivityTest extends TestCase
             'notice_id',
             'agent_id',
             'description',
+            'event',
         ], $activity->getFillable());
     }
 

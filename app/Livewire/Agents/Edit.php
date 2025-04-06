@@ -6,6 +6,7 @@ use App\Models\Agent;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Illuminate\Contracts\View\View;
+use App\Services\ActivityService;
 
 class Edit extends Component
 {
@@ -81,6 +82,9 @@ class Edit extends Component
 
         $this->agent->update($validated);
 
+        // Log the agent update activity
+        ActivityService::log("{name} agent information was updated.", null, null, $this->agent->id, 'Agent');
+
         session()->flash('message', 'Agent successfully updated.');
         session()->flash('message-type', 'success');
 
@@ -99,7 +103,14 @@ class Edit extends Component
 
     public function delete(): void
     {
+        // Capture the agent's name before deletion
+        $agentName = $this->agent->name;
+
         $this->agent->delete();
+
+        // Log the agent deletion activity with explicit event type but no agent_id
+        // This ensures the log persists even after the agent is deleted
+        ActivityService::log("Agent $agentName was deleted.", null, null, null, 'Agent');
 
         session()->flash('message', 'Agent successfully deleted.');
         session()->flash('message-type', 'success');
