@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('account_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
             $table->foreignId('notice_type_id')->constrained()->onDelete('cascade');
             $table->foreignId('agent_id')->constrained()->onDelete('cascade');
             $table->decimal('price', 8, 2);

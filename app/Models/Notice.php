@@ -23,6 +23,7 @@ class Notice extends Model
         'user_id',
         'notice_type_id',
         'agent_id',
+        'tenant_id',
         'price',
         'past_due_rent',
         'late_charges',
@@ -71,6 +72,16 @@ class Notice extends Model
         return $this->belongsTo(NoticeType::class);
     }
 
+    public function agent(): BelongsTo
+    {
+        return $this->belongsTo(Agent::class);
+    }
+
+    public function tenant(): BelongsTo
+    {
+        return $this->belongsTo(Tenant::class);
+    }
+
     public function getAgentFullAddressAttribute(): string
     {
         $address = $this->agent_address_1;
@@ -98,6 +109,7 @@ class Notice extends Model
             'account_id' => ['required', 'exists:accounts,id'],
             'user_id' => ['required', 'exists:users,id'],
             'agent_id' => ['required', 'exists:agents,id'],
+            'tenant_id' => ['nullable', 'exists:tenants,id'],
             'notice_type_id' => ['required', 'exists:notice_types,id'],
             'price' => ['required', 'numeric', 'min:0', 'max:99999.99'],
             'past_due_rent' => ['required', 'numeric', 'min:0', 'max:99999.99'],

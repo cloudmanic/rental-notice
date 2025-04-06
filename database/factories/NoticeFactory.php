@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Account;
 use App\Models\Agent;
+use App\Models\Tenant;
 use App\Models\User;
 use App\Models\Notice;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -19,6 +20,7 @@ class NoticeFactory extends Factory
             'account_id' => Account::factory(),
             'user_id' => User::factory(),
             'agent_id' => Agent::factory(),
+            'tenant_id' => Tenant::factory(),
             'notice_type_id' => fake()->randomElement([1, 2]), // Use existing notice types
             'price' => 50.00, // Fixed price from notice types
             'past_due_rent' => fake()->randomFloat(2, 500, 5000),

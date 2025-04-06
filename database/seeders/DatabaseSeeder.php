@@ -5,6 +5,9 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Account;
 use App\Models\Tenant;
+use App\Models\Notice;
+use App\Models\Agent;
+use App\Models\NoticeType;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -94,30 +97,97 @@ class DatabaseSeeder extends Seeder
         }
 
         // Create tenants and notices for first account
-        Tenant::factory()
+        $firstAccountTenants = Tenant::factory()
             ->count(10)
             ->create([
                 'account_id' => $firstAccount->id,
             ]);
 
         // Create some tenants and notices for second account too
-        Tenant::factory()
+        $secondAccountTenants = Tenant::factory()
             ->count(5)
             ->create([
                 'account_id' => $secondAccount->id,
             ]);
 
         // Create some tenants and notices for third account
-        Tenant::factory()
+        $thirdAccountTenants = Tenant::factory()
             ->count(7)
             ->create([
                 'account_id' => $thirdAccount->id,
             ]);
 
-        // Seed agents for the accounts
+        // Create agents for each account using the AgentSeeder
         $this->call([
             AgentSeeder::class,
-            ActivitySeeder::class, // Add the ActivitySeeder
+        ]);
+
+        // Get all agents
+        $agents = [
+            1 => Agent::where('account_id', $firstAccount->id)->get(),
+            2 => Agent::where('account_id', $secondAccount->id)->get(),
+            3 => Agent::where('account_id', $thirdAccount->id)->get(),
+        ];
+
+        // Get users by account
+        $users = [
+            1 => $firstAccount->users,
+            2 => $secondAccount->users,
+            3 => $thirdAccount->users,
+        ];
+
+        // Get tenants by account
+        $tenants = [
+            1 => $firstAccountTenants,
+            2 => $secondAccountTenants,
+            3 => $thirdAccountTenants,
+        ];
+
+        // Get notice types
+        $noticeTypes = NoticeType::all();
+
+        // Generate 200 notices spread across the accounts
+        // First account: 100 notices
+        // Second account: 60 notices
+        // Third account: 40 notices
+        $noticeDistribution = [
+            1 => 100, // First account
+            2 => 60,  // Second account
+            3 => 40,  // Third account
+        ];
+
+        foreach ($noticeDistribution as $accountId => $count) {
+            $account = $accountId == 1 ? $firstAccount : ($accountId == 2 ? $secondAccount : $thirdAccount);
+
+            // Skip if this account has no agents
+            if ($agents[$accountId]->isEmpty()) {
+                continue;
+            }
+
+            // Create notices for this account
+            for ($i = 0; $i < $count; $i++) {
+                $user = $users[$accountId]->random();
+                $tenant = $tenants[$accountId]->random();
+                $agent = $agents[$accountId]->random();
+                $noticeType = $noticeTypes->random();
+
+                Notice::factory()->create([
+                    'account_id' => $account->id,
+                    'user_id' => $user->id,
+                    'tenant_id' => $tenant->id,
+                    'agent_id' => $agent->id,
+                    'notice_type_id' => $noticeType->id,
+                    'price' => $noticeType->price,
+                    'past_due_rent' => fake()->randomFloat(2, 500, 5000),
+                    'late_charges' => fake()->randomFloat(2, 0, 500),
+                    'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
+                ]);
+            }
+        }
+
+        // Call ActivitySeeder after creating notices
+        $this->call([
+            ActivitySeeder::class,
         ]);
     }
 }
