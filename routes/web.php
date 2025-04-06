@@ -49,6 +49,8 @@ Route::middleware('auth')->group(function () {
     // Notice Routes
     Route::get('notices', NoticesIndex::class)->name('notices.index');
     Route::get('notices/create', NoticesCreate::class)->name('notices.create');
+    Route::get('notices/{notice}', App\Livewire\Notices\Show::class)->name('notices.show');
+    Route::get('notices/{notice}/edit', App\Livewire\Notices\Edit::class)->name('notices.edit');
 
     // Tenant Routes
     Route::get('tenants', TenantsIndex::class)->name('tenants.index');
