@@ -29,9 +29,11 @@ class Tenant extends Model
         return $this->belongsTo(Account::class);
     }
 
-    public function notices(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function notices()
     {
-        return $this->hasMany(Notice::class);
+        return $this->belongsToMany(Notice::class, 'notice_tenant')
+            ->withPivot('is_primary')
+            ->withTimestamps();
     }
 
     public function getFullNameAttribute(): string

@@ -79,10 +79,10 @@
                 @error('notice.agent_id') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
             </div>
 
-            <!-- Tenant Selection with Search -->
+            <!-- Tenant Selection -->
             <div class="mb-6">
-                <label for="tenant_search" class="block text-sm font-medium text-gray-700 mb-1">
-                    Tenant
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Tenants
                     <span class="ml-1 relative group">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 inline" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
@@ -91,11 +91,52 @@
                         </svg>
                         <div
                             class="absolute z-10 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 bottom-full left-0">
-                            Search for an existing tenant or create a new one. The tenant will receive the late rent
-                            notice.
+                            Select one or more tenants who will receive the notice. You must designate one tenant as the primary tenant.
                         </div>
                     </span>
                 </label>
+
+                <!-- Selected Tenants List -->
+                <div class="mb-3">
+                    @if(count($selectedTenants) > 0)
+                    <div class="bg-gray-50 rounded-md p-3 mb-3">
+                        <h3 class="text-sm font-medium text-gray-700 mb-2">Selected Tenants:</h3>
+                        <ul class="space-y-2">
+                            @foreach($selectedTenants as $tenant)
+                            <li class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <input type="radio" id="primary_{{ $tenant['id'] }}"
+                                        name="primaryTenant"
+                                        value="{{ $tenant['id'] }}"
+                                        wire:click="setPrimaryTenant({{ $tenant['id'] }})"
+                                        {{ $primaryTenantId == $tenant['id'] ? 'checked' : '' }}
+                                        class="mr-2 h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                    <label for="primary_{{ $tenant['id'] }}" class="text-sm text-gray-700">
+                                        {{ $tenant['name'] }}
+                                        @if($primaryTenantId == $tenant['id'])
+                                        <span class="text-xs text-indigo-600 font-medium">(Primary)</span>
+                                        @endif
+                                    </label>
+                                </div>
+                                <button type="button" wire:click="removeTenant({{ $tenant['id'] }})"
+                                    class="text-red-500 hover:text-red-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
+
+                    @error('selectedTenants') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
+                    @error('primaryTenantId') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
+                </div>
+
+                <!-- Tenant Search -->
                 <div class="flex items-center space-x-2 relative">
                     <div class="relative w-full">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -107,26 +148,13 @@
                         </div>
                         <input type="text" id="tenant_search" wire:model.live="searchTenant"
                             placeholder="Search for tenant by name or email..."
-                            class="block w-full rounded-md border-0 py-1.5 pl-10 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            {{ $selectedTenantId ? 'readonly' : '' }}>
-                        <input type="hidden" wire:model="notice.tenant_id">
+                            class="block w-full rounded-md border-0 py-1.5 pl-10 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
 
-                        @if($selectedTenantId)
-                        <button type="button" wire:click="clearTenant"
-                            class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-500">
-                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                        @endif
-
-                        @if($tenants->count() > 0 && strlen($searchTenant) >= 2 && !$selectedTenantId)
+                        @if($tenants->count() > 0 && strlen($searchTenant) >= 2)
                         <div
                             class="absolute z-10 mt-2 w-full bg-white shadow-lg rounded-md border border-gray-300 max-h-60 overflow-y-auto">
                             @foreach($tenants as $tenant)
-                            <div wire:click="selectTenant({{ $tenant->id }})"
+                            <div wire:click="addTenant({{ $tenant->id }})"
                                 class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                                 <div class="font-medium">{{ $tenant->full_name }}</div>
                                 <div class="text-xs text-gray-500">{{ $tenant->email }}</div>
@@ -145,7 +173,6 @@
                         New
                     </button>
                 </div>
-                @error('notice.tenant_id') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
             </div>
 
             <!-- Past Due Rent -->

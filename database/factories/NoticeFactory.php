@@ -20,7 +20,6 @@ class NoticeFactory extends Factory
             'account_id' => Account::factory(),
             'user_id' => User::factory(),
             'agent_id' => Agent::factory(),
-            'tenant_id' => Tenant::factory(),
             'notice_type_id' => fake()->randomElement([1, 2]), // Use existing notice types
             'price' => 50.00, // Fixed price from notice types
             'past_due_rent' => fake()->randomFloat(2, 500, 5000),
@@ -49,5 +48,31 @@ class NoticeFactory extends Factory
                 ? fake()->sentence()
                 : null,
         ];
+    }
+
+    /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (Notice $notice) {
+            // Create a tenant and attach it as the primary tenant
+            $tenant = Tenant::factory()->create(['account_id' => $notice->account_id]);
+            $notice->tenants()->attach($tenant->id, ['is_primary' => true]);
+
+            // Randomly add 0-2 additional tenants
+            $additionalTenantsCount = fake()->numberBetween(0, 2);
+            if ($additionalTenantsCount > 0) {
+                $additionalTenants = Tenant::factory()
+                    ->count($additionalTenantsCount)
+                    ->create(['account_id' => $notice->account_id]);
+
+                foreach ($additionalTenants as $additionalTenant) {
+                    $notice->tenants()->attach($additionalTenant->id, ['is_primary' => false]);
+                }
+            }
+        });
     }
 }
