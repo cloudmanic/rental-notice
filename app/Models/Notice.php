@@ -79,13 +79,7 @@ class Notice extends Model
     public function tenants()
     {
         return $this->belongsToMany(Tenant::class, 'notice_tenant')
-            ->withPivot('is_primary')
             ->withTimestamps();
-    }
-
-    public function getPrimaryTenantAttribute()
-    {
-        return $this->tenants()->wherePivot('is_primary', true)->first();
     }
 
     public function getAgentFullAddressAttribute(): string

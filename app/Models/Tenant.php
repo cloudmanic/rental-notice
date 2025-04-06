@@ -32,7 +32,6 @@ class Tenant extends Model
     public function notices()
     {
         return $this->belongsToMany(Notice::class, 'notice_tenant')
-            ->withPivot('is_primary')
             ->withTimestamps();
     }
 

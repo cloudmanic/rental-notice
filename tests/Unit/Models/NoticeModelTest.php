@@ -59,49 +59,13 @@ class NoticeModelTest extends TestCase
             'account_id' => $this->account->id
         ]);
         
-        // Attach the first tenant as primary
-        $notice->tenants()->attach($tenants[0]->id, ['is_primary' => true]);
-        
-        // Attach the other tenants as non-primary
-        $notice->tenants()->attach([$tenants[1]->id, $tenants[2]->id], ['is_primary' => false]);
+        // Attach the tenants
+        foreach ($tenants as $tenant) {
+            $notice->tenants()->attach($tenant->id);
+        }
         
         // Verify that the notice has three tenants
         $this->assertEquals(3, $notice->tenants()->count());
-        
-        // Verify that exactly one tenant is primary
-        $this->assertEquals(1, $notice->tenants()->wherePivot('is_primary', true)->count());
-    }
-    
-    /**
-     * Test that a notice can identify its primary tenant.
-     */
-    public function test_notice_can_identify_primary_tenant(): void
-    {
-        // Create an agent
-        $agent = Agent::factory()->create(['account_id' => $this->account->id]);
-        
-        // Create a notice with minimal properties - don't use the factory's afterCreating
-        $notice = new Notice([
-            'account_id' => $this->account->id,
-            'user_id' => $this->user->id,
-            'agent_id' => $agent->id,
-            'notice_type_id' => $this->noticeType->id,
-            'price' => 50.00,
-            'past_due_rent' => 1000.00,
-            'late_charges' => 100.00,
-            'status' => Notice::STATUS_DRAFT,
-        ]);
-        $notice->save();
-        
-        // Create a tenant and set as primary
-        $tenant = Tenant::factory()->create(['account_id' => $this->account->id]);
-        $notice->tenants()->attach($tenant->id, ['is_primary' => true]);
-        
-        // Fresh load to ensure relationships are properly loaded
-        $notice->refresh();
-        
-        // Verify that the getPrimaryTenantAttribute accessor works
-        $this->assertEquals($tenant->id, $notice->primaryTenant->id);
     }
     
     /**
@@ -125,8 +89,8 @@ class NoticeModelTest extends TestCase
                 'notice_type_id' => $this->noticeType->id,
             ]);
             
-            // Attach the tenant to the notice as primary
-            $notice->tenants()->attach($tenant->id, ['is_primary' => true]);
+            // Attach the tenant to the notice
+            $notice->tenants()->attach($tenant->id);
             
             $notices[] = $notice;
         }

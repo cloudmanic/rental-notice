@@ -58,9 +58,9 @@ class NoticeFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (Notice $notice) {
-            // Create a tenant and attach it as the primary tenant
+            // Create and attach a tenant
             $tenant = Tenant::factory()->create(['account_id' => $notice->account_id]);
-            $notice->tenants()->attach($tenant->id, ['is_primary' => true]);
+            $notice->tenants()->attach($tenant->id);
 
             // Randomly add 0-2 additional tenants
             $additionalTenantsCount = fake()->numberBetween(0, 2);
@@ -70,7 +70,7 @@ class NoticeFactory extends Factory
                     ->create(['account_id' => $notice->account_id]);
 
                 foreach ($additionalTenants as $additionalTenant) {
-                    $notice->tenants()->attach($additionalTenant->id, ['is_primary' => false]);
+                    $notice->tenants()->attach($additionalTenant->id);
                 }
             }
         });

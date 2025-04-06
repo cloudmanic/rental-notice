@@ -91,7 +91,7 @@
                         </svg>
                         <div
                             class="absolute z-10 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 bottom-full left-0">
-                            Select one or more tenants who will receive the notice. You must designate one tenant as the primary tenant.
+                            Select one or more tenants who will receive the notice.
                         </div>
                     </span>
                 </label>
@@ -105,17 +105,8 @@
                             @foreach($selectedTenants as $tenant)
                             <li class="flex items-center justify-between">
                                 <div class="flex items-center">
-                                    <input type="radio" id="primary_{{ $tenant['id'] }}"
-                                        name="primaryTenant"
-                                        value="{{ $tenant['id'] }}"
-                                        wire:click="setPrimaryTenant({{ $tenant['id'] }})"
-                                        {{ $primaryTenantId == $tenant['id'] ? 'checked' : '' }}
-                                        class="mr-2 h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
-                                    <label for="primary_{{ $tenant['id'] }}" class="text-sm text-gray-700">
+                                    <label class="text-sm text-gray-700">
                                         {{ $tenant['name'] }}
-                                        @if($primaryTenantId == $tenant['id'])
-                                        <span class="text-xs text-indigo-600 font-medium">(Primary)</span>
-                                        @endif
                                     </label>
                                 </div>
                                 <button type="button" wire:click="removeTenant({{ $tenant['id'] }})"
@@ -133,7 +124,6 @@
                     @endif
 
                     @error('selectedTenants') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
-                    @error('primaryTenantId') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
                 </div>
 
                 <!-- Tenant Search -->
@@ -347,8 +337,7 @@
                         </svg>
                         <div
                             class="absolute z-10 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 bottom-full left-0">
-                            Check this to include all other occupants in the property on the notice, not just the
-                            primary tenant.
+                            Check this to include all other occupants in the property on the notice.
                         </div>
                     </span>
                 </label>

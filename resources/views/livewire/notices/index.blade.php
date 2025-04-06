@@ -59,11 +59,8 @@
                         <td class="px-6 py-4 text-sm text-gray-500">
                             <div class="flex flex-col">
                                 @foreach($notice->tenants as $tenant)
-                                <div class="mb-1 {{ $tenant->pivot->is_primary ? 'font-medium' : '' }}">
+                                <div class="mb-1">
                                     {{ $tenant->full_name }}
-                                    @if($tenant->pivot->is_primary)
-                                    <span class="text-xs text-indigo-600">(Primary)</span>
-                                    @endif
                                 </div>
                                 @endforeach
                             </div>

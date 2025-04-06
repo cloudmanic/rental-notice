@@ -34,7 +34,6 @@ class Create extends Component
 
     // Array to store the selected tenants
     public $selectedTenants = [];
-    public $primaryTenantId = null;
 
     // Track visible other charges
     public $visibleCharges = 0;
@@ -136,7 +135,6 @@ class Create extends Component
         // Restore selected tenants if available
         if (session()->has('selected_tenants')) {
             $this->selectedTenants = session('selected_tenants');
-            $this->primaryTenantId = session('primary_tenant_id');
         }
 
         // Check for flash messages from the previous request
@@ -247,7 +245,6 @@ class Create extends Component
             ],
             'notice.agent_id' => 'required|exists:agents,id',
             'selectedTenants' => 'required|array|min:1',
-            'primaryTenantId' => 'required|integer|exists:tenants,id',
             'notice.past_due_rent' => 'required|numeric|min:0|max:99999.99',
             'notice.late_charges' => 'required|numeric|min:0|max:99999.99',
             'notice.other_1_title' => 'nullable|string|max:255',
@@ -265,7 +262,6 @@ class Create extends Component
         ], [
             'selectedTenants.required' => 'Please select at least one tenant.',
             'selectedTenants.min' => 'Please select at least one tenant.',
-            'primaryTenantId.required' => 'Please designate a primary tenant.',
         ]);
 
         // Get the notice type for pricing
@@ -297,8 +293,7 @@ class Create extends Component
 
         // Attach tenants to the notice
         foreach ($this->selectedTenants as $tenant) {
-            $isPrimary = ($tenant['id'] == $this->primaryTenantId);
-            $notice->tenants()->attach($tenant['id'], ['is_primary' => $isPrimary]);
+            $notice->tenants()->attach($tenant['id']);
         }
 
         return redirect()->route('notices.index');
@@ -464,11 +459,6 @@ class Create extends Component
             'name' => $tenant->full_name
         ];
 
-        // If this is the first tenant, make them the primary tenant
-        if (count($this->selectedTenants) === 1) {
-            $this->primaryTenantId = $tenant->id;
-        }
-
         // Track all the form data to preserve it after redirect
         $currentFormData = $this->notice;
 
@@ -498,7 +488,6 @@ class Create extends Component
 
         // Store selected tenants in session
         session()->flash('selected_tenants', $this->selectedTenants);
-        session()->flash('primary_tenant_id', $this->primaryTenantId);
 
         $this->showTenantModal = false;
 
@@ -519,7 +508,7 @@ class Create extends Component
         return redirect()->route('notices.create');
     }
 
-    // New methods for handling multiple tenants
+    // Methods for handling multiple tenants
     public function addTenant($id)
     {
         $tenant = Tenant::find($id);
@@ -533,11 +522,6 @@ class Create extends Component
                 'id' => $tenant->id,
                 'name' => $tenant->full_name,
             ];
-
-            // If this is the first tenant, make them the primary tenant
-            if (count($this->selectedTenants) === 1) {
-                $this->primaryTenantId = $tenant->id;
-            }
         }
 
         // Clear the search field after selection
@@ -552,19 +536,5 @@ class Create extends Component
 
         // Re-index the array
         $this->selectedTenants = array_values($this->selectedTenants);
-
-        // If the primary tenant was removed, make the first tenant the primary (if any)
-        if ($this->primaryTenantId == $id && count($this->selectedTenants) > 0) {
-            $this->primaryTenantId = $this->selectedTenants[0]['id'];
-        } elseif (count($this->selectedTenants) === 0) {
-            $this->primaryTenantId = null;
-        }
-    }
-
-    public function setPrimaryTenant($id)
-    {
-        if (in_array($id, array_column($this->selectedTenants, 'id'))) {
-            $this->primaryTenantId = $id;
-        }
     }
 }
