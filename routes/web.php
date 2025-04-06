@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
 
     // Notice Routes
     Route::get('notices', NoticesIndex::class)->name('notices.index');
+    Route::get('notices/create', TenantsCreate::class)->name('notices.create');
 
     // Tenant Routes
     Route::get('tenants', TenantsIndex::class)->name('tenants.index');
