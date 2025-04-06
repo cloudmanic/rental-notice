@@ -159,6 +159,7 @@ class DatabaseSeeder extends Seeder
         // Seed agents for the accounts
         $this->call([
             AgentSeeder::class,
+            ActivitySeeder::class, // Add the ActivitySeeder
         ]);
     }
 }
