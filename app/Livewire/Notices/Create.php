@@ -194,7 +194,7 @@ class Create extends Component
         $this->searchTenant = Tenant::find($id)->full_name;
         $this->selectedTenantId = $id;
     }
-    
+
     public function clearTenant()
     {
         $this->notice['tenant_id'] = '';

@@ -31,7 +31,7 @@
                     </span>
                 </label>
                 <select id="notice_type_id" wire:model="notice.notice_type_id"
-                    class="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    class="block w-full h-[38px] rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     <option value="">Select a notice type</option>
                     @foreach($noticeTypes as $noticeType)
                     <option value="{{ $noticeType->id }}">{{ $noticeType->name }} -
@@ -60,7 +60,7 @@
                 </label>
                 <div class="flex items-center space-x-2">
                     <select id="agent_id" wire:model.live="notice.agent_id"
-                        class="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        class="block w-full h-[38px] rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         @if(count($agents)===1) wire:init="$set('notice.agent_id', {{ $agents->first()->id }})" @endif>
                         <option value="">Select an agent</option>
                         @foreach($agents as $agent)
@@ -105,8 +105,7 @@
                                     clip-rule="evenodd" />
                             </svg>
                         </div>
-                        <input type="text" id="tenant_search" 
-                            wire:model.live="searchTenant"
+                        <input type="text" id="tenant_search" wire:model.live="searchTenant"
                             placeholder="Search for tenant by name or email..."
                             class="block w-full rounded-md border-0 py-1.5 pl-10 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             {{ $selectedTenantId ? 'readonly' : '' }}>
@@ -218,8 +217,7 @@
                             </div>
                         </span>
                     </label>
-                    @if($visibleCharges < 5)
-                        <button type="button" wire:click="addCharge"
+                    @if($visibleCharges < 5) <button type="button" wire:click="addCharge"
                         class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
@@ -231,8 +229,8 @@
                 </div>
 
                 <!-- Dynamically show charge inputs based on visibleCharges property -->
-                @for ($i = 1; $i <= $visibleCharges; $i++)
-                    <div class="mb-3 grid grid-cols-1 md:grid-cols-10 gap-4 bg-gray-50 p-3 rounded-md relative">
+                @for ($i = 1; $i <= $visibleCharges; $i++) <div
+                    class="mb-3 grid grid-cols-1 md:grid-cols-10 gap-4 bg-gray-50 p-3 rounded-md relative">
                     <div class="md:col-span-7">
                         <label for="other_{{ $i }}_title" class="block text-sm font-medium text-gray-700 mb-1">
                             Charge #{{ $i }} Title
@@ -240,7 +238,8 @@
                         <input type="text" id="other_{{ $i }}_title" wire:model="notice.other_{{ $i }}_title"
                             class="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             placeholder="e.g., Utility Payment">
-                        @error("notice.other_{{ $i }}_title") <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                        @error("notice.other_{{ $i }}_title") <div class="mt-1 text-sm text-red-600">{{ $message }}
+                        </div>
                         @enderror
                     </div>
                     <div class="md:col-span-2">
@@ -255,7 +254,8 @@
                                 wire:model="notice.other_{{ $i }}_price"
                                 class="block w-full rounded-md border-0 py-1.5 pl-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
-                        @error("notice.other_{{ $i }}_price") <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                        @error("notice.other_{{ $i }}_price") <div class="mt-1 text-sm text-red-600">{{ $message }}
+                        </div>
                         @enderror
                     </div>
                     <div class="md:col-span-1 flex items-end justify-center pb-1">
@@ -451,7 +451,7 @@
                     <div>
                         <label for="agent-state" class="block text-sm font-medium text-gray-700">State</label>
                         <select id="agent-state" wire:model="agent.state"
-                            class="mt-1 block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            class="mt-1 block w-full h-[38px] rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                             @foreach($states as $abbr => $name)
                             <option value="{{ $abbr }}">{{ $name }}</option>
                             @endforeach
