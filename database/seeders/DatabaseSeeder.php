@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Account;
 use App\Models\Tenant;
-use App\Models\Notice;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -101,27 +100,6 @@ class DatabaseSeeder extends Seeder
                 'account_id' => $firstAccount->id,
             ]);
 
-        // Create notices for first account
-        Notice::factory()
-            ->count(5)
-            ->create([
-                'account_id' => $firstAccount->id,
-                'user_id' => $firstOwner->id,
-                'notice_type_id' => 1,
-                'agent_name' => $firstOwner->full_name,
-                'agent_email' => $firstOwner->email,
-            ]);
-
-        Notice::factory()
-            ->count(5)
-            ->create([
-                'account_id' => $firstAccount->id,
-                'user_id' => $firstOwner->id,
-                'notice_type_id' => 2,
-                'agent_name' => $firstOwner->full_name,
-                'agent_email' => $firstOwner->email,
-            ]);
-
         // Create some tenants and notices for second account too
         Tenant::factory()
             ->count(5)
@@ -129,31 +107,11 @@ class DatabaseSeeder extends Seeder
                 'account_id' => $secondAccount->id,
             ]);
 
-        Notice::factory()
-            ->count(3)
-            ->create([
-                'account_id' => $secondAccount->id,
-                'user_id' => $secondOwner->id,
-                'notice_type_id' => 1,
-                'agent_name' => $secondOwner->full_name,
-                'agent_email' => $secondOwner->email,
-            ]);
-
         // Create some tenants and notices for third account
         Tenant::factory()
             ->count(7)
             ->create([
                 'account_id' => $thirdAccount->id,
-            ]);
-
-        Notice::factory()
-            ->count(4)
-            ->create([
-                'account_id' => $thirdAccount->id,
-                'user_id' => $thirdOwner->id,
-                'notice_type_id' => 3,
-                'agent_name' => $thirdOwner->full_name,
-                'agent_email' => $thirdOwner->email,
             ]);
 
         // Seed agents for the accounts

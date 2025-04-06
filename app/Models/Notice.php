@@ -22,6 +22,7 @@ class Notice extends Model
         'account_id',
         'user_id',
         'notice_type_id',
+        'agent_id',
         'price',
         'past_due_rent',
         'late_charges',
@@ -35,14 +36,6 @@ class Notice extends Model
         'other_4_price',
         'other_5_title',
         'other_5_price',
-        'agent_name',
-        'agent_address_1',
-        'agent_address_2',
-        'agent_city',
-        'agent_state',
-        'agent_zip',
-        'agent_phone',
-        'agent_email',
         'payment_other_means',
         'include_all_other_occupents',
         'status',
@@ -104,6 +97,7 @@ class Notice extends Model
         return [
             'account_id' => ['required', 'exists:accounts,id'],
             'user_id' => ['required', 'exists:users,id'],
+            'agent_id' => ['required', 'exists:agents,id'],
             'notice_type_id' => ['required', 'exists:notice_types,id'],
             'price' => ['required', 'numeric', 'min:0', 'max:99999.99'],
             'past_due_rent' => ['required', 'numeric', 'min:0', 'max:99999.99'],
@@ -120,16 +114,6 @@ class Notice extends Model
             'other_4_price' => ['nullable', 'numeric', 'min:0', 'max:99999.99'],
             'other_5_title' => ['nullable', 'string', 'max:255'],
             'other_5_price' => ['nullable', 'numeric', 'min:0', 'max:99999.99'],
-
-            // Agent information validation
-            'agent_name' => ['required', 'string', 'max:255'],
-            'agent_address_1' => ['required', 'string', 'max:255'],
-            'agent_address_2' => ['nullable', 'string', 'max:255'],
-            'agent_city' => ['required', 'string', 'max:255'],
-            'agent_state' => ['required', 'string', 'size:2'],
-            'agent_zip' => ['required', 'string', 'max:10', 'regex:/^\d{5}(-\d{4})?$/'],
-            'agent_phone' => ['required', 'string', 'max:20'],
-            'agent_email' => ['required', 'email', 'max:255'],
 
             // Flags validation
             'payment_other_means' => ['boolean'],
