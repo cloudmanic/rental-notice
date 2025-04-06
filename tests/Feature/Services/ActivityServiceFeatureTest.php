@@ -10,7 +10,9 @@ use App\Models\NoticeType;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Services\ActivityService;
+use App\Livewire\Notices\Create;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -150,6 +152,47 @@ class ActivityServiceFeatureTest extends TestCase
         $response = $this->get(route('dashboard'));
         $this->assertStringNotContainsString('{name}', $response->getContent());
         $this->assertStringContainsString('Agent Smith was added as a new agent.', $response->getContent());
+    }
+
+    #[Test]
+    public function it_logs_agent_creation_during_notice_creation()
+    {
+        // Test the agent creation functionality within the notice creation process
+        $agentData = [
+            'name' => 'New Test Agent',
+            'email' => 'testnoticeagent@example.com',
+            'phone' => '555-123-4567',
+            'address_1' => '123 Main St',
+            'address_2' => 'Apt 4B',
+            'city' => 'Portland',
+            'state' => 'OR',
+            'zip' => '97205'
+        ];
+
+        // Test the Livewire component's agent creation method
+        Livewire::test(Create::class)
+            ->set('agent.name', $agentData['name'])
+            ->set('agent.email', $agentData['email'])
+            ->set('agent.phone', $agentData['phone'])
+            ->set('agent.address_1', $agentData['address_1'])
+            ->set('agent.address_2', $agentData['address_2'])
+            ->set('agent.city', $agentData['city'])
+            ->set('agent.state', $agentData['state'])
+            ->set('agent.zip', $agentData['zip'])
+            ->call('createAgent');
+
+        // Check that the agent was created
+        $agent = Agent::where('name', $agentData['name'])->first();
+        $this->assertNotNull($agent);
+        
+        // Check that the activity log was created with the expected format
+        $this->assertDatabaseHas('activities', [
+            'account_id' => $this->account->id,
+            'user_id' => $this->user->id,
+            'agent_id' => $agent->id,
+            'description' => '{name} was added as a new agent.',
+            'event' => 'Agent'
+        ]);
     }
 
     #[Test]

@@ -10,6 +10,7 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Services\ActivityService;
 
 class Create extends Component
 {
@@ -355,6 +356,9 @@ class Create extends Component
         $agent->state = $validatedData['agent']['state'];
         $agent->zip = $validatedData['agent']['zip'];
         $agent->save();
+
+        // Log the agent creation activity during notice creation
+        ActivityService::log("{name} was added as a new agent.", null, null, $agent->id, 'Agent');
 
         // Track all the form data to preserve it after redirect
         $currentFormData = $this->notice;
