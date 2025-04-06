@@ -19,7 +19,7 @@ class Edit extends Component
     public $visibleCharges = 0;
 
     // Tenant search results
-    public $tenants = [];
+    public $tenants;
 
     // Auth check and tenant selection
     #[Layout('layouts.app')]
@@ -37,6 +37,9 @@ class Edit extends Component
         }
 
         $this->notice = $notice;
+        
+        // Initialize tenants as an empty collection
+        $this->tenants = collect();
 
         // Load existing tenants
         foreach ($notice->tenants as $tenant) {
