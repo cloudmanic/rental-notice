@@ -225,6 +225,7 @@ class Create extends Component
     public function createNotice()
     {
         $user = Auth::user();
+        $accountId = Auth::user()->account->id;
         $accountPlanDate = $user->account->notice_type_plan_date;
 
         // Get allowed notice type IDs based on plan date
@@ -265,7 +266,7 @@ class Create extends Component
 
         // Create the notice
         $notice = new Notice();
-        $notice->account_id = $user->account_id;
+        $notice->account_id = $accountId;
         $notice->user_id = $user->id;
         $notice->notice_type_id = $validatedData['notice']['notice_type_id'];
         $notice->agent_id = $validatedData['notice']['agent_id'];
@@ -337,7 +338,7 @@ class Create extends Component
         ]);
 
         $agent = new Agent();
-        $agent->account_id = Auth::user()->account->id;
+        $agent->account_id = $accountId;
         $agent->name = $validatedData['agent']['name'];
         $agent->email = $validatedData['agent']['email'];
         $agent->phone = $validatedData['agent']['phone'];
@@ -433,7 +434,7 @@ class Create extends Component
         ]);
 
         $tenant = new Tenant();
-        $tenant->account_id = Auth::user()->account->id;
+        $tenant->account_id = $accountId;
         $tenant->first_name = $validatedData['tenant']['first_name'];
         $tenant->last_name = $validatedData['tenant']['last_name'];
         $tenant->email = $validatedData['tenant']['email'];
