@@ -1,5 +1,12 @@
 # About Rental Notice
 
+Rental notice is the general app for all things rental notices to tenants. The app changes form based on what domain we come into that app with. At launch we are just focusing on past due rental notices. We are only focusing on one state at a time. So the domain name will be specific to the state and the type of rental notice we're offering. We want each user experience to be very specific to a very niche need. However, we're using this generic codebase to support all these different niche verticals. Hence the name Rental Notice.
+
+## Domains
+
+-   oregonpastduerent.com : Main url for past due rental notices in the state of oregon.
+-   oregonpastduerent.net : Uses for cold email outreach. Should just redirect to oregonpastduerent.com.
+
 ## Setting Up The Database For Local Development
 
 The commands below will create the sqlite database, and seed it with test data.

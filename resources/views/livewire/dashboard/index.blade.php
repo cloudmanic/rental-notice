@@ -25,23 +25,23 @@
                             </div>
                             <p class="mt-1 text-sm text-gray-500 truncate">
                                 @php
-                                    $description = $activity->description;
-                                    // Replace {name} placeholder for different entity types
-                                    if (strpos($description, '{name}') !== false) {
-                                        if ($activity->type === 'Agent' && $activity->agent_id && $activity->agent) {
-                                            // For agents
-                                            $description = str_replace('{name}', $activity->agent->name, $description);
-                                        } elseif ($activity->type === 'Tenant' && $activity->tenant_id && $activity->tenant) {
-                                            // For tenants
-                                            $description = str_replace('{name}', $activity->tenant->full_name, $description);
-                                        } elseif ($activity->type === 'Notice' && $activity->notice_id && $activity->notice) {
-                                            // For notices (if needed)
-                                            $description = str_replace('{name}', "Notice #{$activity->notice->id}", $description);
-                                        } else {
-                                            // If the record is gone or not handled, just remove the placeholder
-                                            $description = str_replace('{name}', '', $description);
-                                        }
-                                    }
+                                $description = $activity->description;
+                                // Replace {name} placeholder for different entity types
+                                if (strpos($description, '{name}') !== false) {
+                                if ($activity->type === 'Agent' && $activity->agent_id && $activity->agent) {
+                                // For agents
+                                $description = str_replace('{name}', $activity->agent->name, $description);
+                                } elseif ($activity->type === 'Tenant' && $activity->tenant_id && $activity->tenant) {
+                                // For tenants
+                                $description = str_replace('{name}', $activity->tenant->full_name, $description);
+                                } elseif ($activity->type === 'Notice' && $activity->notice_id && $activity->notice) {
+                                // For notices (if needed)
+                                $description = str_replace('{name}', "Notice #{$activity->notice->id}", $description);
+                                } else {
+                                // If the record is gone or not handled, just remove the placeholder
+                                $description = str_replace('{name}', '', $description);
+                                }
+                                }
                                 @endphp
                                 {{ $description }}
                             </p>
@@ -69,7 +69,7 @@
                         d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
                 </svg>
 
-                <h3 class="mt-4 text-lg font-bold text-gray-900">Get Started with Your First Late Rent Notice</h3>
+                <h3 class="mt-4 text-lg font-bold text-gray-900">Get Started with Your First Past Due Rent Notice</h3>
 
                 <div class="mt-6">
                     <a href="{{ route('notices.create') }}"
@@ -78,7 +78,7 @@
                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
-                        Create My First Late Rent Notice
+                        Create My First Past Due Rent Notice
                     </a>
                 </div>
 

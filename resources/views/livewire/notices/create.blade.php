@@ -1,6 +1,6 @@
 <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-semibold text-gray-900">Create Late Rent Notice</h1>
+        <h1 class="text-2xl font-semibold text-gray-900">Create Past Due Rent Notice</h1>
     </div>
 
     <!-- Flash Messages -->
@@ -25,7 +25,7 @@
                         </svg>
                         <div
                             class="absolute z-10 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 bottom-full left-0">
-                            Select the type of late rent notice required for your state. Each notice type is
+                            Select the type of Past Due Rent Notice required for your state. Each notice type is
                             court-tested to ensure compliance with local regulations.
                         </div>
                     </span>

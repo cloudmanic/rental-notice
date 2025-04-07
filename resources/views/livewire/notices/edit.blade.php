@@ -24,7 +24,7 @@
                         </svg>
                         <div
                             class="absolute z-10 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 bottom-full left-0">
-                            Select the type of late rent notice required for your state. Each notice type is
+                            Select the type of Past Due Rent Notice required for your state. Each notice type is
                             court-tested to ensure compliance with local regulations.
                         </div>
                     </span>

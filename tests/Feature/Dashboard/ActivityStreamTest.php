@@ -122,8 +122,8 @@ class ActivityStreamTest extends TestCase
 
         // Assert the page contains our call-to-action elements
         $response->assertStatus(200);
-        $response->assertSee('Get Started with Your First Late Rent Notice', false);
-        $response->assertSee('Create My First Late Rent Notice', false);
+        $response->assertSee('Get Started with Your First Past Due Rent Notice', false);
+        $response->assertSee('Create My First Past Due Rent Notice', false);
     }
 
     #[Test]
