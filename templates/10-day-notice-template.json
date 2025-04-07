@@ -1,0 +1,428 @@
+{
+	"header": {
+		"source": "10-day-notice-template.pdf",
+		"version": "pdfcpu v0.9.1 dev",
+		"creation": "2025-04-06 20:39:08 PDT",
+		"author": "Tenant Technologies, LLC",
+		"creator": "Tenant Technologies, LLC",
+		"producer": "macOS Version 15.3.2 (Build 24D2082) Quartz PDFContext"
+	},
+	"forms": [
+		{
+			"textfield": [
+				{
+					"pages": [
+						1
+					],
+					"id": "175",
+					"name": "otherCharge1",
+					"value": "Pet fee: $25.00",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "176",
+					"name": "otherCharge2",
+					"value": "Parking fee: $30.00",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "178",
+					"name": "otherCharge4",
+					"value": "Utility fee: $45.00",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "162",
+					"name": "streetAddress",
+					"value": "123 Main Street",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "163",
+					"name": "city",
+					"value": "Portland",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "171",
+					"name": "other3",
+					"value": "NSF fee: $35.00",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "194",
+					"name": "rentAmountDue",
+					"value": "$1,250.00",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "157",
+					"name": "tenant2",
+					"value": "Jane Smith",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "160",
+					"name": "tenant5",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "164",
+					"name": "state",
+					"value": "OR",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "170",
+					"name": "other2",
+					"value": "Maintenance fee: $75.00",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "174",
+					"name": "lateCharges",
+					"value": "$75.00",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "38",
+					"name": "tenant4",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "161",
+					"name": "unitNumber",
+					"value": "Apt 4B",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "39",
+					"name": "other5",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "180",
+					"name": "totalOutstandingAmount",
+					"value": "$1,535.00",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "181",
+					"name": "agentAddress1",
+					"value": "456 Property Lane, Suite 200",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "183",
+					"name": "agentPhone",
+					"value": "(503) 555-1234",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "45",
+					"name": "postedServiceDate",
+					"value": "April 10, 2023",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "159",
+					"name": "tenant6",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "165",
+					"name": "zip",
+					"value": "97201",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "179",
+					"name": "otherCharge5",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "158",
+					"name": "tenant3",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "42",
+					"name": "otherCharge3",
+					"value": "HOA fee: $25.00",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "44",
+					"name": "personalServiceDate",
+					"value": "April 8, 2023",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "40",
+					"name": "other1",
+					"value": "Legal fee: $100.00",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "192",
+					"name": "firstClassServiceDate",
+					"value": "April 7, 2023",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "153",
+					"name": "date",
+					"value": "April 5, 2023",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "154",
+					"name": "propertyName",
+					"value": "Riverdale Apartments",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "155",
+					"name": "tenant1",
+					"value": "John Doe",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "182",
+					"name": "agentAddress2",
+					"value": "Portland, OR 97204",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "193",
+					"name": "addendumServiceDate",
+					"value": "April 6, 2023",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "43",
+					"name": "agentEmail",
+					"value": "manager@riverdale-apts.com",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "172",
+					"name": "other4",
+					"value": "Key replacement: $50.00",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "41",
+					"name": "pastDueRent",
+					"value": "$1,250.00",
+					"multiline": false,
+					"locked": false
+				}
+			],
+			"checkbox": [
+				{
+					"pages": [
+						1
+					],
+					"id": "189",
+					"name": "checkBoxFirstClass",
+					"default": false,
+					"value": true,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "184",
+					"name": "checkBoxOtherFormPayment",
+					"default": false,
+					"value": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "186",
+					"name": "checkBoxPersonalDelivery",
+					"default": false,
+					"value": true,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "187",
+					"name": "checkBoxPosted",
+					"default": false,
+					"value": true,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "190",
+					"name": "checkBoxSection8",
+					"default": false,
+					"value": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "188",
+					"name": "checkBoxAddendum",
+					"default": false,
+					"value": true,
+					"locked": false
+				}
+			]
+		}
+	]
+}
