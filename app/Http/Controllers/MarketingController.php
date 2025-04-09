@@ -114,6 +114,14 @@ class MarketingController extends Controller
     }
 
     /**
+     * Display the refund policy page
+     */
+    public function refundPolicy()
+    {
+        return view('marketing.refund-policy');
+    }
+
+    /**
      * Subscribe to the newsletter
      */
     public function subscribeToNewsletter(Request $request)

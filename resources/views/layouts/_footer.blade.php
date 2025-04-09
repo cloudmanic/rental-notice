@@ -4,5 +4,11 @@
         Rental Notice is a product of <a href="https://cloudmanic.com/" target="_blank" rel="noopener"
             class="text-indigo-600 hover:text-indigo-500">Cloudmanic Labs, LLC</a>. Copyright © {{ date('Y') }}.
         All rights reserved.
+        <span class="mx-2">•</span>
+        <a href="{{ route('marketing.privacy-policy') }}" class="text-indigo-600 hover:text-indigo-500">Privacy Policy</a>
+        <span class="mx-2">•</span>
+        <a href="{{ route('marketing.terms') }}" class="text-indigo-600 hover:text-indigo-500">Terms</a>
+        <span class="mx-2">•</span>
+        <a href="{{ route('marketing.refund-policy') }}" class="text-indigo-600 hover:text-indigo-500">Refund Policy</a>
     </div>
 </footer>

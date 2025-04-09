@@ -214,6 +214,11 @@
                                         Terms of Service
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{{ route('marketing.refund-policy') }}" class="text-base text-gray-300 hover:text-white">
+                                        Refund Policy
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                         <div class="mt-12 md:mt-0">

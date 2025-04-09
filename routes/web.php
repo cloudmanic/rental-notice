@@ -36,6 +36,7 @@ Route::get('/about', [MarketingController::class, 'about'])->name('marketing.abo
 Route::get('/testimonials', [MarketingController::class, 'testimonials'])->name('marketing.testimonials');
 Route::get('/privacy-policy', [MarketingController::class, 'privacyPolicy'])->name('marketing.privacy-policy');
 Route::get('/terms', [MarketingController::class, 'terms'])->name('marketing.terms');
+Route::get('/refund-policy', [MarketingController::class, 'refundPolicy'])->name('marketing.refund-policy');
 Route::post('/newsletter/subscribe', [MarketingController::class, 'subscribeToNewsletter'])->name('marketing.newsletter.subscribe');
 
 // Guest routes (not logged in)
