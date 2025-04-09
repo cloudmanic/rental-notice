@@ -1,7 +1,8 @@
 @extends('layouts.marketing')
 
 @section('title', 'Pricing - Oregon Past Due Rent')
-@section('description', 'Simple, transparent pricing for Oregon Past Due Rent notices. Just $15 per notice with no subscriptions or hidden fees.')
+@section('description', 'Simple, transparent pricing for Oregon Past Due Rent notices. Just $15 per notice with no
+subscriptions or hidden fees.')
 
 @section('content')
 <!-- Hero Section -->
@@ -25,14 +26,17 @@
                     Pay only for what you need, when you need it
                 </h2>
                 <p class="mt-4 text-lg text-gray-500">
-                    We believe in fair, straightforward pricing. No monthly subscriptions that make you pay even when you don't use the service.
+                    We believe in fair, straightforward pricing. No monthly subscriptions that make you pay even when
+                    you don't use the service.
                 </p>
-                <div class="mt-6">
+                <div class="mt-6 space-y-6">
                     <div class="flex">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
                                 </svg>
                             </div>
                         </div>
@@ -44,11 +48,13 @@
                         </div>
                     </div>
 
-                    <div class="mt-6 flex">
+                    <div class="flex">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
                                 </svg>
                             </div>
                         </div>
@@ -60,11 +66,13 @@
                         </div>
                     </div>
 
-                    <div class="mt-6 flex">
+                    <div class="flex">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
                                 </svg>
                             </div>
                         </div>
@@ -82,7 +90,8 @@
                 <div class="rounded-lg bg-gray-50 shadow-lg overflow-hidden">
                     <div class="px-6 py-8 sm:p-10 sm:pb-6">
                         <div>
-                            <h3 class="inline-flex px-4 py-1 rounded-full text-sm font-semibold tracking-wide uppercase bg-indigo-100 text-indigo-600">
+                            <h3
+                                class="inline-flex px-4 py-1 rounded-full text-sm font-semibold tracking-wide uppercase bg-indigo-100 text-indigo-600">
                                 Standard Notice
                             </h3>
                         </div>
@@ -98,8 +107,10 @@
                         <ul role="list" class="space-y-4">
                             <li class="flex items-start">
                                 <div class="flex-shrink-0">
-                                    <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
                                     </svg>
                                 </div>
                                 <p class="ml-3 text-base text-gray-700">
@@ -108,8 +119,10 @@
                             </li>
                             <li class="flex items-start">
                                 <div class="flex-shrink-0">
-                                    <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
                                     </svg>
                                 </div>
                                 <p class="ml-3 text-base text-gray-700">
@@ -118,8 +131,10 @@
                             </li>
                             <li class="flex items-start">
                                 <div class="flex-shrink-0">
-                                    <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
                                     </svg>
                                 </div>
                                 <p class="ml-3 text-base text-gray-700">
@@ -128,8 +143,10 @@
                             </li>
                             <li class="flex items-start">
                                 <div class="flex-shrink-0">
-                                    <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
                                     </svg>
                                 </div>
                                 <p class="ml-3 text-base text-gray-700">
@@ -138,8 +155,10 @@
                             </li>
                             <li class="flex items-start">
                                 <div class="flex-shrink-0">
-                                    <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
                                     </svg>
                                 </div>
                                 <p class="ml-3 text-base text-gray-700">
@@ -148,7 +167,8 @@
                             </li>
                         </ul>
                         <div class="mt-8">
-                            <a href="{{ route('register') }}" class="block w-full bg-indigo-600 border border-transparent rounded-md py-3 px-5 text-center font-medium text-white hover:bg-indigo-700">
+                            <a href="{{ route('register') }}"
+                                class="block w-full bg-indigo-600 border border-transparent rounded-md py-3 px-5 text-center font-medium text-white hover:bg-indigo-700">
                                 Get started today
                             </a>
                         </div>
@@ -177,13 +197,17 @@
                     Bulk Notices
                 </h3>
                 <p class="mt-4 text-lg text-gray-500">
-                    Managing multiple properties? We offer volume discounts for property managers who send 10+ notices per month.
+                    Managing multiple properties? We offer volume discounts for property managers who send 10+ notices
+                    per month.
                 </p>
                 <ul role="list" class="mt-8 space-y-5 lg:space-y-0 lg:grid lg:grid-cols-1 lg:gap-x-8 lg:gap-y-5">
                     <li class="flex items-start">
                         <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
                             </svg>
                         </div>
                         <p class="ml-3 text-base text-gray-700">
@@ -192,8 +216,11 @@
                     </li>
                     <li class="flex items-start">
                         <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
                             </svg>
                         </div>
                         <p class="ml-3 text-base text-gray-700">
@@ -202,8 +229,11 @@
                     </li>
                     <li class="flex items-start">
                         <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
                             </svg>
                         </div>
                         <p class="ml-3 text-base text-gray-700">
@@ -212,8 +242,11 @@
                     </li>
                     <li class="flex items-start">
                         <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
                             </svg>
                         </div>
                         <p class="ml-3 text-base text-gray-700">
@@ -231,7 +264,8 @@
                 </p>
                 <div class="mt-8">
                     <div class="rounded-md shadow">
-                        <a href="{{ route('marketing.contact') }}?subject=Bulk%20Pricing%20Inquiry" class="flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                        <a href="{{ route('marketing.contact') }}?subject=Bulk%20Pricing%20Inquiry"
+                            class="flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
                             Request Custom Quote
                         </a>
                     </div>
@@ -259,16 +293,20 @@
                 <div class="p-8 sm:p-10">
                     <div class="flex items-center">
                         <h3 class="text-2xl font-bold text-gray-900">DIY Approach</h3>
-                        <span class="ml-4 inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                        <span
+                            class="ml-4 inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-red-100 text-red-800">
                             High Risk
                         </span>
                     </div>
-                    <p class="mt-4 text-base text-gray-500">Handling notices yourself might seem less expensive initially, but consider these hidden costs:</p>
+                    <p class="mt-4 text-base text-gray-500">Handling notices yourself might seem less expensive
+                        initially, but consider these hidden costs:</p>
                     <ul role="list" class="mt-8 space-y-4">
                         <li class="flex items-start">
                             <div class="flex-shrink-0">
-                                <svg class="h-6 w-6 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                <svg class="h-6 w-6 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </div>
                             <p class="ml-3 text-base text-gray-700">
@@ -277,8 +315,10 @@
                         </li>
                         <li class="flex items-start">
                             <div class="flex-shrink-0">
-                                <svg class="h-6 w-6 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                <svg class="h-6 w-6 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </div>
                             <p class="ml-3 text-base text-gray-700">
@@ -287,8 +327,10 @@
                         </li>
                         <li class="flex items-start">
                             <div class="flex-shrink-0">
-                                <svg class="h-6 w-6 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                <svg class="h-6 w-6 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </div>
                             <p class="ml-3 text-base text-gray-700">
@@ -297,8 +339,10 @@
                         </li>
                         <li class="flex items-start">
                             <div class="flex-shrink-0">
-                                <svg class="h-6 w-6 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                <svg class="h-6 w-6 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </div>
                             <p class="ml-3 text-base text-gray-700">
@@ -312,16 +356,20 @@
                 <div class="p-8 sm:p-10 border-t border-gray-200 lg:border-t-0">
                     <div class="flex items-center">
                         <h3 class="text-2xl font-bold text-gray-900">Hiring a Lawyer</h3>
-                        <span class="ml-4 inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                        <span
+                            class="ml-4 inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
                             Expensive
                         </span>
                     </div>
-                    <p class="mt-4 text-base text-gray-500">Having an attorney handle your notices is secure but expensive:</p>
+                    <p class="mt-4 text-base text-gray-500">Having an attorney handle your notices is secure but
+                        expensive:</p>
                     <ul role="list" class="mt-8 space-y-4">
                         <li class="flex items-start">
                             <div class="flex-shrink-0">
-                                <svg class="h-6 w-6 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                <svg class="h-6 w-6 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                 </svg>
                             </div>
                             <p class="ml-3 text-base text-gray-700">
@@ -330,8 +378,10 @@
                         </li>
                         <li class="flex items-start">
                             <div class="flex-shrink-0">
-                                <svg class="h-6 w-6 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                <svg class="h-6 w-6 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                 </svg>
                             </div>
                             <p class="ml-3 text-base text-gray-700">
@@ -340,8 +390,10 @@
                         </li>
                         <li class="flex items-start">
                             <div class="flex-shrink-0">
-                                <svg class="h-6 w-6 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                <svg class="h-6 w-6 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                 </svg>
                             </div>
                             <p class="ml-3 text-base text-gray-700">
@@ -350,8 +402,10 @@
                         </li>
                         <li class="flex items-start">
                             <div class="flex-shrink-0">
-                                <svg class="h-6 w-6 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                <svg class="h-6 w-6 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                 </svg>
                             </div>
                             <p class="ml-3 text-base text-gray-700">
@@ -365,16 +419,20 @@
                 <div class="p-8 sm:p-10 border-t border-gray-200 lg:border-t-0 bg-green-50">
                     <div class="flex items-center">
                         <h3 class="text-2xl font-bold text-gray-900">Oregon Past Due Rent</h3>
-                        <span class="ml-4 inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                        <span
+                            class="ml-4 inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
                             Best Value
                         </span>
                     </div>
-                    <p class="mt-4 text-base text-gray-500">Our service provides all benefits at a fraction of the cost:</p>
+                    <p class="mt-4 text-base text-gray-500">Our service provides all benefits at a fraction of the cost:
+                    </p>
                     <ul role="list" class="mt-8 space-y-4">
                         <li class="flex items-start">
                             <div class="flex-shrink-0">
-                                <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
                                 </svg>
                             </div>
                             <p class="ml-3 text-base text-gray-700">
@@ -383,8 +441,10 @@
                         </li>
                         <li class="flex items-start">
                             <div class="flex-shrink-0">
-                                <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
                                 </svg>
                             </div>
                             <p class="ml-3 text-base text-gray-700">
@@ -393,8 +453,10 @@
                         </li>
                         <li class="flex items-start">
                             <div class="flex-shrink-0">
-                                <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
                                 </svg>
                             </div>
                             <p class="ml-3 text-base text-gray-700">
@@ -403,8 +465,10 @@
                         </li>
                         <li class="flex items-start">
                             <div class="flex-shrink-0">
-                                <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
                                 </svg>
                             </div>
                             <p class="ml-3 text-base text-gray-700">
@@ -413,7 +477,8 @@
                         </li>
                     </ul>
                     <div class="mt-8">
-                        <a href="{{ route('register') }}" class="block w-full bg-green-600 border border-transparent rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-green-700">
+                        <a href="{{ route('register') }}"
+                            class="block w-full bg-green-600 border border-transparent rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-green-700">
                             Get started now
                         </a>
                     </div>
@@ -433,49 +498,66 @@
             <dl class="mt-10 space-y-6 divide-y divide-gray-200">
                 <div class="pt-6">
                     <dt class="text-lg">
-                        <button class="text-left w-full flex justify-between items-start text-gray-900 focus:outline-none">
+                        <button type="button"
+                            class="text-left w-full flex justify-between items-start text-gray-900 focus:outline-none">
                             <span class="font-medium">Are there any additional fees beyond the $15 per notice?</span>
+                            <span class="ml-6 h-7 flex items-center">
+                                <svg class="h-6 w-6 transform rotate-0" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </span>
                         </button>
                     </dt>
                     <dd class="mt-2 pr-12">
                         <p class="text-base text-gray-500">
-                            No, the $15 fee covers everything you need - notice creation, delivery via all required methods, and standard proof of service. The only potential additional cost would be for optional notarized affidavits, which can be requested for a small additional fee.
+                            No, the $15 fee covers everything you need - notice creation, delivery via all required
+                            methods, and standard proof of service. The only potential additional cost would be for
+                            optional notarized affidavits, which can be requested for a small additional fee.
                         </p>
                     </dd>
                 </div>
                 <div class="pt-6">
                     <dt class="text-lg">
-                        <button class="text-left w-full flex justify-between items-start text-gray-900 focus:outline-none">
+                        <button
+                            class="text-left w-full flex justify-between items-start text-gray-900 focus:outline-none">
                             <span class="font-medium">Do I need to sign up for a subscription?</span>
                         </button>
                     </dt>
                     <dd class="mt-2 pr-12">
                         <p class="text-base text-gray-500">
-                            No, there's no subscription required. You only pay when you create and send a notice. Your account remains active for whenever you need it, with no monthly or annual fees.
+                            No, there's no subscription required. You only pay when you create and send a notice. Your
+                            account remains active for whenever you need it, with no monthly or annual fees.
                         </p>
                     </dd>
                 </div>
                 <div class="pt-6">
                     <dt class="text-lg">
-                        <button class="text-left w-full flex justify-between items-start text-gray-900 focus:outline-none">
+                        <button
+                            class="text-left w-full flex justify-between items-start text-gray-900 focus:outline-none">
                             <span class="font-medium">What payment methods do you accept?</span>
                         </button>
                     </dt>
                     <dd class="mt-2 pr-12">
                         <p class="text-base text-gray-500">
-                            We accept all major credit cards and debit cards. For property management companies with bulk notice needs, we can also arrange for invoicing.
+                            We accept all major credit cards and debit cards. For property management companies with
+                            bulk notice needs, we can also arrange for invoicing.
                         </p>
                     </dd>
                 </div>
                 <div class="pt-6">
                     <dt class="text-lg">
-                        <button class="text-left w-full flex justify-between items-start text-gray-900 focus:outline-none">
+                        <button
+                            class="text-left w-full flex justify-between items-start text-gray-900 focus:outline-none">
                             <span class="font-medium">How do I qualify for bulk pricing?</span>
                         </button>
                     </dt>
                     <dd class="mt-2 pr-12">
                         <p class="text-base text-gray-500">
-                            If you anticipate sending 10 or more notices per month, you may qualify for our bulk pricing program. Please contact us through the form on this page, and we'll provide a custom quote based on your specific needs and volume.
+                            If you anticipate sending 10 or more notices per month, you may qualify for our bulk pricing
+                            program. Please contact us through the form on this page, and we'll provide a custom quote
+                            based on your specific needs and volume.
                         </p>
                     </dd>
                 </div>
@@ -494,12 +576,14 @@
             </p>
             <div class="mt-8 flex justify-center">
                 <div class="inline-flex rounded-md shadow">
-                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                    <a href="{{ route('register') }}"
+                        class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
                         Create your free account
                     </a>
                 </div>
                 <div class="ml-3 inline-flex">
-                    <a href="{{ route('marketing.contact') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200">
+                    <a href="{{ route('marketing.contact') }}"
+                        class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200">
                         Contact us
                     </a>
                 </div>

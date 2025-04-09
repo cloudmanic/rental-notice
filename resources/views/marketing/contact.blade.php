@@ -22,8 +22,8 @@ with past-due rent notices, pricing, or legal requirements.')
     <div class="lg:absolute lg:inset-0">
         <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
             <img class="h-56 w-full object-cover lg:absolute lg:h-full"
-                src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80"
-                alt="Office building">
+                src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1773&q=80"
+                alt="Modern apartment building">
         </div>
     </div>
     <div class="relative py-16 px-4 sm:py-24 sm:px-6 lg:px-8 lg:max-w-7xl lg:mx-auto lg:py-32 lg:grid lg:grid-cols-2">
@@ -64,7 +64,7 @@ with past-due rent notices, pricing, or legal requirements.')
                         <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
                         <div class="mt-1">
                             <input type="text" name="name" id="name" autocomplete="name"
-                                class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+                                class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md py-3 px-4 bg-white border-2"
                                 value="{{ old('name') }}">
                             @error('name')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -76,7 +76,7 @@ with past-due rent notices, pricing, or legal requirements.')
                         <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                         <div class="mt-1">
                             <input id="email" name="email" type="email" autocomplete="email"
-                                class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+                                class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md py-3 px-4 bg-white border-2"
                                 value="{{ old('email') }}">
                             @error('email')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -88,7 +88,7 @@ with past-due rent notices, pricing, or legal requirements.')
                         <label for="subject" class="block text-sm font-medium text-gray-700">Subject</label>
                         <div class="mt-1">
                             <input type="text" name="subject" id="subject"
-                                class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+                                class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md py-3 px-4 bg-white border-2"
                                 value="{{ old('subject', request('subject')) }}">
                             @error('subject')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -105,7 +105,7 @@ with past-due rent notices, pricing, or legal requirements.')
                         </div>
                         <div class="mt-1">
                             <textarea id="message" name="message" rows="4"
-                                class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+                                class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md py-3 px-4 bg-white border-2"
                                 maxlength="500">{{ old('message') }}</textarea>
                             @error('message')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

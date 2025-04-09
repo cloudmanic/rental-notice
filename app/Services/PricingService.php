@@ -51,4 +51,71 @@ class PricingService
         $account->notice_type_plan_date = $this->getMostRecentPlanDate();
         $account->save();
     }
+
+    /**
+     * Get the standard price for a notice.
+     *
+     * @return float
+     */
+    public function getStandardPrice(): float
+    {
+        return 15.00;
+    }
+
+    /**
+     * Get the bulk pricing for notices based on quantity.
+     *
+     * @param int $quantity
+     * @return float|null
+     */
+    public function getBulkPrice(int $quantity): ?float
+    {
+        // Implement bulk pricing logic
+        if ($quantity >= 50) {
+            return 12.00;
+        } elseif ($quantity >= 20) {
+            return 13.00;
+        } elseif ($quantity >= 10) {
+            return 14.00;
+        }
+
+        return null; // Not eligible for bulk pricing
+    }
+
+    /**
+     * Get all bulk price tiers.
+     *
+     * @return array
+     */
+    public function getBulkPrices(): array
+    {
+        return [
+            [
+                'quantity' => 10,
+                'price' => 14.00,
+                'savings' => '6.7%'
+            ],
+            [
+                'quantity' => 20,
+                'price' => 13.00,
+                'savings' => '13.3%'
+            ],
+            [
+                'quantity' => 50,
+                'price' => 12.00,
+                'savings' => '20%'
+            ]
+        ];
+    }
+
+    /**
+     * Check if the given quantity is eligible for bulk pricing.
+     *
+     * @param int $quantity
+     * @return bool
+     */
+    public function isEligibleForBulkPricing(int $quantity): bool
+    {
+        return $quantity >= 10;
+    }
 }
