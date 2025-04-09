@@ -50,3 +50,9 @@ $pricingService->setAccountToMostRecentPlan($account);
 ```
 
 This ensures consistent pricing and simplifies the management of different pricing tiers over time.
+
+## Building Forms in PDFs
+
+-   `pdfcpu form export templates/ps3817-form.pdf templates/ps3817-form.json`
+-   Update the data in `templates/ps3817-form.json`
+-   `pdfcpu form fill templates/ps3817-form.pdf templates/ps3817-form.json out.pdf`
