@@ -12,15 +12,34 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\MarketingController;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+
+// Marketing Routes
+Route::get('/', [MarketingController::class, 'home'])->name('marketing.home');
+Route::get('/how-it-works', [MarketingController::class, 'howItWorks'])->name('marketing.how-it-works');
+Route::get('/pricing', [MarketingController::class, 'pricing'])->name('marketing.pricing');
+Route::get('/faq', [MarketingController::class, 'faq'])->name('marketing.faq');
+Route::get('/contact', [MarketingController::class, 'contact'])->name('marketing.contact');
+Route::post('/contact', [MarketingController::class, 'sendContactForm'])->name('marketing.contact.send');
+Route::get('/about', [MarketingController::class, 'about'])->name('marketing.about');
+Route::get('/testimonials', [MarketingController::class, 'testimonials'])->name('marketing.testimonials');
+Route::get('/privacy-policy', [MarketingController::class, 'privacyPolicy'])->name('marketing.privacy-policy');
+Route::get('/terms', [MarketingController::class, 'terms'])->name('marketing.terms');
+Route::post('/newsletter/subscribe', [MarketingController::class, 'subscribeToNewsletter'])->name('marketing.newsletter.subscribe');
 
 // Guest routes (not logged in)
 Route::middleware('guest')->group(function () {
-    // Index route - Coming Soon
-    Route::get('/', function () {
-        return view('welcome')->with('message', 'Coming Soon');
-    })->name('home');
-
     Route::controller(LoginController::class)->group(function () {
         Route::get('login', 'show')->name('login');
         Route::post('login', 'authenticate');
