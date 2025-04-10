@@ -238,7 +238,7 @@ with past-due rent notices, pricing, or legal requirements.')
                         How much does each notice cost?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        Each notice costs $15. This flat fee covers the entire process from notice creation to delivery
+                        Each notice costs ${{ $standardPrice }}. This flat fee covers the entire process from notice creation to delivery
                         and proof of service.
                     </dd>
                 </div>

@@ -379,7 +379,7 @@
     <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
         <h2 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
             <span class="block">Simple, transparent pricing</span>
-            <span class="block text-indigo-200">Just $15 per notice, with no subscription required</span>
+            <span class="block text-indigo-200">Just ${{ $standardPrice }} per notice, with no subscription required</span>
         </h2>
         <div class="mt-8 flex lg:mt-0 lg:flex-shrink-0">
             <div class="inline-flex rounded-md shadow">

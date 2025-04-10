@@ -1,7 +1,7 @@
 @extends('layouts.marketing')
 
 @section('title', 'Pricing - Oregon Past Due Rent')
-@section('description', 'Simple, transparent pricing for Oregon Past Due Rent notices. Just $15 per notice with no
+@section('description', 'Simple, transparent pricing for Oregon Past Due Rent notices. Just ${{ $standardPrice }} per notice with no
 subscriptions or hidden fees.')
 
 @section('content')
@@ -79,7 +79,7 @@ subscriptions or hidden fees.')
                         <div class="ml-4">
                             <h3 class="text-lg font-medium text-gray-900">No Hidden Costs</h3>
                             <p class="mt-1 text-base text-gray-500">
-                                Our $15 fee includes notice creation, delivery, and standard proof of service.
+                                Our ${{ $standardPrice }} fee includes notice creation, delivery, and standard proof of service.
                             </p>
                         </div>
                     </div>
@@ -96,7 +96,7 @@ subscriptions or hidden fees.')
                             </h3>
                         </div>
                         <div class="mt-4 flex items-baseline text-6xl font-extrabold">
-                            $15
+                            ${{ $standardPrice }}
                             <span class="ml-1 text-2xl font-medium text-gray-500">per notice</span>
                         </div>
                         <p class="mt-5 text-lg text-gray-500">
@@ -436,7 +436,7 @@ subscriptions or hidden fees.')
                                 </svg>
                             </div>
                             <p class="ml-3 text-base text-gray-700">
-                                <strong>Just $15</strong> per notice, all-inclusive
+                                <strong>Just ${{ $standardPrice }}</strong> per notice, all-inclusive
                             </p>
                         </li>
                         <li class="flex items-start">
@@ -500,7 +500,7 @@ subscriptions or hidden fees.')
                     <dt class="text-lg">
                         <button type="button"
                             class="text-left w-full flex justify-between items-start text-gray-900 focus:outline-none">
-                            <span class="font-medium">Are there any additional fees beyond the $15 per notice?</span>
+                            <span class="font-medium">Are there any additional fees beyond the ${{ $standardPrice }} per notice?</span>
                             <span class="ml-6 h-7 flex items-center">
                                 <svg class="h-6 w-6 transform rotate-0" xmlns="http://www.w3.org/2000/svg" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -512,7 +512,7 @@ subscriptions or hidden fees.')
                     </dt>
                     <dd class="mt-2 pr-12">
                         <p class="text-base text-gray-500">
-                            No, the $15 fee covers everything you need - notice creation, delivery via all required
+                            No, the ${{ $standardPrice }} fee covers everything you need - notice creation, delivery via all required
                             methods, and standard proof of service. The only potential additional cost would be for
                             optional notarized affidavits, which can be requested for a small additional fee.
                         </p>

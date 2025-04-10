@@ -199,7 +199,7 @@
                         How much does each notice cost?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        Each notice costs $15. This flat fee covers the entire process from notice creation to delivery and proof of service.
+                        Each notice costs ${{ $standardPrice }}. This flat fee covers the entire process from notice creation to delivery and proof of service.
                     </dd>
                 </div>
 
@@ -235,7 +235,7 @@
                         Are there any hidden fees?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        No, the $15 per notice fee is all-inclusive. The only potential additional cost would be for optional notarized affidavits, which can be requested for a small additional fee if needed for court proceedings.
+                        No, the ${{ $standardPrice }} per notice fee is all-inclusive. The only potential additional cost would be for optional notarized affidavits, which can be requested for a small additional fee if needed for court proceedings.
                     </dd>
                 </div>
 

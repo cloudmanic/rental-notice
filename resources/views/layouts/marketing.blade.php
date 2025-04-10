@@ -8,7 +8,7 @@
 
     <title>@yield('title', 'Oregon Past Due Rent - Landlord Notice Service')</title>
     <meta name="description"
-        content="@yield('description', 'Oregon Past Due Rent helps landlords issue legally compliant past-due rent notices with professional delivery for just $15 per notice.')">
+        content="@yield('description', 'Oregon Past Due Rent helps landlords issue legally compliant past-due rent notices with professional delivery for just ${{ $standardPrice }} per notice.')">
 
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">

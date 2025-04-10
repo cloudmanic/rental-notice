@@ -20,7 +20,13 @@ class MarketingController extends Controller
      */
     public function home()
     {
-        return view('marketing.home');
+        $standardPrice = $this->pricingService->getStandardPrice();
+        $bulkPrices = $this->pricingService->getBulkPrices();
+
+        return view('marketing.home', [
+            'standardPrice' => $standardPrice,
+            'bulkPrices' => $bulkPrices,
+        ]);
     }
 
     /**
@@ -28,7 +34,13 @@ class MarketingController extends Controller
      */
     public function howItWorks()
     {
-        return view('marketing.how-it-works');
+        $standardPrice = $this->pricingService->getStandardPrice();
+        $bulkPrices = $this->pricingService->getBulkPrices();
+
+        return view('marketing.how-it-works', [
+            'standardPrice' => $standardPrice,
+            'bulkPrices' => $bulkPrices,
+        ]);
     }
 
     /**
@@ -50,7 +62,13 @@ class MarketingController extends Controller
      */
     public function faq()
     {
-        return view('marketing.faq');
+        $standardPrice = $this->pricingService->getStandardPrice();
+        $bulkPrices = $this->pricingService->getBulkPrices();
+
+        return view('marketing.faq', [
+            'standardPrice' => $standardPrice,
+            'bulkPrices' => $bulkPrices,
+        ]);
     }
 
     /**
@@ -58,7 +76,13 @@ class MarketingController extends Controller
      */
     public function contact()
     {
-        return view('marketing.contact');
+        $standardPrice = $this->pricingService->getStandardPrice();
+        $bulkPrices = $this->pricingService->getBulkPrices();
+
+        return view('marketing.contact', [
+            'standardPrice' => $standardPrice,
+            'bulkPrices' => $bulkPrices,
+        ]);
     }
 
     /**
@@ -86,15 +110,13 @@ class MarketingController extends Controller
      */
     public function about()
     {
-        return view('marketing.about');
-    }
+        $standardPrice = $this->pricingService->getStandardPrice();
+        $bulkPrices = $this->pricingService->getBulkPrices();
 
-    /**
-     * Display the testimonials page
-     */
-    public function testimonials()
-    {
-        return view('marketing.testimonials');
+        return view('marketing.about', [
+            'standardPrice' => $standardPrice,
+            'bulkPrices' => $bulkPrices,
+        ]);
     }
 
     /**
@@ -102,7 +124,13 @@ class MarketingController extends Controller
      */
     public function privacyPolicy()
     {
-        return view('marketing.privacy-policy');
+        $standardPrice = $this->pricingService->getStandardPrice();
+        $bulkPrices = $this->pricingService->getBulkPrices();
+
+        return view('marketing.privacy-policy', [
+            'standardPrice' => $standardPrice,
+            'bulkPrices' => $bulkPrices,
+        ]);
     }
 
     /**
@@ -110,7 +138,13 @@ class MarketingController extends Controller
      */
     public function terms()
     {
-        return view('marketing.terms');
+        $standardPrice = $this->pricingService->getStandardPrice();
+        $bulkPrices = $this->pricingService->getBulkPrices();
+
+        return view('marketing.terms', [
+            'standardPrice' => $standardPrice,
+            'bulkPrices' => $bulkPrices,
+        ]);
     }
 
     /**
@@ -118,7 +152,13 @@ class MarketingController extends Controller
      */
     public function refundPolicy()
     {
-        return view('marketing.refund-policy');
+        $standardPrice = $this->pricingService->getStandardPrice();
+        $bulkPrices = $this->pricingService->getBulkPrices();
+
+        return view('marketing.refund-policy', [
+            'standardPrice' => $standardPrice,
+            'bulkPrices' => $bulkPrices,
+        ]);
     }
 
     /**

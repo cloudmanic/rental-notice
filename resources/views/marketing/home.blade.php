@@ -2,7 +2,7 @@
 
 @section('title', 'Oregon Past Due Rent - Landlord Notice Service')
 @section('description', 'Oregon Past Due Rent helps landlords issue legally compliant past-due rent notices with
-professional delivery for just $15 per notice.')
+professional delivery for just ${{ $standardPrice }} per notice.')
 
 @section('content')
 <!-- Hero Section -->
@@ -19,7 +19,7 @@ professional delivery for just $15 per notice.')
             Made Simple
         </h1>
         <p class="mt-6 text-xl text-indigo-100 max-w-3xl">
-            Issue legally compliant 10-day or 13-day nonpayment notices with professional delivery for just $15 per
+            Issue legally compliant 10-day or 13-day nonpayment notices with professional delivery for just ${{ $standardPrice }} per
             notice.
             Designed specifically for Oregon landlords and property managers.
         </p>
@@ -104,7 +104,7 @@ professional delivery for just $15 per notice.')
                             Affordable Flat Rate
                         </h3>
                         <p class="mt-2 text-base text-gray-500">
-                            Just $15 per notice with no subscription fees. Only pay when you need to send a notice.
+                            Just ${{ $standardPrice }} per notice with no subscription fees. Only pay when you need to send a notice.
                         </p>
                     </div>
                 </div>
@@ -481,7 +481,7 @@ professional delivery for just $15 per notice.')
     <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
         <h2 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
             <span class="block">Ready to get started?</span>
-            <span class="block text-indigo-200">Just $15 per notice with no subscription fees.</span>
+            <span class="block text-indigo-200">Just ${{ $standardPrice }} per notice with no subscription fees.</span>
         </h2>
         <div class="mt-8 flex lg:mt-0 lg:flex-shrink-0">
             <div class="inline-flex rounded-md shadow">
