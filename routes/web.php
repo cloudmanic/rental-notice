@@ -8,6 +8,7 @@ use App\Livewire\Tenants\Create as TenantsCreate;
 use App\Livewire\Tenants\Edit as TenantsEdit;
 use App\Livewire\Agents\Index as AgentsIndex;
 use App\Livewire\Profile\Edit as ProfileEdit;
+use App\Livewire\Account\Edit as AccountEdit;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -69,6 +70,9 @@ Route::middleware('auth')->group(function () {
 
     // Profile Route
     Route::get('/profile', ProfileEdit::class)->name('profile.edit');
+
+    // Account Route
+    Route::get('/account', AccountEdit::class)->name('account.edit');
 
     // Notice Routes
     Route::get('notices', NoticesIndex::class)->name('notices.index');
