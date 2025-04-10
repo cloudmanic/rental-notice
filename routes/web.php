@@ -7,6 +7,7 @@ use App\Livewire\Tenants\Index as TenantsIndex;
 use App\Livewire\Tenants\Create as TenantsCreate;
 use App\Livewire\Tenants\Edit as TenantsEdit;
 use App\Livewire\Agents\Index as AgentsIndex;
+use App\Livewire\Profile\Edit as ProfileEdit;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -65,6 +66,9 @@ Route::middleware('auth')->group(function () {
 
     // Dashboard Route
     Route::get('/dashboard', DashboardIndex::class)->name('dashboard');
+
+    // Profile Route
+    Route::get('/profile', ProfileEdit::class)->name('profile.edit');
 
     // Notice Routes
     Route::get('notices', NoticesIndex::class)->name('notices.index');
