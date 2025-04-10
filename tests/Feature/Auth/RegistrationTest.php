@@ -113,4 +113,36 @@ class RegistrationTest extends TestCase
         $response->assertSessionHasErrors(['email']);
         $this->assertDatabaseCount('users', 1); // Still just the one user
     }
+
+    /**
+     * Test that users are assigned the Admin type by default when registering.
+     */
+    #[Test]
+    public function test_new_users_are_assigned_admin_type_by_default(): void
+    {
+        $userData = [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'email' => 'john.doe@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'company_name' => 'Test Company',
+        ];
+
+        // Submit the registration form
+        $response = $this->post(route('register'), $userData);
+
+        // Assert the response redirects to dashboard
+        $response->assertRedirect(route('dashboard'));
+
+        // Assert that a user was created with the given email
+        $this->assertDatabaseHas('users', [
+            'email' => 'john.doe@example.com',
+            'type' => User::TYPE_ADMIN,
+        ]);
+
+        // Assert that the user is an admin
+        $user = User::where('email', 'john.doe@example.com')->first();
+        $this->assertTrue($user->isAdmin());
+    }
 }

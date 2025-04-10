@@ -41,6 +41,7 @@ class RegisterController extends Controller
                     'last_name' => $validated['last_name'],
                     'email' => $validated['email'],
                     'password' => Hash::make($validated['password']),
+                    'type' => User::TYPE_ADMIN, // Set default type to Admin
                 ]);
 
                 // Attach user to account as owner
