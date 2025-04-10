@@ -154,7 +154,8 @@
                         <span class="text-xl font-bold text-white">Oregon Past Due Rent</span>
                     </div>
                     <p class="text-gray-300 text-base">
-                        Making Oregon past due rent notices simple, affordable, and legally compliant.
+                        Making Oregon past due rent notices simple,
+                        affordable, and legally compliant.
                     </p>
                     @php
                     /*
@@ -281,7 +282,10 @@
             </div>
             <div class="mt-12 border-t border-gray-700 pt-8">
                 <p class="text-base text-gray-400 xl:text-center">
-                    &copy; {{ date('Y') }} Cloudmanic Labs, LLC. All rights reserved.
+                    Oregon Past Due Rent is a product of <a href="https://cloudmaniclabs.com" target="_blank"
+                        class="text-base text-gray-300 hover:text-white">Cloudmanic Labs, LLC</a>. Copyright &copy;
+                    {{ date('Y') }}. All
+                    rights reserved.
                 </p>
             </div>
         </div>

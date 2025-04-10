@@ -158,7 +158,7 @@ with past-due rent notices, pricing, or legal requirements.')
                                 For general inquiries and support:
                             </p>
                             <p class="mt-2 text-base text-indigo-600 font-medium">
-                                {{ config('constants.company_support_email') }}
+                                {{ config('constants.oregonpastduerent_com.support_email') }}
                             </p>
                         </div>
                     </div>
@@ -186,7 +186,7 @@ with past-due rent notices, pricing, or legal requirements.')
                                 Monday-Friday, 9am-5pm PT:
                             </p>
                             <p class="mt-2 text-base text-indigo-600 font-medium">
-                                {{ config('constants.company_phone') }}
+                                {{ config('constants.oregonpastduerent_com.company_phone') }}
                             </p>
                         </div>
                     </div>
