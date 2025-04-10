@@ -59,7 +59,7 @@ class Edit extends Component
         ]);
 
         // Log the profile update activity
-        ActivityService::log("Profile information was updated.", null, null, null, 'User');
+        ActivityService::log($this->first_name . "'s profile information was updated.", null, null, null, 'User');
 
         // For flash message in UI
         session()->flash('message', 'Profile successfully updated.');
@@ -89,7 +89,7 @@ class Edit extends Component
         $this->reset(['current_password', 'password', 'password_confirmation']);
 
         // Log the password update activity
-        ActivityService::log("Password was updated.", null, null, null, 'User');
+        ActivityService::log($this->first_name . "'s password was updated.", null, null, null, 'User');
 
         // For flash message in UI
         session()->flash('password_message', 'Password successfully updated.');
