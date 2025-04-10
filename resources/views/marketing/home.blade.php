@@ -19,7 +19,8 @@ professional delivery for just ${{ $standardPrice }} per notice.')
             Made Simple
         </h1>
         <p class="mt-6 text-xl text-indigo-100 max-w-3xl">
-            Issue legally compliant 10-day or 13-day nonpayment notices with professional delivery for just ${{ $standardPrice }} per
+            Issue legally compliant 10-day or 13-day nonpayment notices with professional delivery for just
+            ${{ $standardPrice }} per
             notice.
             Designed specifically for Oregon landlords and property managers.
         </p>
@@ -29,7 +30,7 @@ professional delivery for just ${{ $standardPrice }} per notice.')
                 Get Started Today
             </a>
             <a href="{{ route('marketing.how-it-works') }}"
-                class="inline-flex w-full sm:w-auto items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-300 bg-indigo-800 hover:bg-indigo-700 md:text-lg">
+                class="inline-flex w-full sm:w-auto items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:text-lg">
                 Learn How It Works
             </a>
         </div>
@@ -104,7 +105,8 @@ professional delivery for just ${{ $standardPrice }} per notice.')
                             Affordable Flat Rate
                         </h3>
                         <p class="mt-2 text-base text-gray-500">
-                            Just ${{ $standardPrice }} per notice with no subscription fees. Only pay when you need to send a notice.
+                            Just ${{ $standardPrice }} per notice with no subscription fees. Only pay when you need to
+                            send a notice.
                         </p>
                     </div>
                 </div>
