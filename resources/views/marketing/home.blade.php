@@ -2,7 +2,7 @@
 
 @section('title', 'Oregon Past Due Rent - Landlord Notice Service')
 @section('description', 'Oregon Past Due Rent helps landlords issue legally compliant past-due rent notices with
-professional delivery for just ${{ $standardPrice }} per notice.')
+professional delivery for just $' . $standardPrice . ' per notice.')
 
 @section('content')
 <!-- Hero Section -->
@@ -468,12 +468,16 @@ professional delivery for just ${{ $standardPrice }} per notice.')
                     </div>
                 </div>
             </div>
+            @php
+            /*
             <div class="mt-10 text-center">
                 <a href="{{ route('marketing.testimonials') }}"
                     class="text-base font-medium text-indigo-600 hover:text-indigo-500">
                     Read more testimonials <span aria-hidden="true">&rarr;</span>
                 </a>
             </div>
+            */
+            @endphp
         </div>
     </div>
 </div>
