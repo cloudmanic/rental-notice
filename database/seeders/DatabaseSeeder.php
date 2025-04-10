@@ -40,20 +40,47 @@ class DatabaseSeeder extends Seeder
                     'last_name' => 'Matthews',
                     'password' => Hash::make('foobar'), // Set a known password
                     'email_verified_at' => now(),
+                    'type' => User::TYPE_SUPER_ADMIN, // Setting user as Super Admin
                 ]
             );
+
+            // Update the type if user already exists
+            if ($firstOwner->type !== User::TYPE_SUPER_ADMIN) {
+                $firstOwner->update(['type' => User::TYPE_SUPER_ADMIN]);
+            }
 
             // Attach user to account if not already attached
             if (!$firstAccount->users()->where('user_id', $firstOwner->id)->exists()) {
                 $firstAccount->users()->attach($firstOwner, ['is_owner' => true]);
             }
 
-            // Create 5 additional users for first account with known password
+            // Create or update 5 additional users for first account with known password
+            $userTypes = [
+                User::TYPE_ADMIN,
+                User::TYPE_ADMIN,
+                User::TYPE_CONTRIBUTOR,
+                User::TYPE_CONTRIBUTOR,
+                User::TYPE_CONTRIBUTOR
+            ];
+
             for ($i = 0; $i < 5; $i++) {
-                $user = User::factory()->create([
-                    'password' => Hash::make('password123'),
-                    'email' => 'first_account_user_' . ($i + 1) . '@example.com',
-                ]);
+                $email = 'first_account_user_' . ($i + 1) . '@example.com';
+                $user = User::firstOrCreate(
+                    ['email' => $email],
+                    [
+                        'first_name' => fake()->firstName(),
+                        'last_name' => fake()->lastName(),
+                        'password' => Hash::make('password123'),
+                        'email_verified_at' => now(),
+                        'type' => $userTypes[$i],
+                    ]
+                );
+
+                // Update type if the user already exists
+                if ($user->type !== $userTypes[$i]) {
+                    $user->update(['type' => $userTypes[$i]]);
+                }
+
                 if (!$firstAccount->users()->where('user_id', $user->id)->exists()) {
                     $firstAccount->users()->attach($user, ['is_owner' => false]);
                 }
@@ -74,20 +101,47 @@ class DatabaseSeeder extends Seeder
                     'last_name' => 'Owner',
                     'password' => Hash::make('password123'), // Set a known password
                     'email_verified_at' => now(),
+                    'type' => User::TYPE_ADMIN, // Setting user as Admin
                 ]
             );
+
+            // Update the type if user already exists
+            if ($secondOwner->type !== User::TYPE_ADMIN) {
+                $secondOwner->update(['type' => User::TYPE_ADMIN]);
+            }
 
             // Attach user to account if not already attached
             if (!$secondAccount->users()->where('user_id', $secondOwner->id)->exists()) {
                 $secondAccount->users()->attach($secondOwner, ['is_owner' => true]);
             }
 
-            // Create 5 additional users for second account with known password
+            // Create or update 5 additional users for second account with known password
+            $userTypes = [
+                User::TYPE_ADMIN,
+                User::TYPE_CONTRIBUTOR,
+                User::TYPE_CONTRIBUTOR,
+                User::TYPE_CONTRIBUTOR,
+                User::TYPE_CONTRIBUTOR,
+            ];
+
             for ($i = 0; $i < 5; $i++) {
-                $user = User::factory()->create([
-                    'password' => Hash::make('password123'),
-                    'email' => 'second_account_user_' . ($i + 1) . '@example.com',
-                ]);
+                $email = 'second_account_user_' . ($i + 1) . '@example.com';
+                $user = User::firstOrCreate(
+                    ['email' => $email],
+                    [
+                        'first_name' => fake()->firstName(),
+                        'last_name' => fake()->lastName(),
+                        'password' => Hash::make('password123'),
+                        'email_verified_at' => now(),
+                        'type' => $userTypes[$i],
+                    ]
+                );
+
+                // Update type if the user already exists
+                if ($user->type !== $userTypes[$i]) {
+                    $user->update(['type' => $userTypes[$i]]);
+                }
+
                 if (!$secondAccount->users()->where('user_id', $user->id)->exists()) {
                     $secondAccount->users()->attach($user, ['is_owner' => false]);
                 }
@@ -108,20 +162,45 @@ class DatabaseSeeder extends Seeder
                     'last_name' => 'Owner',
                     'password' => Hash::make('password123'), // Set a known password
                     'email_verified_at' => now(),
+                    'type' => User::TYPE_ADMIN, // Setting user as Admin
                 ]
             );
+
+            // Update the type if user already exists
+            if ($thirdOwner->type !== User::TYPE_ADMIN) {
+                $thirdOwner->update(['type' => User::TYPE_ADMIN]);
+            }
 
             // Attach user to account if not already attached
             if (!$thirdAccount->users()->where('user_id', $thirdOwner->id)->exists()) {
                 $thirdAccount->users()->attach($thirdOwner, ['is_owner' => true]);
             }
 
-            // Create 3 additional users for third account with known password
+            // Create or update 3 additional users for third account with known password
+            $userTypes = [
+                User::TYPE_CONTRIBUTOR,
+                User::TYPE_CONTRIBUTOR,
+                User::TYPE_ADMIN,
+            ];
+
             for ($i = 0; $i < 3; $i++) {
-                $user = User::factory()->create([
-                    'password' => Hash::make('password123'),
-                    'email' => 'third_account_user_' . ($i + 1) . '@example.com',
-                ]);
+                $email = 'third_account_user_' . ($i + 1) . '@example.com';
+                $user = User::firstOrCreate(
+                    ['email' => $email],
+                    [
+                        'first_name' => fake()->firstName(),
+                        'last_name' => fake()->lastName(),
+                        'password' => Hash::make('password123'),
+                        'email_verified_at' => now(),
+                        'type' => $userTypes[$i],
+                    ]
+                );
+
+                // Update type if the user already exists
+                if ($user->type !== $userTypes[$i]) {
+                    $user->update(['type' => $userTypes[$i]]);
+                }
+
                 if (!$thirdAccount->users()->where('user_id', $user->id)->exists()) {
                     $thirdAccount->users()->attach($user, ['is_owner' => false]);
                 }

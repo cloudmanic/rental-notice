@@ -30,6 +30,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'type' => \App\Models\User::TYPE_CONTRIBUTOR,
         ];
     }
 
@@ -40,6 +41,36 @@ class UserFactory extends Factory
     {
         return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Set the user type to Super Admin
+     */
+    public function superAdmin(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'type' => \App\Models\User::TYPE_SUPER_ADMIN,
+        ]);
+    }
+
+    /**
+     * Set the user type to Admin
+     */
+    public function admin(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'type' => \App\Models\User::TYPE_ADMIN,
+        ]);
+    }
+
+    /**
+     * Set the user type to Contributor
+     */
+    public function contributor(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'type' => \App\Models\User::TYPE_CONTRIBUTOR,
         ]);
     }
 }

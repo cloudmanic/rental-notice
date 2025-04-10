@@ -60,3 +60,9 @@ This ensures consistent pricing and simplifies the management of different prici
 # Sysadmin Notes
 
 -   Fly.io restricts where the PHP app can access via `open_basedir`. So in our `Dockerfile` we added this line `sed -i 's|php_admin_value\[open_basedir\] = /var/www/html:/dev/stdout:/tmp|php_admin_value[open_basedir] = /var/www/html:/dev/stdout:/tmp:/data/rental-notice.sqlite|' /etc/php/8.2/fpm/pool.d/www.conf`. This way we can access the sqlite database file.
+
+# User Types
+
+-   `Admin` - This person can do anything related to the account they are associated with.
+-   `Contributor` - This A person can do anything in the account except for billing and managing users (This is not implemented yet).
+-   `Super Admin` - Only for our employees, a super admin can access any account across the board.

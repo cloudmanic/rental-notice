@@ -17,6 +17,11 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, CanResetPassword;
 
+    // User types
+    public const TYPE_SUPER_ADMIN = 'Super Admin';
+    public const TYPE_ADMIN = 'Admin';
+    public const TYPE_CONTRIBUTOR = 'Contributor';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -29,6 +34,7 @@ class User extends Authenticatable
         'password',
         'account_id',
         'is_owner',
+        'type',
     ];
 
     /**
@@ -90,6 +96,38 @@ class User extends Authenticatable
     public function getFullNameAttribute(): string
     {
         return "{$this->first_name} {$this->last_name}";
+    }
+
+    /**
+     * Check if user is a Super Admin
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->type === self::TYPE_SUPER_ADMIN;
+    }
+
+    /**
+     * Check if user is an Admin
+     */
+    public function isAdmin(): bool
+    {
+        return $this->type === self::TYPE_ADMIN;
+    }
+
+    /**
+     * Check if user is a Contributor
+     */
+    public function isContributor(): bool
+    {
+        return $this->type === self::TYPE_CONTRIBUTOR;
+    }
+
+    /**
+     * Check if user has at least admin privileges
+     */
+    public function hasAdminAccess(): bool
+    {
+        return in_array($this->type, [self::TYPE_SUPER_ADMIN, self::TYPE_ADMIN]);
     }
 
     public static function validationRules(bool $isUpdate = false): array
