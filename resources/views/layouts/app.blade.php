@@ -15,6 +15,9 @@
 </head>
 
 <body class="font-sans antialiased min-h-full flex flex-col">
+    <!-- Impersonation Banner -->
+    @include('layouts._impersonation_banner')
+
     <div class="flex-1 flex flex-col bg-gray-100">
         <div class="flex-1 flex flex-col bg-gray-50">
             @include('layouts._navigation')

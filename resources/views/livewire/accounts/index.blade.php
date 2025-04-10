@@ -25,6 +25,22 @@
             </div>
         </div>
 
+        <!-- Alert Message after returning from impersonation -->
+        @if(session('message'))
+        <div class="mt-4 rounded-md bg-green-50 p-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-green-800">{{ session('message') }}</p>
+                </div>
+            </div>
+        </div>
+        @endif
+
         <!-- Accounts List -->
         <div class="mt-8 flow-root">
             <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -54,7 +70,18 @@
                                         {{ $account->created_at->format('M j, Y') }}
                                     </td>
                                     <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                        <a href="#" class="text-blue-600 hover:text-blue-900">View</a>
+                                        @if($account->users->count() > 0)
+                                        @php
+                                        // Get an owner user if available or otherwise the first user
+                                        $impersonateUser = $account->owners->first();
+                                        if (!$impersonateUser) {
+                                        $impersonateUser = $account->users->first();
+                                        }
+                                        @endphp
+                                        <a href="{{ route('impersonate', $impersonateUser) }}" class="text-indigo-600 hover:text-indigo-900">Login As</a>
+                                        @else
+                                        <span class="text-gray-400">No users</span>
+                                        @endif
                                     </td>
                                 </tr>
                                 @empty

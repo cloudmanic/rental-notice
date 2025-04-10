@@ -16,6 +16,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\MarketingController;
+use App\Http\Controllers\Auth\AccountImpersonationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,7 +80,13 @@ Route::middleware('auth')->group(function () {
     Route::middleware('superadmin')->group(function () {
         // Accounts management
         Route::get('/accounts', AccountsIndex::class)->name('accounts.index');
+
+        // Account impersonation
+        Route::get('/impersonate/{user}', [AccountImpersonationController::class, 'impersonate'])->name('impersonate');
     });
+
+    // Leave impersonation route (available to any impersonating user)
+    Route::get('/leave-impersonation', [AccountImpersonationController::class, 'leave'])->name('leave-impersonation');
 
     // Notice Routes
     Route::get('notices', NoticesIndex::class)->name('notices.index');
