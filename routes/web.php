@@ -98,6 +98,7 @@ Route::middleware('auth')->group(function () {
     Route::get('notices/{notice}/preview', NoticesPreview::class)->name('notices.preview');
     Route::get('notices/{notice}/pdf', [NoticeController::class, 'generatePdf'])->name('notices.pdf');
     Route::get('notices/{notice}/shipping-form', [NoticeController::class, 'generateShippingForm'])->name('notices.shipping-form');
+    Route::get('notices/{notice}/complete-package', [NoticeController::class, 'generateCompletePackage'])->name('notices.complete-package');
 
     // Tenant Routes
     Route::get('tenants', TenantsIndex::class)->name('tenants.index');

@@ -491,4 +491,58 @@ class NoticeService
 
         return $pdfStoragePath;
     }
+
+    /**
+     * Generate a complete PDF package that includes both the notice and the shipping form
+     * 
+     * @param Notice $notice The notice to generate the complete package for
+     * @param bool $watermarked Whether to add a "DRAFT" watermark to the PDF
+     * @return string The path to the generated complete PDF file in storage
+     */
+    public function generateCompletePdfPackage(Notice $notice, bool $watermarked = false): string
+    {
+        // Generate both PDFs separately first
+        $noticePdfPath = $this->generatePdfNotice($notice, $watermarked);
+        $shippingFormPdfPath = $this->generatePdfShippingForm($notice, $watermarked);
+
+        // Get the full paths to both files
+        $noticePdfFullPath = Storage::disk('local')->path($noticePdfPath);
+        $shippingFormPdfFullPath = Storage::disk('local')->path($shippingFormPdfPath);
+
+        // Generate the output PDF filename for the merged document
+        $mergedPdfFileName = 'complete_package_' . $notice->id . '_' . time() . '.pdf';
+        $mergedPdfStoragePath = 'notices/' . $mergedPdfFileName;
+        $mergedPdfFullPath = Storage::disk('local')->path($mergedPdfStoragePath);
+
+        // Make sure the output directory exists
+        $outputDir = dirname($mergedPdfFullPath);
+        if (!File::isDirectory($outputDir)) {
+            File::makeDirectory($outputDir, 0755, true);
+        }
+
+        // Execute pdfcpu command to merge the PDFs
+        // Notice PDF first, then shipping form as specified
+        $process = new Process([
+            'pdfcpu',
+            'merge',
+            '-mode=create',
+            $mergedPdfFullPath,
+            $noticePdfFullPath,
+            $shippingFormPdfFullPath
+        ]);
+
+        $process->run();
+
+        // Check if the merge process was successful
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        // Check if the merged PDF was actually created
+        if (!File::exists($mergedPdfFullPath)) {
+            throw new \Exception("Failed to generate merged PDF package");
+        }
+
+        return $mergedPdfStoragePath;
+    }
 }
