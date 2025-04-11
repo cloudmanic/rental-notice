@@ -61,6 +61,9 @@ class NoticeController extends Controller
                 'Content-Disposition' => 'inline; filename="notice-' . uniqid() . '.pdf"'
             ]);
         } catch (\Exception $e) {
+
+            dd($e->getMessage());
+
             // Log the error
             \Log::error('PDF Generation failed: ' . $e->getMessage(), [
                 'notice_id' => $notice->id,

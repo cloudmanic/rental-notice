@@ -287,6 +287,14 @@ class NoticeServiceTest extends TestCase
             })
             ->andReturn(true);
 
+        // Specific expectation for the flattened PDF move operation    
+        File::shouldReceive('move')
+            ->once()
+            ->withArgs(function ($source, $dest) {
+                return str_ends_with($source, '.flattened.pdf') && !str_ends_with($dest, '.flattened.pdf');
+            })
+            ->andReturn(true);
+
         // Additional expectation for the lockPdfForms move operation
         File::shouldReceive('move')
             ->once()
@@ -420,13 +428,14 @@ class NoticeServiceTest extends TestCase
         File::shouldReceive('exists')
             ->andReturnUsing(function ($path) {
                 // Return true for PDF files to simulate they were created
-                return pathinfo($path, PATHINFO_EXTENSION) === 'pdf' || file_exists($path);
+                return pathinfo($path, PATHINFO_EXTENSION) === 'pdf' ||
+                    str_ends_with($path, '.flattened.pdf') ||
+                    file_exists($path);
             });
 
-        // Mock File::move for both watermark and lockPdfForms processes
+        // Mock File::move for both watermark, flattening and lockPdfForms processes
         File::shouldReceive('move')->andReturnUsing(function ($source, $dest) {
-            // This will handle both the watermarked file being moved to replace the original
-            // and the secured file being moved to replace the original
+            // This will handle moving any temporary files to replace the original
             return true;
         });
     }

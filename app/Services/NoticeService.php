@@ -207,6 +207,15 @@ class NoticeService
             $this->addDraftWatermark($pdfFullPath);
         }
 
+        // // Create a temporary file path for the flattened PDF
+        // $flattenedPath = $pdfFullPath . '.flattened.pdf';
+
+        // // Flatten the PDF to convert form fields to static content
+        // $this->flattenPdf($pdfFullPath, $flattenedPath);
+
+        // // Replace the original PDF with the flattened version
+        // File::move($flattenedPath, $pdfFullPath);
+
         // Lock the PDF forms so they cannot be edited
         $this->lockPdfForms($pdfFullPath);
 
@@ -259,17 +268,33 @@ class NoticeService
      */
     private function lockPdfForms(string $pdfPath): void
     {
+        // First, lock all form fields to make them read-only
+        $process = new Process([
+            'pdfcpu',
+            'form',
+            'lock',
+            $pdfPath
+        ]);
+
+        $process->run();
+
+        // Check if the form lock process was successful
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        // Now encrypt the PDF with further restrictions
         // Create a temporary file path for the secured PDF
         $tempPath = $pdfPath . '.secured.pdf';
 
         // Execute pdfcpu command to encrypt the PDF with permissions that prevent form editing
-        // We're setting an empty owner password but restricting permissions for all users
+        // We're setting an owner password but restricting permissions for all users
         $process = new Process([
             'pdfcpu',
             'encrypt',
             '-mode=rc4',         // Encryption mode
             '-perm=none',        // No permissions (can't edit, print, copy, etc.)
-            '-opw=secret',        // Owner password (corrected from -op to -opw)
+            '-opw=secret',       // Owner password
             $pdfPath,            // Source PDF
             $tempPath            // Output PDF
         ]);
@@ -283,5 +308,36 @@ class NoticeService
 
         // Replace the original PDF with the secured version
         File::move($tempPath, $pdfPath);
+    }
+
+    /**
+     * Flatten a PDF file using ImageMagick to convert form fields to static content
+     * 
+     * @param string $inputPath The input PDF file path
+     * @param string $outputPath The output flattened PDF file path
+     * @return void
+     */
+    private function flattenPdf(string $inputPath, string $outputPath): void
+    {
+        // Use ImageMagick's convert command to flatten the PDF
+        $process = new Process([
+            'convert',
+            '-density',
+            '300',
+            $inputPath,
+            $outputPath
+        ]);
+
+        $process->run();
+
+        // Check if the conversion was successful
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        // Verify the flattened PDF was created
+        if (!File::exists($outputPath)) {
+            throw new \Exception("Failed to flatten PDF at {$outputPath}");
+        }
     }
 }
