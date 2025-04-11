@@ -66,3 +66,7 @@ This ensures consistent pricing and simplifies the management of different prici
 -   `Admin` - This person can do anything related to the account they are associated with.
 -   `Contributor` - This A person can do anything in the account except for billing and managing users (This is not implemented yet).
 -   `Super Admin` - Only for our employees, a super admin can access any account across the board.
+
+# SSH Support To Support Servers
+
+We use SSH to connect to support servers. As a result we install ssh keys into our docker container, and need them for local development. For security reasons we leave out `.fly/ssh/id_ed25519` using `.gitignore`. Contact another member of the development team to get this key. This key is injected into the build process via our Ci/CD and stored as a secret at github.

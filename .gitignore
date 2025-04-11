@@ -22,3 +22,4 @@ yarn-error.log
 /.vscode
 /.zed
 .DS_STORE
+.fly/ssh/id_ed25519

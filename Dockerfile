@@ -33,7 +33,7 @@ ADD .fly/php/packages/${PHP_VERSION}.txt /tmp/php-packages.txt
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends gnupg2 ca-certificates git-core curl zip unzip golang \
-    rsync vim-tiny htop sqlite3 nginx supervisor cron \
+    rsync vim-tiny htop sqlite3 nginx supervisor cron openssh-client \
     && ln -sf /usr/bin/vim.tiny /etc/alternatives/vim \
     && ln -sf /etc/alternatives/vim /usr/bin/vim \
     && echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu jammy main" > /etc/apt/sources.list.d/ondrej-ubuntu-php-focal.list \
@@ -52,7 +52,8 @@ COPY .fly/fpm/ /etc/php/${PHP_VERSION}/fpm/
 COPY .fly/supervisor/ /etc/supervisor/
 COPY .fly/entrypoint.sh /entrypoint
 COPY .fly/start-nginx.sh /usr/local/bin/start-nginx
-RUN mkdir /data && chmod 754 /usr/local/bin/start-nginx
+COPY .fly/ssh/ /root/.ssh
+RUN mkdir /data && chmod 754 /usr/local/bin/start-nginx && chmod 700 -R /root/.ssh
 
 # 3. Copy application code, skipping files based on .dockerignore
 COPY . /var/www/html
