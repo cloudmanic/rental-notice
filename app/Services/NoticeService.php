@@ -323,4 +323,16 @@ class NoticeService
         // Replace the original PDF with the secured version
         File::move($tempPath, $pdfPath);
     }
+
+    /**
+     * Mark a notice as served
+     * 
+     * @param Notice $notice The notice to mark as served
+     * @return void
+     */
+    public function markAsServed($notice)
+    {
+        $notice->update(['status' => Notice::STATUS_SERVED]);
+        // Additional logic...
+    }
 }

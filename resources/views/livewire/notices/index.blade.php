@@ -88,12 +88,9 @@
                     <select wire:model.live="statusFilter" id="status_filter"
                         class="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         <option value="">All Statuses</option>
-                        <option value="draft">Draft</option>
                         <option value="pending_payment">Pending Payment</option>
-                        <option value="pending_form_creation">Pending Form Creation</option>
-                        <option value="pending_mailing">Pending Mailing</option>
-                        <option value="mailed">Mailed</option>
-                        <option value="complete">Complete</option>
+                        <option value="service_pending">Service Pending</option>
+                        <option value="served">Served</option>
                         <option value="error">Error</option>
                     </select>
                 </div>
@@ -168,12 +165,9 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span
                                     class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    {{ $notice->status === 'draft' ? 'bg-gray-100 text-gray-800' : 
-                                       ($notice->status === 'pending_payment' ? 'bg-yellow-100 text-yellow-800' : 
-                                       ($notice->status === 'pending_form_creation' ? 'bg-blue-100 text-blue-800' : 
-                                       ($notice->status === 'pending_mailing' ? 'bg-purple-100 text-purple-800' : 
-                                       ($notice->status === 'mailed' ? 'bg-green-100 text-green-800' : 
-                                       ($notice->status === 'complete' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'))))) }}">
+                                    {{ $notice->status === 'pending_payment' ? 'bg-yellow-100 text-yellow-800' : 
+                                       ($notice->status === 'service_pending' ? 'bg-purple-100 text-purple-800' : 
+                                       ($notice->status === 'served' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800')) }}">
                                     {{ ucfirst(str_replace('_', ' ', $notice->status)) }}
                                 </span>
                             </td>

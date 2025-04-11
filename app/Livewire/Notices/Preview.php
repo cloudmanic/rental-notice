@@ -20,7 +20,7 @@ class Preview extends Component
             abort(403, 'Unauthorized action.');
         }
 
-        // // Can only preview draft notices
+        // Previous code commented out
         // if ($this->notice->status !== Notice::STATUS_DRAFT) {
         //     return redirect()->route('notices.show', $notice->id)
         //         ->with('error', 'This notice is no longer in draft status.');
@@ -51,6 +51,16 @@ class Preview extends Component
         // Redirect to notices index with a notice message instead of success
         return redirect()->route('notices.index')
             ->with('notice', 'Notice has been kept as a draft.');
+    }
+
+    public function saveAsDraft()
+    {
+        $this->notice->status = Notice::STATUS_PENDING_PAYMENT;
+        $this->notice->save();
+
+        // Redirect to the notices list
+        return redirect()->route('notices.index')
+            ->with('success', 'Notice saved successfully.');
     }
 
     public function backToEdit()

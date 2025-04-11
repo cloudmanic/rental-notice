@@ -10,7 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('notices', function (Blueprint $table) {
-            $table->enum('status', Notice::statuses())->default(Notice::STATUS_DRAFT)->after('include_all_other_occupents');
+            $table->enum('status', Notice::statuses())->default(Notice::STATUS_PENDING_PAYMENT)->after('include_all_other_occupents');
             $table->text('error_message')->nullable()->after('status');
         });
     }

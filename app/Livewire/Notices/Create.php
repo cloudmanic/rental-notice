@@ -289,7 +289,7 @@ class Create extends Component
         $notice->other_5_price = $validatedData['notice']['other_5_price'];
         $notice->payment_other_means = $validatedData['notice']['payment_other_means'];
         $notice->include_all_other_occupents = $validatedData['notice']['include_all_other_occupents'];
-        $notice->status = Notice::STATUS_DRAFT;
+        $notice->status = Notice::STATUS_PENDING_PAYMENT;
         $notice->save();
 
         // Attach tenants to the notice

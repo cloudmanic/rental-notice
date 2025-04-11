@@ -10,12 +10,9 @@ class Notice extends Model
 {
     use HasFactory;
 
-    const STATUS_DRAFT = 'draft';
     const STATUS_PENDING_PAYMENT = 'pending_payment';
-    const STATUS_PENDING_FORM_CREATION = 'pending_form_creation';
-    const STATUS_PENDING_MAILING = 'pending_mailing';
-    const STATUS_MAILED = 'mailed';
-    const STATUS_COMPLETE = 'complete';
+    const STATUS_SERVICE_PENDING = 'service_pending';
+    const STATUS_SERVED = 'served';
     const STATUS_ERROR = 'error';
 
     protected $fillable = [
@@ -155,12 +152,9 @@ class Notice extends Model
     public static function statuses(): array
     {
         return [
-            self::STATUS_DRAFT,
             self::STATUS_PENDING_PAYMENT,
-            self::STATUS_PENDING_FORM_CREATION,
-            self::STATUS_PENDING_MAILING,
-            self::STATUS_MAILED,
-            self::STATUS_COMPLETE,
+            self::STATUS_SERVICE_PENDING,
+            self::STATUS_SERVED,
             self::STATUS_ERROR,
         ];
     }

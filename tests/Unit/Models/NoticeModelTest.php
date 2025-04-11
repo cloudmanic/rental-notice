@@ -50,7 +50,7 @@ class NoticeModelTest extends TestCase
             'price' => 50.00,
             'past_due_rent' => 1000.00,
             'late_charges' => 100.00,
-            'status' => Notice::STATUS_DRAFT,
+            'status' => Notice::STATUS_PENDING_PAYMENT,
         ]);
         $notice->save();
 

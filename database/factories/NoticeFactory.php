@@ -7,6 +7,7 @@ use App\Models\Agent;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Models\Notice;
+use App\Models\NoticeType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class NoticeFactory extends Factory
 {
+    protected $model = Notice::class;
+
     public function definition(): array
     {
         return [
@@ -42,7 +45,12 @@ class NoticeFactory extends Factory
             'include_all_other_occupents' => fake()->boolean(),
 
             // Status and error fields
-            'status' => fake()->randomElement(Notice::statuses()),
+            'status' => fake()->randomElement([
+                Notice::STATUS_PENDING_PAYMENT,
+                Notice::STATUS_SERVICE_PENDING,
+                Notice::STATUS_SERVED,
+                Notice::STATUS_ERROR,
+            ]),
             'error_message' => fn(array $attributes) =>
             $attributes['status'] === Notice::STATUS_ERROR
                 ? fake()->sentence()
@@ -73,6 +81,35 @@ class NoticeFactory extends Factory
                     $notice->tenants()->attach($additionalTenant->id);
                 }
             }
+        });
+    }
+
+    // Add specific state methods if needed
+    public function pendingPayment()
+    {
+        return $this->state(function (array $attributes) {
+            return ['status' => Notice::STATUS_PENDING_PAYMENT];
+        });
+    }
+
+    public function servicePending()
+    {
+        return $this->state(function (array $attributes) {
+            return ['status' => Notice::STATUS_SERVICE_PENDING];
+        });
+    }
+
+    public function served()
+    {
+        return $this->state(function (array $attributes) {
+            return ['status' => Notice::STATUS_SERVED];
+        });
+    }
+
+    public function error()
+    {
+        return $this->state(function (array $attributes) {
+            return ['status' => Notice::STATUS_ERROR];
         });
     }
 }

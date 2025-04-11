@@ -39,12 +39,9 @@
     <!-- Status Badge -->
     <div class="mb-6">
         <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full 
-            {{ $notice->status === 'draft' ? 'bg-gray-100 text-gray-800' : 
-            ($notice->status === 'pending_payment' ? 'bg-yellow-100 text-yellow-800' : 
-            ($notice->status === 'pending_form_creation' ? 'bg-blue-100 text-blue-800' : 
-            ($notice->status === 'pending_mailing' ? 'bg-purple-100 text-purple-800' : 
-            ($notice->status === 'mailed' ? 'bg-green-100 text-green-800' : 
-            ($notice->status === 'complete' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'))))) }}">
+            {{ $notice->status === 'pending_payment' ? 'bg-yellow-100 text-yellow-800' : 
+            ($notice->status === 'service_pending' ? 'bg-purple-100 text-purple-800' : 
+            ($notice->status === 'served' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800')) }}">
             {{ ucfirst(str_replace('_', ' ', $notice->status)) }}
         </span>
     </div>

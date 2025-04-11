@@ -30,10 +30,10 @@ class Edit extends Component
             abort(403, 'Unauthorized action.');
         }
 
-        // Can only edit draft notices
-        if ($notice->status !== Notice::STATUS_DRAFT) {
+        // Can only edit notices in the pending payment status
+        if ($notice->status !== Notice::STATUS_PENDING_PAYMENT) {
             return redirect()->route('notices.show', $notice->id)
-                ->with('error', 'Only draft notices can be edited.');
+                ->with('error', 'Only notices in pending payment status can be edited.');
         }
 
         $this->notice = $notice;
