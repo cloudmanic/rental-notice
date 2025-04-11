@@ -297,7 +297,8 @@ class Create extends Component
             $notice->tenants()->attach($tenant['id']);
         }
 
-        return redirect()->route('notices.index');
+        // Redirect to preview page instead of index
+        return redirect()->route('notices.preview', $notice->id);
     }
 
     public function createAgent()

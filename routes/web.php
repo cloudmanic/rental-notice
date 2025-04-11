@@ -3,6 +3,8 @@
 use App\Livewire\Dashboard\Index as DashboardIndex;
 use App\Livewire\Notices\Index as NoticesIndex;
 use App\Livewire\Notices\Create as NoticesCreate;
+use App\Livewire\Notices\Preview as NoticesPreview;
+use App\Http\Controllers\NoticeController;
 use App\Livewire\Tenants\Index as TenantsIndex;
 use App\Livewire\Tenants\Create as TenantsCreate;
 use App\Livewire\Tenants\Edit as TenantsEdit;
@@ -93,6 +95,8 @@ Route::middleware('auth')->group(function () {
     Route::get('notices/create', NoticesCreate::class)->name('notices.create');
     Route::get('notices/{notice}', App\Livewire\Notices\Show::class)->name('notices.show');
     Route::get('notices/{notice}/edit', App\Livewire\Notices\Edit::class)->name('notices.edit');
+    Route::get('notices/{notice}/preview', NoticesPreview::class)->name('notices.preview');
+    Route::get('notices/{notice}/pdf', [NoticeController::class, 'generatePdf'])->name('notices.pdf');
 
     // Tenant Routes
     Route::get('tenants', TenantsIndex::class)->name('tenants.index');
