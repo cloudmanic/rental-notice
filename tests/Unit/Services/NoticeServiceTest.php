@@ -271,13 +271,29 @@ class NoticeServiceTest extends TestCase
         // Mock the Process class for both the form fill and watermark operations
         $this->mockPdfcpuProcess();
 
-        // Mock File::move specifically for the watermark process
-        File::shouldReceive('move')->once()->andReturnUsing(function ($source, $dest) {
-            // Verify that this is the watermarked file being moved to replace the original
-            $this->assertTrue(str_ends_with($source, '.temp.pdf'));
-            $this->assertFalse(str_ends_with($dest, '.temp.pdf'));
-            return true;
-        });
+        // Reset the File::move mock to avoid conflicts with the one in mockPdfcpuProcess
+        \Mockery::resetContainer();
+
+        // Now set up the specific expectation for the watermark process
+        File::shouldReceive('exists')->andReturn(true);
+        File::shouldReceive('isDirectory')->andReturn(true);
+        File::shouldReceive('makeDirectory')->andReturn(true);
+
+        // Specific expectation for the watermark move operation
+        File::shouldReceive('move')
+            ->once()
+            ->withArgs(function ($source, $dest) {
+                return str_ends_with($source, '.temp.pdf') && !str_ends_with($dest, '.temp.pdf');
+            })
+            ->andReturn(true);
+
+        // Additional expectation for the lockPdfForms move operation
+        File::shouldReceive('move')
+            ->once()
+            ->withArgs(function ($source, $dest) {
+                return str_ends_with($source, '.secured.pdf') && !str_ends_with($dest, '.secured.pdf');
+            })
+            ->andReturn(true);
 
         // Call the service with watermark=true
         $noticeService = new NoticeService();
@@ -406,6 +422,13 @@ class NoticeServiceTest extends TestCase
                 // Return true for PDF files to simulate they were created
                 return pathinfo($path, PATHINFO_EXTENSION) === 'pdf' || file_exists($path);
             });
+
+        // Mock File::move for both watermark and lockPdfForms processes
+        File::shouldReceive('move')->andReturnUsing(function ($source, $dest) {
+            // This will handle both the watermarked file being moved to replace the original
+            // and the secured file being moved to replace the original
+            return true;
+        });
     }
 
     private function getFieldValue($textfields, $fieldName)

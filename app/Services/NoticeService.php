@@ -207,6 +207,9 @@ class NoticeService
             $this->addDraftWatermark($pdfFullPath);
         }
 
+        // Lock the PDF forms so they cannot be edited
+        $this->lockPdfForms($pdfFullPath);
+
         return $pdfStoragePath;
     }
 
@@ -245,6 +248,40 @@ class NoticeService
         }
 
         // Replace the original PDF with the watermarked version
+        File::move($tempPath, $pdfPath);
+    }
+
+    /**
+     * Lock the PDF forms so they cannot be edited
+     * 
+     * @param string $pdfPath The full path to the PDF file
+     * @return void
+     */
+    private function lockPdfForms(string $pdfPath): void
+    {
+        // Create a temporary file path for the secured PDF
+        $tempPath = $pdfPath . '.secured.pdf';
+
+        // Execute pdfcpu command to encrypt the PDF with permissions that prevent form editing
+        // We're setting an empty owner password but restricting permissions for all users
+        $process = new Process([
+            'pdfcpu',
+            'encrypt',
+            '-mode=rc4',         // Encryption mode
+            '-perm=none',        // No permissions (can't edit, print, copy, etc.)
+            '-opw=secret',        // Owner password (corrected from -op to -opw)
+            $pdfPath,            // Source PDF
+            $tempPath            // Output PDF
+        ]);
+
+        $process->run();
+
+        // Check if the encryption process was successful
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        // Replace the original PDF with the secured version
         File::move($tempPath, $pdfPath);
     }
 }
