@@ -307,7 +307,7 @@ class NoticeService
             'pdfcpu',
             'encrypt',
             '-mode=rc4',         // Encryption mode
-            '-perm=none',        // No permissions (can't edit, print, copy, etc.)
+            '-perm=all',        // No permissions (can't edit, print, copy, etc.)
             '-opw=' . env('PDF_PASSWORD'),       // Owner password
             $pdfPath,            // Source PDF
             $tempPath            // Output PDF
