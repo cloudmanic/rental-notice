@@ -308,7 +308,7 @@ class NoticeService
             'encrypt',
             '-mode=rc4',         // Encryption mode
             '-perm=none',        // No permissions (can't edit, print, copy, etc.)
-            '-opw=secret',       // Owner password
+            '-opw=' . env('PDF_PASSWORD'),       // Owner password
             $pdfPath,            // Source PDF
             $tempPath            // Output PDF
         ]);
