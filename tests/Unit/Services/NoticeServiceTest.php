@@ -11,7 +11,9 @@ use App\Models\User;
 use App\Services\NoticeService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use PHPUnit\Framework\Attributes\Test;
+use Symfony\Component\Process\Process;
 use Tests\TestCase;
 
 class NoticeServiceTest extends TestCase
@@ -169,6 +171,198 @@ class NoticeServiceTest extends TestCase
         $checkboxes = collect($generatedNotice['forms'][0]['checkbox']);
         $otherFormPayment = $checkboxes->firstWhere('name', 'checkBoxOtherFormPayment')['value'];
         $this->assertTrue($otherFormPayment);
+    }
+
+    #[Test]
+    public function it_generates_pdf_notice_file()
+    {
+        // Create account first
+        $account = Account::factory()->create();
+
+        // Create a user connected to the account
+        $user = User::factory()->create();
+        $user->accounts()->attach($account->id);
+
+        // Create a notice type
+        $noticeType = NoticeType::factory()->create();
+
+        // Create an agent connected to the account
+        $agent = Agent::factory()->create([
+            'account_id' => $account->id,
+            'address_1' => '456 Property Lane',
+            'address_2' => 'Suite 200',
+            'city' => 'Portland',
+            'state' => 'OR',
+            'zip' => '97204',
+            'phone' => '(503) 555-1234',
+            'email' => 'agent@example.com',
+        ]);
+
+        // Create tenant connected to the account
+        $tenant = Tenant::factory()->create([
+            'account_id' => $account->id,
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'address_1' => '123 Main Street',
+            'address_2' => 'Apt 4B',
+            'city' => 'Portland',
+            'state' => 'OR',
+            'zip' => '97201',
+        ]);
+
+        // Create notice
+        $notice = Notice::factory()->create([
+            'account_id' => $account->id,
+            'user_id' => $user->id,
+            'notice_type_id' => $noticeType->id,
+            'agent_id' => $agent->id,
+            'past_due_rent' => 1250.00,
+            'late_charges' => 75.00,
+            'other_1_title' => 'Legal fee',
+            'other_1_price' => 100.00,
+        ]);
+
+        // Attach tenant to notice
+        $notice->tenants()->attach([$tenant->id]);
+
+        // Set up the needed template files
+        $this->setUpTemplateFiles();
+
+        // Create a mock Process for testing
+        $this->mockPdfcpuProcess();
+
+        // Call the service method
+        $noticeService = new NoticeService();
+        $pdfPath = $noticeService->generatePdfNotice($notice);
+
+        // Check if file exists
+        Storage::assertExists($pdfPath);
+
+        // Verify file extension is PDF
+        $this->assertEquals('pdf', pathinfo($pdfPath, PATHINFO_EXTENSION));
+
+        // Verify the file name format
+        $this->assertStringContainsString('notice_' . $notice->id, $pdfPath);
+    }
+
+    /**
+     * Set up the needed template files for testing
+     */
+    private function setUpTemplateFiles()
+    {
+        // Set up the templates directory
+        $templateDir = base_path('templates');
+        if (!file_exists($templateDir)) {
+            mkdir($templateDir, 0777, true);
+        }
+
+        // Create a mock JSON template content
+        $jsonTemplate = json_encode([
+            'header' => [
+                'source' => '10-day-notice-template.pdf',
+                'version' => 'pdfcpu v0.9.1 dev',
+            ],
+            'forms' => [
+                [
+                    'textfield' => [
+                        ['name' => 'date', 'value' => ''],
+                        ['name' => 'tenant1', 'value' => ''],
+                        ['name' => 'tenant2', 'value' => ''],
+                        ['name' => 'streetAddress', 'value' => ''],
+                        ['name' => 'unitNumber', 'value' => ''],
+                        ['name' => 'city', 'value' => ''],
+                        ['name' => 'state', 'value' => ''],
+                        ['name' => 'zip', 'value' => ''],
+                        ['name' => 'pastDueRent', 'value' => ''],
+                        ['name' => 'rentAmountDue', 'value' => ''],
+                        ['name' => 'lateCharges', 'value' => ''],
+                        ['name' => 'other1', 'value' => ''],
+                        ['name' => 'other2', 'value' => ''],
+                        ['name' => 'other3', 'value' => ''],
+                        ['name' => 'other4', 'value' => ''],
+                        ['name' => 'other5', 'value' => ''],
+                        ['name' => 'totalOutstandingAmount', 'value' => ''],
+                        ['name' => 'agentAddress1', 'value' => ''],
+                        ['name' => 'agentAddress2', 'value' => ''],
+                        ['name' => 'agentPhone', 'value' => ''],
+                        ['name' => 'agentEmail', 'value' => ''],
+                        ['name' => 'personalServiceDate', 'value' => ''],
+                        ['name' => 'postedServiceDate', 'value' => ''],
+                        ['name' => 'firstClassServiceDate', 'value' => ''],
+                        ['name' => 'addendumServiceDate', 'value' => ''],
+                    ],
+                    'checkbox' => [
+                        ['name' => 'checkBoxOtherFormPayment', 'value' => false],
+                    ],
+                ],
+            ],
+        ], JSON_PRETTY_PRINT);
+
+        // Mock File::exists to return true for template paths
+        File::shouldReceive('exists')
+            ->andReturnUsing(function ($path) {
+                // Return true for template paths, otherwise use the real file_exists
+                if (strpos($path, 'templates/10-day-notice-template') !== false) {
+                    return true;
+                }
+                return file_exists($path);
+            });
+
+        // Mock File::get to return our template JSON
+        File::shouldReceive('get')
+            ->andReturnUsing(function ($path) use ($jsonTemplate) {
+                // Return JSON content for the template
+                if ($path === base_path('templates/10-day-notice-template.json')) {
+                    return $jsonTemplate;
+                }
+                // Use real file_get_contents for other files
+                return file_get_contents($path);
+            });
+            
+        // Mock File::isDirectory to work with our fake directories
+        File::shouldReceive('isDirectory')
+            ->andReturnUsing(function ($path) {
+                // For test paths, return true
+                if (strpos($path, 'storage') !== false) {
+                    return true;
+                }
+                return is_dir($path);
+            });
+            
+        // Mock File::makeDirectory to not do anything in tests
+        File::shouldReceive('makeDirectory')
+            ->andReturnUsing(function ($path, $mode, $recursive, $force = false) {
+                return true;
+            });
+    }
+
+    /**
+     * Mock the pdfcpu Process for testing
+     */
+    private function mockPdfcpuProcess()
+    {
+        // Create a mock of the Process class
+        $process = $this->getMockBuilder(Process::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        // Mock the run method to return exit code 0 (success)
+        $process->method('run')->willReturn(0);
+
+        // Mock the isSuccessful method to return true
+        $process->method('isSuccessful')->willReturn(true);
+
+        // Replace the real Process with our mock
+        $this->app->bind(Process::class, function ($app) use ($process) {
+            return $process;
+        });
+
+        // Make sure the PDF "exists" for the test
+        File::shouldReceive('exists')
+            ->andReturnUsing(function ($path) {
+                // Return true for PDF files to simulate they were created
+                return pathinfo($path, PATHINFO_EXTENSION) === 'pdf' || file_exists($path);
+            });
     }
 
     private function getFieldValue($textfields, $fieldName)

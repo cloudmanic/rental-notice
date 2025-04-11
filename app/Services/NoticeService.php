@@ -6,6 +6,8 @@ use App\Models\Notice;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class NoticeService
 {
@@ -145,5 +147,60 @@ class NoticeService
         Storage::put($storagePath, json_encode($template, JSON_PRETTY_PRINT));
 
         return $storagePath;
+    }
+
+    /**
+     * Generate a PDF notice file by filling the PDF template with JSON data
+     * 
+     * @param Notice $notice The notice to generate PDF for
+     * @return string The path to the generated PDF file in storage
+     */
+    public function generatePdfNotice(Notice $notice): string
+    {
+        // First, generate the JSON notice
+        $jsonStoragePath = $this->generateJsonNotice($notice);
+        $jsonFullPath = Storage::path($jsonStoragePath);
+
+        // Get the PDF template path
+        $pdfTemplatePath = base_path('templates/10-day-notice-template.pdf');
+
+        if (!File::exists($pdfTemplatePath)) {
+            throw new \Exception("PDF template file not found at {$pdfTemplatePath}");
+        }
+
+        // Generate the output PDF filename
+        $pdfFileName = 'notice_' . $notice->id . '_' . time() . '.pdf';
+        $pdfStoragePath = 'notices/' . $pdfFileName;
+        $pdfFullPath = Storage::path($pdfStoragePath);
+
+        // Make sure the output directory exists
+        $outputDir = dirname($pdfFullPath);
+        if (!File::isDirectory($outputDir)) {
+            File::makeDirectory($outputDir, 0755, true);
+        }
+
+        // Execute pdfcpu command to fill the form
+        $process = new Process([
+            'pdfcpu', 
+            'form', 
+            'fill', 
+            $pdfTemplatePath, 
+            $jsonFullPath, 
+            $pdfFullPath
+        ]);
+
+        $process->run();
+
+        // Check if the process was successful
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        // Check if the PDF was actually created
+        if (!File::exists($pdfFullPath)) {
+            throw new \Exception("Failed to generate PDF notice");
+        }
+
+        return $pdfStoragePath;
     }
 }
