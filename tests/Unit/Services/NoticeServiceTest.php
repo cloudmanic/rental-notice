@@ -245,6 +245,49 @@ class NoticeServiceTest extends TestCase
         $this->assertStringContainsString('notice_' . $notice->id, $pdfPath);
     }
 
+    #[Test]
+    public function it_adds_draft_watermark_when_requested()
+    {
+        // Create the required models for testing
+        $account = Account::factory()->create();
+        $user = User::factory()->create();
+        $user->accounts()->attach($account->id);
+        $noticeType = NoticeType::factory()->create();
+        $agent = Agent::factory()->create(['account_id' => $account->id]);
+        $tenant = Tenant::factory()->create(['account_id' => $account->id]);
+
+        $notice = Notice::factory()->create([
+            'account_id' => $account->id,
+            'user_id' => $user->id,
+            'notice_type_id' => $noticeType->id,
+            'agent_id' => $agent->id,
+        ]);
+
+        $notice->tenants()->attach([$tenant->id]);
+
+        // Set up template files
+        $this->setUpTemplateFiles();
+
+        // Mock the Process class for both the form fill and watermark operations
+        $this->mockPdfcpuProcess();
+
+        // Mock File::move specifically for the watermark process
+        File::shouldReceive('move')->once()->andReturnUsing(function ($source, $dest) {
+            // Verify that this is the watermarked file being moved to replace the original
+            $this->assertTrue(str_ends_with($source, '.temp.pdf'));
+            $this->assertFalse(str_ends_with($dest, '.temp.pdf'));
+            return true;
+        });
+
+        // Call the service with watermark=true
+        $noticeService = new NoticeService();
+        $pdfPath = $noticeService->generatePdfNotice($notice, true);
+
+        // Verify the path is correct
+        $this->assertStringContainsString('notice_' . $notice->id, $pdfPath);
+        $this->assertStringEndsWith('.pdf', $pdfPath);
+    }
+
     /**
      * Set up the needed template files for testing
      */

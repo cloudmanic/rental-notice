@@ -42,8 +42,11 @@ class NoticeController extends Controller
         }
 
         try {
+            // Check if watermark is requested
+            $watermarked = true;
+
             // Generate the PDF using our NoticeService
-            $pdfPath = $this->noticeService->generatePdfNotice($notice);
+            $pdfPath = $this->noticeService->generatePdfNotice($notice, $watermarked);
 
             // Get the full path to the generated PDF file
             $fullPath = Storage::path($pdfPath);

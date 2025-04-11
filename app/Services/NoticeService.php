@@ -153,9 +153,10 @@ class NoticeService
      * Generate a PDF notice file by filling the PDF template with JSON data
      * 
      * @param Notice $notice The notice to generate PDF for
+     * @param bool $watermarked Whether to add a "DRAFT" watermark to the PDF
      * @return string The path to the generated PDF file in storage
      */
-    public function generatePdfNotice(Notice $notice): string
+    public function generatePdfNotice(Notice $notice, bool $watermarked = false): string
     {
         // First, generate the JSON notice
         $jsonStoragePath = $this->generateJsonNotice($notice);
@@ -201,6 +202,49 @@ class NoticeService
             throw new \Exception("Failed to generate PDF notice");
         }
 
+        // Add watermark if requested
+        if ($watermarked) {
+            $this->addDraftWatermark($pdfFullPath);
+        }
+
         return $pdfStoragePath;
+    }
+
+    /**
+     * Add a "DRAFT" watermark to the generated PDF
+     * 
+     * @param string $pdfPath The full path to the PDF file
+     * @return void
+     */
+    private function addDraftWatermark(string $pdfPath): void
+    {
+        // Create a temporary file path for the watermarked PDF with proper extension
+        $tempPath = $pdfPath . '.temp.pdf';
+
+        // Execute pdfcpu command to add watermark
+        // The correct syntax according to pdfcpu help documentation
+        $process = new Process([
+            'pdfcpu',
+            'watermark',
+            'add',
+            '-v',                // Verbose output to help with debugging
+            '-m',
+            'text',        // Use text mode for the watermark
+            '--',                // Required separator between mode and text
+            'DRAFT',             // The text to display
+            'points:48, scale:1, color:#FF0000, op:.6', // Configuration string
+            $pdfPath,            // Source PDF
+            $tempPath            // Output PDF (with .pdf extension)
+        ]);
+
+        $process->run();
+
+        // Check if the watermark process was successful
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        // Replace the original PDF with the watermarked version
+        File::move($tempPath, $pdfPath);
     }
 }

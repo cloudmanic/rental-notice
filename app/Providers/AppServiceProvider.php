@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Account;
 use App\Models\NoticeType;
+use App\Services\PricingService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
 
@@ -14,7 +15,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Register the PricingService in the service container
+        $this->app->bind('pricing', function ($app) {
+            return new PricingService();
+        });
     }
 
     /**

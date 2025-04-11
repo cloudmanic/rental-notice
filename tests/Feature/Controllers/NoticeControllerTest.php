@@ -70,7 +70,7 @@ class NoticeControllerTest extends TestCase
             ->once()
             ->with(Mockery::on(function ($arg) use ($notice) {
                 return $arg->id === $notice->id;
-            }))
+            }), true) // Add the second parameter 'true' for watermarked
             ->andReturn($pdfPath);
 
         // Create a test PDF file
