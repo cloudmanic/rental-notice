@@ -73,10 +73,14 @@ class NoticeService
             return number_format((float)$amount, 2);
         };
 
+        // Calculate the posted date (today unless it's a weekend, then Monday)
+        $postedDate = Carbon::now();
+        if ($postedDate->isWeekend()) {
+            $postedDate = $postedDate->next('Monday');
+        }
+
         // Current date
-        $updateTextField('date', Carbon::now()->format('m/d/Y'));
-
-
+        $updateTextField('date', $postedDate->format('m/d/Y'));
 
         // Tenant information
         $primaryTenant = $tenants->first();
@@ -109,11 +113,11 @@ class NoticeService
 
         // Other charges
         $otherChargeFields = [
-            ['title' => 'other_1_title', 'price' => 'other_1_price', 'field' => 'other1'],
-            ['title' => 'other_2_title', 'price' => 'other_2_price', 'field' => 'other2'],
-            ['title' => 'other_3_title', 'price' => 'other_3_price', 'field' => 'other3'],
-            ['title' => 'other_4_title', 'price' => 'other_4_price', 'field' => 'other4'],
-            ['title' => 'other_5_title', 'price' => 'other_5_price', 'field' => 'other5'],
+            ['title' => 'other_1_title', 'price' => 'other_1_price', 'desc_field' => 'other1', 'amount_field' => 'otherCharge1'],
+            ['title' => 'other_2_title', 'price' => 'other_2_price', 'desc_field' => 'other2', 'amount_field' => 'otherCharge2'],
+            ['title' => 'other_3_title', 'price' => 'other_3_price', 'desc_field' => 'other3', 'amount_field' => 'otherCharge3'],
+            ['title' => 'other_4_title', 'price' => 'other_4_price', 'desc_field' => 'other4', 'amount_field' => 'otherCharge4'],
+            ['title' => 'other_5_title', 'price' => 'other_5_price', 'desc_field' => 'other5', 'amount_field' => 'otherCharge5'],
         ];
 
         foreach ($otherChargeFields as $charge) {
@@ -121,9 +125,11 @@ class NoticeService
             $price = $notice->{$charge['price']} ?? 0;
 
             if (!empty($title) && $price > 0) {
-                $updateTextField($charge['field'], $title . ': ' . $formatCurrency($price));
+                $updateTextField($charge['desc_field'], $title);
+                $updateTextField($charge['amount_field'], $formatCurrency($price));
             } else {
-                $updateTextField($charge['field'], '');
+                $updateTextField($charge['desc_field'], '');
+                $updateTextField($charge['amount_field'], '');
             }
         }
 
@@ -131,20 +137,25 @@ class NoticeService
         $updateTextField('totalOutstandingAmount', $formatCurrency($notice->total_charges));
 
         // Agent information
+        $updateTextField('signature', $agent->name);
         $updateTextField('agentAddress1', $agent->address_1);
         $updateTextField('agentAddress2', $agent->city . ', ' . $agent->state . ' ' . $agent->zip);
         $updateTextField('agentPhone', $agent->phone);
         $updateTextField('agentEmail', $agent->email);
 
         // Payment method checkbox
+        $updateCheckbox('checkBoxFirstClass', true);
         $updateCheckbox('checkBoxOtherFormPayment', $notice->payment_other_means);
 
+        // Calculate the serve by date (15 days from posted date) (start next day, add 4 mailing, 10 service)
+        $serveByDate = clone $postedDate;
+        $serveByDate->addDays(15);
+
         // Service date information - just using current date for now, these should be updated when services actually happen
-        $currentDate = Carbon::now()->format('m/d/Y');
-        $updateTextField('personalServiceDate', $currentDate);
-        $updateTextField('postedServiceDate', $currentDate);
-        $updateTextField('firstClassServiceDate', $currentDate);
-        $updateTextField('addendumServiceDate', $currentDate);
+        //$updateTextField('personalServiceDate', $currentDate);
+        //$updateTextField('postedServiceDate', $currentDate);
+        $updateTextField('firstClassServiceDate', $serveByDate->format('m/d/Y'));
+        $updateTextField('addendumServiceDate', $serveByDate->format('m/d/Y'));
 
         // Add notice ID. This is used internally to match up the notice to a DB record (UII = Unique Internal Identifier)
         $updateTextField('noticeId', "UII:$notice->id");
