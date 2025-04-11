@@ -39,6 +39,20 @@ class Preview extends Component
             ->with('success', 'Notice status updated to pending payment.');
     }
 
+    /**
+     * Keep the notice in draft status and redirect to the notices index
+     */
+    public function keepAsDraft()
+    {
+        // Ensure the notice stays in the draft status (it should be already, but just in case)
+        $this->notice->status = Notice::STATUS_DRAFT;
+        $this->notice->save();
+
+        // Redirect to notices index with a notice message instead of success
+        return redirect()->route('notices.index')
+            ->with('notice', 'Notice has been kept as a draft.');
+    }
+
     public function backToEdit()
     {
         return redirect()->route('notices.edit', $this->notice->id);

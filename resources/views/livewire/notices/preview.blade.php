@@ -4,11 +4,18 @@
 
         <!-- Action Buttons - Moved to top -->
         <div class="flex space-x-4">
-            <button wire:click="backToEdit" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <button wire:click="backToEdit"
+                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Back to Edit
             </button>
 
-            <button wire:click="proceedToPayment" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <button wire:click="keepAsDraft"
+                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Keep as Draft
+            </button>
+
+            <button wire:click="proceedToPayment"
+                class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Proceed to Payment
             </button>
         </div>
@@ -16,7 +23,8 @@
 
     <!-- Information Alert -->
     <div class="mb-6 p-4 bg-blue-50 text-blue-800 rounded-md">
-        <p class="text-center">This is the notice that's going to get served to your tenant. Please review before proceeding.</p>
+        <p class="text-center">This is the notice that's going to get served to your tenant. Please review before
+            proceeding.</p>
     </div>
 
     <div class="flex flex-col space-y-6">
@@ -24,11 +32,7 @@
         <div class="bg-white rounded-lg shadow-sm overflow-hidden">
             <div class="border border-gray-200 rounded-md h-[800px]">
                 <!-- Embed PDF here - this is a placeholder -->
-                <embed
-                    src="{{ route('notices.pdf', $notice->id) }}"
-                    type="application/pdf"
-                    width="100%"
-                    height="100%"
+                <embed src="{{ route('notices.pdf', $notice->id) }}" type="application/pdf" width="100%" height="100%"
                     class="border-0" />
                 <!-- Note: You'll need to create a route and controller method to generate/serve the PDF -->
             </div>
@@ -69,11 +73,20 @@
 
         <!-- Duplicate Action Buttons at the bottom for convenience -->
         <div class="flex justify-between">
-            <button wire:click="backToEdit" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Back to Edit
-            </button>
+            <div class="flex space-x-4">
+                <button wire:click="backToEdit"
+                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Back to Edit
+                </button>
 
-            <button wire:click="proceedToPayment" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <button wire:click="keepAsDraft"
+                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Keep as Draft
+                </button>
+            </div>
+
+            <button wire:click="proceedToPayment"
+                class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Proceed to Payment
             </button>
         </div>
