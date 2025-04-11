@@ -21,21 +21,19 @@ class Preview extends Component
         }
 
         // Previous code commented out
-        // if ($this->notice->status !== Notice::STATUS_DRAFT) {
-        //     return redirect()->route('notices.show', $notice->id)
-        //         ->with('error', 'This notice is no longer in draft status.');
-        // }
+        if ($this->notice->status !== Notice::STATUS_PENDING_PAYMENT) {
+            return redirect()->route('notices.index')
+                ->with('error', 'This notice is no longer in pending payment status.');
+        }
     }
 
     public function proceedToPayment()
     {
-        // Update the notice status to pending payment
-        $this->notice->status = Notice::STATUS_PENDING_PAYMENT;
-        $this->notice->save();
+        // TODO: Implement payment logic here
 
         // Redirect to payment page (you'll need to create this later)
         // For now, we'll redirect to the notice show page
-        return redirect()->route('notices.show', $this->notice->id)
+        return redirect()->route('notices.index')
             ->with('success', 'Notice status updated to pending payment.');
     }
 
@@ -44,10 +42,6 @@ class Preview extends Component
      */
     public function keepAsDraft()
     {
-        // Ensure the notice stays in the draft status (it should be already, but just in case)
-        $this->notice->status = Notice::STATUS_DRAFT;
-        $this->notice->save();
-
         // Redirect to notices index with a notice message instead of success
         return redirect()->route('notices.index')
             ->with('notice', 'Notice has been kept as a draft.');
@@ -55,12 +49,9 @@ class Preview extends Component
 
     public function saveAsDraft()
     {
-        $this->notice->status = Notice::STATUS_PENDING_PAYMENT;
-        $this->notice->save();
-
         // Redirect to the notices list
         return redirect()->route('notices.index')
-            ->with('success', 'Notice saved successfully.');
+            ->with('success', 'Notice kept as a draft successfully.');
     }
 
     public function backToEdit()

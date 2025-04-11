@@ -175,6 +175,17 @@
                                 {{ $notice->created_at->format('M d, Y') }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                @if($notice->status === 'pending_payment')
+                                <a href="{{ route('notices.preview', $notice->id) }}"
+                                    class="text-yellow-600 hover:text-yellow-900 inline-flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                    </svg>
+                                    Proceed to Payment
+                                </a>
+                                @else
                                 <a href="{{ route('notices.show', $notice->id) }}"
                                     class="text-indigo-600 hover:text-indigo-900 inline-flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
@@ -186,6 +197,7 @@
                                     </svg>
                                     View
                                 </a>
+                                @endif
                                 @if($notice->status === 'draft')
                                 <a href="{{ route('notices.edit', $notice->id) }}"
                                     class="text-blue-600 hover:text-blue-900 inline-flex items-center">

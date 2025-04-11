@@ -10,6 +10,7 @@ class Notice extends Model
 {
     use HasFactory;
 
+    const STATUS_DRAFT = 'draft';
     const STATUS_PENDING_PAYMENT = 'pending_payment';
     const STATUS_SERVICE_PENDING = 'service_pending';
     const STATUS_SERVED = 'served';
@@ -152,6 +153,7 @@ class Notice extends Model
     public static function statuses(): array
     {
         return [
+            self::STATUS_DRAFT,
             self::STATUS_PENDING_PAYMENT,
             self::STATUS_SERVICE_PENDING,
             self::STATUS_SERVED,
