@@ -312,6 +312,179 @@ class NoticeServiceTest extends TestCase
         $this->assertStringEndsWith('.pdf', $pdfPath);
     }
 
+    #[Test]
+    public function it_generates_json_shipping_form()
+    {
+        // Create account first
+        $account = Account::factory()->create();
+
+        // Create a user connected to the account
+        $user = User::factory()->create();
+        $user->accounts()->attach($account->id);
+
+        // Create a notice type
+        $noticeType = NoticeType::factory()->create();
+
+        // Create an agent connected to the account
+        $agent = Agent::factory()->create([
+            'account_id' => $account->id,
+            'name' => 'Jane Smith',
+            'address_1' => '456 Property Lane',
+            'address_2' => 'Suite 200',
+            'city' => 'Portland',
+            'state' => 'OR',
+            'zip' => '97204',
+            'phone' => '(503) 555-1234',
+            'email' => 'agent@example.com',
+        ]);
+
+        // Create tenant connected to the account
+        $tenant = Tenant::factory()->create([
+            'account_id' => $account->id,
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'address_1' => '123 Main Street',
+            'address_2' => 'Apt 4B',
+            'city' => 'Portland',
+            'state' => 'OR',
+            'zip' => '97201',
+        ]);
+
+        // Create notice without address fields
+        $notice = Notice::factory()->create([
+            'account_id' => $account->id,
+            'user_id' => $user->id,
+            'notice_type_id' => $noticeType->id,
+            'agent_id' => $agent->id,
+        ]);
+
+        // Attach ONLY this tenant to notice
+        $notice->tenants()->sync([$tenant->id]);
+
+        // Set up the needed template files
+        $this->setUpShippingFormTemplateFiles();
+
+        // Call the service method
+        $noticeService = new NoticeService();
+        $storagePath = $noticeService->generateJsonShippingForm($notice);
+
+        // Check if file exists
+        Storage::assertExists($storagePath);
+
+        // Read the generated file
+        $jsonContent = Storage::get($storagePath);
+        $generatedForm = json_decode($jsonContent, true);
+
+        // Verify the JSON structure
+        $this->assertIsArray($generatedForm);
+        $this->assertArrayHasKey('forms', $generatedForm);
+        $this->assertNotEmpty($generatedForm['forms']);
+
+        // Get all textfields from the generated form
+        $textfields = collect($generatedForm['forms'][0]['textfield']);
+
+        // Check sender information (agent details)
+        $this->assertEquals('Jane Smith', $this->getFieldValue($textfields, 'fromLine1'));
+        $this->assertEquals('456 Property Lane', $this->getFieldValue($textfields, 'fromLine2'));
+        $this->assertEquals('Suite 200', $this->getFieldValue($textfields, 'fromLine3'));
+        $this->assertEquals('Portland, OR 97204', $this->getFieldValue($textfields, 'fromLine4'));
+
+        // Check recipient information (tenant details)
+        $this->assertEquals('John Doe', $this->getFieldValue($textfields, 'toLine1'));
+        $this->assertEquals('123 Main Street', $this->getFieldValue($textfields, 'toLine2'));
+        $this->assertEquals('Apt 4B', $this->getFieldValue($textfields, 'toLine3'));
+        $this->assertEquals('Portland, OR 97201', $this->getFieldValue($textfields, 'toLine4'));
+
+        // Verify the filename format
+        $this->assertStringContainsString('shipping_' . $notice->id, $storagePath);
+    }
+
+    #[Test]
+    public function it_generates_pdf_shipping_form()
+    {
+        // Create account first
+        $account = Account::factory()->create();
+
+        // Create a user connected to the account
+        $user = User::factory()->create();
+        $user->accounts()->attach($account->id);
+
+        // Create a notice type
+        $noticeType = NoticeType::factory()->create();
+
+        // Create an agent connected to the account
+        $agent = Agent::factory()->create([
+            'account_id' => $account->id,
+            'address_1' => '456 Property Lane',
+            'address_2' => 'Suite 200',
+            'city' => 'Portland',
+            'state' => 'OR',
+            'zip' => '97204',
+            'phone' => '(503) 555-1234',
+            'email' => 'agent@example.com',
+        ]);
+
+        // Create tenant connected to the account
+        $tenant = Tenant::factory()->create([
+            'account_id' => $account->id,
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'address_1' => '123 Main Street',
+            'address_2' => 'Apt 4B',
+            'city' => 'Portland',
+            'state' => 'OR',
+            'zip' => '97201',
+        ]);
+
+        // Create notice without address fields
+        $notice = Notice::factory()->create([
+            'account_id' => $account->id,
+            'user_id' => $user->id,
+            'notice_type_id' => $noticeType->id,
+            'agent_id' => $agent->id,
+        ]);
+
+        // Attach tenant to notice
+        $notice->tenants()->sync([$tenant->id]);
+
+        // Set up mock File operations
+        // Reset all previous mocks to avoid conflicts
+        \Mockery::resetContainer();
+
+        // Set up the needed template files
+        $this->setUpShippingFormTemplateFiles();
+
+        // Set up additional directory mocks needed
+        File::shouldReceive('isDirectory')->andReturn(true);
+        File::shouldReceive('makeDirectory')->andReturn(true);
+        File::shouldReceive('exists')->andReturn(true);
+        File::shouldReceive('move')->andReturn(true);
+
+        // Create a mock Process for testing
+        $process = $this->getMockBuilder(Process::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        // Mock the run method to return exit code 0 (success)
+        $process->method('run')->willReturn(0);
+
+        // Mock the isSuccessful method to return true
+        $process->method('isSuccessful')->willReturn(true);
+
+        // Replace the real Process with our mock
+        $this->app->bind(Process::class, function ($app) use ($process) {
+            return $process;
+        });
+
+        // Call the service method
+        $noticeService = new NoticeService();
+        $pdfPath = $noticeService->generatePdfShippingForm($notice);
+
+        // Check if file exists - use our own assertion since File::exists is mocked
+        $this->assertStringContainsString('shipping_' . $notice->id, $pdfPath);
+        $this->assertStringEndsWith('.pdf', $pdfPath);
+    }
+
     /**
      * Set up the needed template files for testing
      */
@@ -400,6 +573,64 @@ class NoticeServiceTest extends TestCase
         File::shouldReceive('makeDirectory')
             ->andReturnUsing(function ($path, $mode, $recursive, $force = false) {
                 return true;
+            });
+    }
+
+    /**
+     * Set up the needed PS3817 shipping form template files for testing
+     */
+    private function setUpShippingFormTemplateFiles()
+    {
+        // Set up the templates directory
+        $templateDir = base_path('templates');
+        if (!file_exists($templateDir)) {
+            mkdir($templateDir, 0777, true);
+        }
+
+        // Create a mock JSON template content for the shipping form
+        $jsonTemplate = json_encode([
+            'header' => [
+                'source' => 'ps3817-form.pdf',
+                'version' => 'pdfcpu v0.9.1 dev',
+            ],
+            'forms' => [
+                [
+                    'textfield' => [
+                        ['name' => 'fromLine1', 'value' => ''],
+                        ['name' => 'fromLine2', 'value' => ''],
+                        ['name' => 'fromLine3', 'value' => ''],
+                        ['name' => 'fromLine4', 'value' => ''],
+                        ['name' => 'toLine1', 'value' => ''],
+                        ['name' => 'toLine2', 'value' => ''],
+                        ['name' => 'toLine3', 'value' => ''],
+                        ['name' => 'toLine4', 'value' => ''],
+                    ],
+                ],
+            ],
+        ], JSON_PRETTY_PRINT);
+
+        // Extend File::exists mock to cover shipping form templates
+        File::shouldReceive('exists')
+            ->andReturnUsing(function ($path) {
+                // Return true for both 10-day and PS3817 template paths
+                if (
+                    strpos($path, 'templates/10-day-notice-template') !== false ||
+                    strpos($path, 'templates/ps3817-form') !== false
+                ) {
+                    return true;
+                }
+                return file_exists($path);
+            });
+
+        // Extend File::get mock to return our PS3817 template JSON
+        File::shouldReceive('get')
+            ->andReturnUsing(function ($path) use ($jsonTemplate) {
+                // Return JSON content for the PS3817 template
+                if ($path === base_path('templates/ps3817-form.json')) {
+                    return $jsonTemplate;
+                }
+                // For other templates, use the existing mock or real file_get_contents
+                return file_get_contents($path);
             });
     }
 

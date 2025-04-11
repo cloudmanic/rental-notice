@@ -335,4 +335,160 @@ class NoticeService
         $notice->update(['status' => Notice::STATUS_SERVED]);
         // Additional logic...
     }
+
+    /**
+     * Generate a JSON shipping confirmation form (PS3817) based on a template for the given notice
+     * 
+     * @param Notice $notice The notice for which to generate a shipping confirmation
+     * @return string The path to the generated JSON file in storage
+     */
+    public function generateJsonShippingForm(Notice $notice): string
+    {
+        // Load the template
+        $templatePath = base_path('templates/ps3817-form.json');
+        if (!File::exists($templatePath)) {
+            throw new \Exception("Shipping form template not found at {$templatePath}");
+        }
+
+        $templateJson = File::get($templatePath);
+        $template = json_decode($templateJson, true);
+
+        if (!$template) {
+            throw new \Exception("Failed to parse shipping form template JSON");
+        }
+
+        // Update template with notice data
+        $formData = &$template['forms'][0];
+
+        // Helper function to update textfield by name
+        $updateTextField = function (string $name, ?string $value = '') use (&$formData) {
+            // Convert null to empty string
+            $value = $value ?? '';
+
+            foreach ($formData['textfield'] as &$field) {
+                if ($field['name'] === $name) {
+                    $field['value'] = $value;
+                    break;
+                }
+            }
+        };
+
+        // Get the tenants and agent
+        $tenants = $notice->tenants()->get();
+
+        if ($tenants->isEmpty()) {
+            throw new \Exception("No tenants associated with this notice");
+        }
+
+        $primaryTenant = $tenants->first();
+        $agent = $notice->agent;
+
+        if (!$agent) {
+            throw new \Exception("No agent associated with this notice");
+        }
+
+        // Set sender information (agent details)
+        $updateTextField('fromLine1', $agent->name);
+        $updateTextField('fromLine2', $agent->address_1);
+
+        if ($agent->address_2) {
+            $updateTextField('fromLine3', $agent->address_2);
+            $updateTextField('fromLine4', "{$agent->city}, {$agent->state} {$agent->zip}");
+        } else {
+            $updateTextField('fromLine3', "{$agent->city}, {$agent->state} {$agent->zip}");
+            $updateTextField('fromLine4', $agent->phone);
+        }
+
+        // Set recipient information (tenant details)
+        // Concatenate all tenant names for the first line
+        $tenantNames = $tenants->pluck('full_name')->join(', ');
+        $updateTextField('toLine1', $tenantNames);
+
+        // Use the primary tenant's address for the shipping address
+        $updateTextField('toLine2', $primaryTenant->address_1);
+
+        if (!empty($primaryTenant->address_2)) {
+            $updateTextField('toLine3', $primaryTenant->address_2);
+            $updateTextField('toLine4', "{$primaryTenant->city}, {$primaryTenant->state} {$primaryTenant->zip}");
+        } else {
+            $updateTextField('toLine3', "{$primaryTenant->city}, {$primaryTenant->state} {$primaryTenant->zip}");
+            $updateTextField('toLine4', '');
+        }
+
+        // Generate unique filename based on notice ID
+        $fileName = 'shipping_' . $notice->id . '_' . time() . '.json';
+        $storagePath = 'notices/' . $fileName;
+
+        // Make sure the notices directory exists
+        Storage::disk('local')->makeDirectory('notices');
+
+        // Store the generated JSON
+        Storage::disk('local')->put($storagePath, json_encode($template, JSON_PRETTY_PRINT));
+
+        return $storagePath;
+    }
+
+    /**
+     * Generate a PDF shipping confirmation form (PS3817) by filling the PDF template with JSON data
+     * 
+     * @param Notice $notice The notice for which to generate a shipping form
+     * @param bool $watermarked Whether to add a "DRAFT" watermark to the PDF
+     * @return string The path to the generated PDF file in storage
+     */
+    public function generatePdfShippingForm(Notice $notice, bool $watermarked = false): string
+    {
+        // First, generate the JSON for the shipping form
+        $jsonStoragePath = $this->generateJsonShippingForm($notice);
+        $jsonFullPath = Storage::disk('local')->path($jsonStoragePath);
+
+        // Get the PDF template path
+        $pdfTemplatePath = base_path('templates/ps3817-form.pdf');
+
+        if (!File::exists($pdfTemplatePath)) {
+            throw new \Exception("Shipping form template not found at {$pdfTemplatePath}");
+        }
+
+        // Generate the output PDF filename
+        $pdfFileName = 'shipping_' . $notice->id . '_' . time() . '.pdf';
+        $pdfStoragePath = 'notices/' . $pdfFileName;
+        $pdfFullPath = Storage::disk('local')->path($pdfStoragePath);
+
+        // Make sure the output directory exists
+        $outputDir = dirname($pdfFullPath);
+        if (!File::isDirectory($outputDir)) {
+            File::makeDirectory($outputDir, 0755, true);
+        }
+
+        // Execute pdfcpu command to fill the form
+        $process = new Process([
+            'pdfcpu',
+            'form',
+            'fill',
+            $pdfTemplatePath,
+            $jsonFullPath,
+            $pdfFullPath
+        ]);
+
+        $process->run();
+
+        // Check if the process was successful
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        // Check if the PDF was actually created
+        if (!File::exists($pdfFullPath)) {
+            throw new \Exception("Failed to generate PDF shipping form");
+        }
+
+        // Add watermark if requested
+        if ($watermarked) {
+            $this->addDraftWatermark($pdfFullPath);
+        }
+
+        // Lock the PDF forms so they cannot be edited
+        $this->lockPdfForms($pdfFullPath);
+
+        return $pdfStoragePath;
+    }
 }

@@ -61,9 +61,6 @@ class NoticeController extends Controller
                 'Content-Disposition' => 'inline; filename="notice-' . uniqid() . '.pdf"'
             ]);
         } catch (\Exception $e) {
-
-            dd($e->getMessage());
-
             // Log the error
             \Log::error('PDF Generation failed: ' . $e->getMessage(), [
                 'notice_id' => $notice->id,
@@ -72,6 +69,50 @@ class NoticeController extends Controller
 
             // Return error response
             abort(500, 'Failed to generate PDF: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Generate and serve a PDF for a shipping confirmation form (PS3817).
+     * 
+     * @param Notice $notice
+     * @return Response
+     */
+    public function generateShippingForm(Notice $notice)
+    {
+        // Authorization check - can only view notices in your own account
+        if ($notice->account_id !== auth()->user()->account->id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        try {
+            // Check if watermark is requested
+            $watermarked = true;
+
+            // Generate the shipping form PDF using our NoticeService
+            $pdfPath = $this->noticeService->generatePdfShippingForm($notice, $watermarked);
+
+            // Get the full path to the generated PDF file
+            $fullPath = Storage::path($pdfPath);
+
+            if (!file_exists($fullPath)) {
+                abort(404, 'Shipping form generation failed');
+            }
+
+            // Return the PDF as a download
+            return response()->file($fullPath, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="shipping-form-' . uniqid() . '.pdf"'
+            ]);
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Shipping Form PDF Generation failed: ' . $e->getMessage(), [
+                'notice_id' => $notice->id,
+                'exception' => $e
+            ]);
+
+            // Return error response
+            abort(500, 'Failed to generate shipping form: ' . $e->getMessage());
         }
     }
 }
