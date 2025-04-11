@@ -181,11 +181,11 @@ class NoticeService
 
         // Execute pdfcpu command to fill the form
         $process = new Process([
-            'pdfcpu', 
-            'form', 
-            'fill', 
-            $pdfTemplatePath, 
-            $jsonFullPath, 
+            'pdfcpu',
+            'form',
+            'fill',
+            $pdfTemplatePath,
+            $jsonFullPath,
             $pdfFullPath
         ]);
 

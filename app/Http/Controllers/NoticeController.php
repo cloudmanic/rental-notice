@@ -3,11 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notice;
+use App\Services\NoticeService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 
 class NoticeController extends Controller
 {
+    /**
+     * The notice service instance.
+     *
+     * @var NoticeService
+     */
+    protected $noticeService;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param NoticeService $noticeService
+     * @return void
+     */
+    public function __construct(NoticeService $noticeService)
+    {
+        $this->noticeService = $noticeService;
+    }
+
     /**
      * Generate and serve a PDF for a notice.
      * 
@@ -21,21 +41,31 @@ class NoticeController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        // This is a placeholder. In a real implementation, you would:
-        // 1. Generate the PDF using a library like DOMPDF, TCPDF, or Snappy PDF
-        // 2. Return the PDF content
+        try {
+            // Generate the PDF using our NoticeService
+            $pdfPath = $this->noticeService->generatePdfNotice($notice);
 
-        // For demo purposes, we'll just serve a static PDF from the templates folder
-        // You'll need to implement the actual PDF generation based on the notice data
-        $pdfPath = storage_path('app/templates/10-day-notice-template.pdf');
+            // Get the full path to the generated PDF file
+            $fullPath = Storage::path($pdfPath);
 
-        if (!file_exists($pdfPath)) {
-            abort(404, 'PDF template not found');
+            if (!file_exists($fullPath)) {
+                abort(404, 'PDF generation failed');
+            }
+
+            // Return the PDF as a download
+            return response()->file($fullPath, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="notice-' . uniqid() . '.pdf"'
+            ]);
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('PDF Generation failed: ' . $e->getMessage(), [
+                'notice_id' => $notice->id,
+                'exception' => $e
+            ]);
+
+            // Return error response
+            abort(500, 'Failed to generate PDF: ' . $e->getMessage());
         }
-
-        return response()->file($pdfPath, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="notice-' . $notice->id . '.pdf"'
-        ]);
     }
 }

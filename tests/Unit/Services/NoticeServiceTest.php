@@ -318,7 +318,7 @@ class NoticeServiceTest extends TestCase
                 // Use real file_get_contents for other files
                 return file_get_contents($path);
             });
-            
+
         // Mock File::isDirectory to work with our fake directories
         File::shouldReceive('isDirectory')
             ->andReturnUsing(function ($path) {
@@ -328,7 +328,7 @@ class NoticeServiceTest extends TestCase
                 }
                 return is_dir($path);
             });
-            
+
         // Mock File::makeDirectory to not do anything in tests
         File::shouldReceive('makeDirectory')
             ->andReturnUsing(function ($path, $mode, $recursive, $force = false) {
