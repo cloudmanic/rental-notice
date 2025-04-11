@@ -165,10 +165,10 @@ class NoticeService
         $storagePath = 'notices/' . $fileName;
 
         // Make sure the notices directory exists
-        Storage::makeDirectory('notices');
+        Storage::disk('local')->makeDirectory('notices');
 
         // Store the generated JSON
-        Storage::put($storagePath, json_encode($template, JSON_PRETTY_PRINT));
+        Storage::disk('local')->put($storagePath, json_encode($template, JSON_PRETTY_PRINT));
 
         return $storagePath;
     }
@@ -184,7 +184,7 @@ class NoticeService
     {
         // First, generate the JSON notice
         $jsonStoragePath = $this->generateJsonNotice($notice);
-        $jsonFullPath = Storage::path($jsonStoragePath);
+        $jsonFullPath = Storage::disk('local')->path($jsonStoragePath);
 
         // Get the PDF template path
         $pdfTemplatePath = base_path('templates/10-day-notice-template.pdf');
@@ -196,7 +196,7 @@ class NoticeService
         // Generate the output PDF filename
         $pdfFileName = 'notice_' . $notice->id . '_' . time() . '.pdf';
         $pdfStoragePath = 'notices/' . $pdfFileName;
-        $pdfFullPath = Storage::path($pdfStoragePath);
+        $pdfFullPath = Storage::disk('local')->path($pdfStoragePath);
 
         // Make sure the output directory exists
         $outputDir = dirname($pdfFullPath);

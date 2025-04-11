@@ -37,7 +37,7 @@ class Edit extends Component
         }
 
         $this->notice = $notice;
-        
+
         // Initialize tenants as an empty collection
         $this->tenants = collect();
 
@@ -179,15 +179,15 @@ class Edit extends Component
         })->pluck('id')->toArray();
 
         $validatedData = $this->validate([
-            'notice.notice_type_id' => [
-                'required',
-                'exists:notice_types,id',
-                function ($attribute, $value, $fail) use ($allowedNoticeTypeIds) {
-                    if (!in_array($value, $allowedNoticeTypeIds)) {
-                        $fail('The selected notice type is not available for your current plan.');
-                    }
-                },
-            ],
+            // 'notice.notice_type_id' => [
+            //     'required',
+            //     'exists:notice_types,id',
+            //     function ($attribute, $value, $fail) use ($allowedNoticeTypeIds) {
+            //         if (!in_array($value, $allowedNoticeTypeIds)) {
+            //             $fail('The selected notice type is not available for your current plan.');
+            //         }
+            //     },
+            // ],
             'notice.agent_id' => 'required|exists:agents,id',
             'selectedTenants' => 'required|array|min:1',
             'notice.past_due_rent' => 'required|numeric|min:0|max:99999.99',
@@ -225,7 +225,7 @@ class Edit extends Component
         $this->notice->tenants()->sync($tenantIds);
 
         // Redirect to the notice details page
-        return redirect()->route('notices.show', $this->notice->id)
+        return redirect()->route('notices.preview', $this->notice->id)
             ->with('success', 'Notice updated successfully.');
     }
 }

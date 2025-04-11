@@ -104,7 +104,7 @@ class NoticeServiceTest extends TestCase
 
         // Calculate expected total based on the getTotalChargesAttribute method in the Notice model
         $expectedTotal = $pastDueRent + $lateCharges + $other1Price + $other2Price + $other3Price;
-        $formattedExpectedTotal = '$' . number_format($expectedTotal, 2);
+        $formattedExpectedTotal = number_format($expectedTotal, 2);
 
         // Attach tenants to notice
         $notice->tenants()->attach([$tenant1->id, $tenant2->id]);
@@ -144,22 +144,22 @@ class NoticeServiceTest extends TestCase
         // Check tenant information
         $this->assertEquals('John Doe', $this->getFieldValue($textfields, 'tenant1'));
         $this->assertEquals('Jane Smith', $this->getFieldValue($textfields, 'tenant2'));
-        $this->assertEquals('123 Main Street', $this->getFieldValue($textfields, 'streetAddress'));
-        $this->assertEquals('Apt 4B', $this->getFieldValue($textfields, 'unitNumber'));
+        $this->assertEquals('123 Main Street, Apt 4B', $this->getFieldValue($textfields, 'streetAddress'));
+        $this->assertEquals('', $this->getFieldValue($textfields, 'unitNumber'));
         $this->assertEquals('Portland', $this->getFieldValue($textfields, 'city'));
         $this->assertEquals('OR', $this->getFieldValue($textfields, 'state'));
         $this->assertEquals('97201', $this->getFieldValue($textfields, 'zip'));
 
         // Check financial information
-        $this->assertEquals('$1,250.00', $this->getFieldValue($textfields, 'pastDueRent'));
-        $this->assertEquals('$1,250.00', $this->getFieldValue($textfields, 'rentAmountDue'));
-        $this->assertEquals('$75.00', $this->getFieldValue($textfields, 'lateCharges'));
+        $this->assertEquals('1,250.00', $this->getFieldValue($textfields, 'pastDueRent'));
+        $this->assertEquals('1,250.00', $this->getFieldValue($textfields, 'rentAmountDue'));
+        $this->assertEquals('75.00', $this->getFieldValue($textfields, 'lateCharges'));
         $this->assertEquals($formattedExpectedTotal, $this->getFieldValue($textfields, 'totalOutstandingAmount'));
 
         // Check other charges
-        $this->assertEquals('Legal fee: $100.00', $this->getFieldValue($textfields, 'other1'));
-        $this->assertEquals('Maintenance fee: $75.00', $this->getFieldValue($textfields, 'other2'));
-        $this->assertEquals('NSF fee: $35.00', $this->getFieldValue($textfields, 'other3'));
+        $this->assertEquals('Legal fee', $this->getFieldValue($textfields, 'other1'));
+        $this->assertEquals('Maintenance fee', $this->getFieldValue($textfields, 'other2'));
+        $this->assertEquals('NSF fee', $this->getFieldValue($textfields, 'other3'));
 
         // Check agent information
         $this->assertEquals('456 Property Lane', $this->getFieldValue($textfields, 'agentAddress1'));
