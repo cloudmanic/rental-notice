@@ -70,16 +70,26 @@ class NoticeService
 
         // Format currency values
         $formatCurrency = function ($amount) {
-            return '$' . number_format((float)$amount, 2);
+            return number_format((float)$amount, 2);
         };
 
         // Current date
-        $updateTextField('date', Carbon::now()->format('F j, Y'));
+        $updateTextField('date', Carbon::now()->format('m/d/Y'));
+
+
 
         // Tenant information
         $primaryTenant = $tenants->first();
-        $updateTextField('streetAddress', $primaryTenant->address_1);
-        $updateTextField('unitNumber', $primaryTenant->address_2 ?? '');
+
+        $streetAddress = $primaryTenant->address_1 ?? "";
+
+        if ($primaryTenant->address_2) {
+            $streetAddress = $primaryTenant->address_1 . ', ' . $primaryTenant->address_2;
+        }
+
+        $updateTextField('propertyName', $primaryTenant->address_1);
+        $updateTextField('streetAddress', $streetAddress);
+        //$updateTextField('unitNumber', $primaryTenant->address_2 ?? '');
         $updateTextField('city', $primaryTenant->city);
         $updateTextField('state', $primaryTenant->state);
         $updateTextField('zip', $primaryTenant->zip);
@@ -130,11 +140,14 @@ class NoticeService
         $updateCheckbox('checkBoxOtherFormPayment', $notice->payment_other_means);
 
         // Service date information - just using current date for now, these should be updated when services actually happen
-        $currentDate = Carbon::now()->format('F j, Y');
+        $currentDate = Carbon::now()->format('m/d/Y');
         $updateTextField('personalServiceDate', $currentDate);
         $updateTextField('postedServiceDate', $currentDate);
         $updateTextField('firstClassServiceDate', $currentDate);
         $updateTextField('addendumServiceDate', $currentDate);
+
+        // Add notice ID. This is used internally to match up the notice to a DB record (UII = Unique Internal Identifier)
+        $updateTextField('noticeId', "UII:$notice->id");
 
         // Generate unique filename based on notice ID
         $fileName = 'notice_' . $notice->id . '_' . time() . '.json';
@@ -207,15 +220,6 @@ class NoticeService
             $this->addDraftWatermark($pdfFullPath);
         }
 
-        // // Create a temporary file path for the flattened PDF
-        // $flattenedPath = $pdfFullPath . '.flattened.pdf';
-
-        // // Flatten the PDF to convert form fields to static content
-        // $this->flattenPdf($pdfFullPath, $flattenedPath);
-
-        // // Replace the original PDF with the flattened version
-        // File::move($flattenedPath, $pdfFullPath);
-
         // Lock the PDF forms so they cannot be edited
         $this->lockPdfForms($pdfFullPath);
 
@@ -237,16 +241,15 @@ class NoticeService
         // The correct syntax according to pdfcpu help documentation
         $process = new Process([
             'pdfcpu',
-            'watermark',
+            'stamp',
             'add',
-            '-v',                // Verbose output to help with debugging
-            '-m',
-            'text',        // Use text mode for the watermark
-            '--',                // Required separator between mode and text
-            'DRAFT',             // The text to display
-            'points:48, scale:1, color:#FF0000, op:.6', // Configuration string
-            $pdfPath,            // Source PDF
-            $tempPath            // Output PDF (with .pdf extension)
+            '-mode',
+            'text',
+            '--',
+            'Draft Document',
+            'scale:1, op:0.6',
+            $pdfPath,
+            $tempPath
         ]);
 
         $process->run();
@@ -308,36 +311,5 @@ class NoticeService
 
         // Replace the original PDF with the secured version
         File::move($tempPath, $pdfPath);
-    }
-
-    /**
-     * Flatten a PDF file using ImageMagick to convert form fields to static content
-     * 
-     * @param string $inputPath The input PDF file path
-     * @param string $outputPath The output flattened PDF file path
-     * @return void
-     */
-    private function flattenPdf(string $inputPath, string $outputPath): void
-    {
-        // Use ImageMagick's convert command to flatten the PDF
-        $process = new Process([
-            'convert',
-            '-density',
-            '300',
-            $inputPath,
-            $outputPath
-        ]);
-
-        $process->run();
-
-        // Check if the conversion was successful
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-
-        // Verify the flattened PDF was created
-        if (!File::exists($outputPath)) {
-            throw new \Exception("Failed to flatten PDF at {$outputPath}");
-        }
     }
 }
