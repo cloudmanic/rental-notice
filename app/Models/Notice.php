@@ -38,6 +38,9 @@ class Notice extends Model
         'include_all_other_occupents',
         'status',
         'error_message',
+        'draft_pdf',
+        'final_pdf',
+        'certificate_pdf',
     ];
 
     protected $casts = [
@@ -129,6 +132,11 @@ class Notice extends Model
             // Flags validation
             'payment_other_means' => ['boolean'],
             'include_all_other_occupents' => ['boolean'],
+
+            // PDF files validation
+            'draft_pdf' => ['nullable', 'string'],
+            'final_pdf' => ['nullable', 'string'],
+            'certificate_pdf' => ['nullable', 'string'],
 
             'status' => ['required', 'string', 'in:' . implode(',', self::statuses())],
             'error_message' => ['nullable', 'string', 'max:1000'],

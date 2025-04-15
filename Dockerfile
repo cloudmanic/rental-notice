@@ -59,6 +59,7 @@ RUN mkdir /data && chmod 754 /usr/local/bin/start-nginx && chmod 700 -R /root/.s
 COPY . /var/www/html
 WORKDIR /var/www/html
 RUN chown www-data:www-data /data
+RUN chown www-data:www-data /var/www
 
 # 4. Setup application dependencies 
 RUN composer install --optimize-autoloader --no-dev \

@@ -178,10 +178,41 @@ class NoticeService
      * 
      * @param Notice $notice The notice to generate PDF for
      * @param bool $watermarked Whether to add a "DRAFT" watermark to the PDF
+     * @param bool $refresh Whether to force regenerate the PDF even if it exists
      * @return string The path to the generated PDF file in storage
      */
-    public function generatePdfNotice(Notice $notice, bool $watermarked = false): string
+    public function generatePdfNotice(Notice $notice, bool $watermarked = false, bool $refresh = false): string
     {
+        // Check if PDF already exists in the database
+        $pdfColumn = $watermarked ? 'draft_pdf' : 'final_pdf';
+
+        if (!$refresh && !empty($notice->$pdfColumn)) {
+            // PDF exists in database, check if we have it locally
+            $s3Path = $notice->$pdfColumn;
+            $localFileName = basename($s3Path);
+            $localStoragePath = 'notices/' . $localFileName;
+            $localFullPath = Storage::disk('local')->path($localStoragePath);
+
+            // Check if PDF exists locally
+            if (!Storage::disk('local')->exists($localStoragePath)) {
+                // PDF not found locally, download from S3
+                $s3Contents = Storage::disk('s3')->get($s3Path);
+
+                // Ensure local directory exists
+                $localDir = dirname($localFullPath);
+                if (!File::isDirectory($localDir)) {
+                    File::makeDirectory($localDir, 0755, true);
+                }
+
+                // Store the file locally
+                Storage::disk('local')->put($localStoragePath, $s3Contents);
+            }
+
+            // Return the full local path to the PDF file
+            return $localStoragePath;
+        }
+
+        // PDF doesn't exist or we're refreshing, generate it
         // First, generate the JSON notice
         $jsonStoragePath = $this->generateJsonNotice($notice);
         $jsonFullPath = Storage::disk('local')->path($jsonStoragePath);
@@ -195,11 +226,11 @@ class NoticeService
 
         // Generate the output PDF filename
         $pdfFileName = 'notice_' . $notice->id . '_' . time() . '.pdf';
-        $pdfStoragePath = 'notices/' . $pdfFileName;
-        $pdfFullPath = Storage::disk('local')->path($pdfStoragePath);
+        $localStoragePath = 'notices/' . ($watermarked ? 'drafts/' : 'finals/') . $pdfFileName;
+        $localFullPath = Storage::disk('local')->path($localStoragePath);
 
         // Make sure the output directory exists
-        $outputDir = dirname($pdfFullPath);
+        $outputDir = dirname($localFullPath);
         if (!File::isDirectory($outputDir)) {
             File::makeDirectory($outputDir, 0755, true);
         }
@@ -211,7 +242,7 @@ class NoticeService
             'fill',
             $pdfTemplatePath,
             $jsonFullPath,
-            $pdfFullPath
+            $localFullPath
         ]);
 
         $process->run();
@@ -222,19 +253,31 @@ class NoticeService
         }
 
         // Check if the PDF was actually created
-        if (!File::exists($pdfFullPath)) {
+        if (!File::exists($localFullPath)) {
             throw new \Exception("Failed to generate PDF notice");
         }
 
         // Add watermark if requested
         if ($watermarked) {
-            $this->addDraftWatermark($pdfFullPath);
+            $this->addDraftWatermark($localFullPath);
         }
 
         // Lock the PDF forms so they cannot be edited
-        $this->lockPdfForms($pdfFullPath);
+        $this->lockPdfForms($localFullPath);
 
-        return $pdfStoragePath;
+        // Upload to AWS S3
+        $s3Path = $notice->account_id . '/notice_' . ($watermarked ? 'draft_' : 'final_') . $notice->id . '.pdf';
+        $result = Storage::disk('s3')->put($s3Path, file_get_contents($localFullPath));
+
+        if (!$result) {
+            throw new \Exception("Failed to upload PDF to S3");
+        }
+
+        // Update the notice record
+        $notice->update([$pdfColumn => $s3Path]);
+
+        // Return the full local path to the generated PDF
+        return $localStoragePath;
     }
 
     /**
