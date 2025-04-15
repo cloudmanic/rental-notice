@@ -11,6 +11,15 @@
         content="@yield('description', 'Oregon Past Due Rent helps landlords issue legally compliant past-due rent notices with professional delivery for just $' . App\Facades\Pricing::getStandardPrice() . ' per notice.')">
     <link rel="canonical" href="{{ url()->current() }}" />
 
+    <script defer data-domain="oregonpastduerent.com"
+        src="https://plausible.io/js/script.pageview-props.revenue.tagged-events.js"></script>
+    <script>
+    window.plausible = window.plausible || function() {
+        (window.plausible.q = window.plausible.q || []).push(arguments)
+    }
+    </script>
+
+
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
@@ -288,24 +297,24 @@
 
     <!-- Mobile menu toggle script -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const menuClosedIcon = document.getElementById('menu-closed-icon');
-            const menuOpenIcon = document.getElementById('menu-open-icon');
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuClosedIcon = document.getElementById('menu-closed-icon');
+        const menuOpenIcon = document.getElementById('menu-open-icon');
 
-            mobileMenuButton.addEventListener('click', function() {
-                const isMenuOpen = mobileMenu.classList.toggle('hidden');
+        mobileMenuButton.addEventListener('click', function() {
+            const isMenuOpen = mobileMenu.classList.toggle('hidden');
 
-                if (isMenuOpen) {
-                    menuClosedIcon.classList.remove('hidden');
-                    menuOpenIcon.classList.add('hidden');
-                } else {
-                    menuClosedIcon.classList.add('hidden');
-                    menuOpenIcon.classList.remove('hidden');
-                }
-            });
+            if (isMenuOpen) {
+                menuClosedIcon.classList.remove('hidden');
+                menuOpenIcon.classList.add('hidden');
+            } else {
+                menuClosedIcon.classList.add('hidden');
+                menuOpenIcon.classList.remove('hidden');
+            }
         });
+    });
     </script>
 </body>
 

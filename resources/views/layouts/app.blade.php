@@ -9,6 +9,15 @@
     <title>{{ config('app.name', 'Rental Notice') }}</title>
     <link rel="canonical" href="{{ url()->current() }}" />
 
+    <script defer data-domain="oregonpastduerent.com"
+        src="https://plausible.io/js/script.pageview-props.revenue.tagged-events.js"></script>
+    <script>
+    window.plausible = window.plausible || function() {
+        (window.plausible.q = window.plausible.q || []).push(arguments)
+    }
+    </script>
+
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
