@@ -20,12 +20,16 @@ primary_region = 'sea'
   APP_ENV = 'production'
   LOG_CHANNEL = 'stderr'
   LOG_LEVEL = 'info'
+  MAIL_MAILER = 'ses'
+  MAIL_FROM_ADDRESS = 'help@oregonpastduerent.com'
+  MAIL_FROM_NAME = 'Oregon Past Due Rent'
   LOG_STDERR_FORMATTER = 'Monolog\Formatter\JsonFormatter'
   SESSION_DRIVER = 'database'
   SESSION_SECURE_COOKIE = 'true'
   QUEUE_CONNECTION = 'database'
   DB_CONNECTION = 'sqlite'
-  DB_DATABASE = '/data/rental-notice.sqlite' 
+  DB_DATABASE = '/data/rental-notice.sqlite'
+  AWS_DEFAULT_REGION = 'us-east-1'  
 
 [http_service]
   internal_port = 8080

@@ -67,6 +67,18 @@ Route::middleware('guest')->group(function () {
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {
+    Route::get('slack-test', function (Illuminate\Http\Request $request) {
+        $user = $request->user();
+        $notice = \App\Models\Notice::find(1);
+
+        $user->notify(new App\Notifications\NoticePaid($notice));
+
+        //\Illuminate\Support\Facades\Mail::to($request->user())->send(new \App\Mail\NoticePaid());
+
+        return 'woots';
+    })->name('slack-test');
+
+
     // Logout Route
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 

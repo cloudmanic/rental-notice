@@ -4,6 +4,8 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use App\Models\Notice;
+use Illuminate\Mail\Mailable;
+use App\Mail\NoticePaid as InvoicePaidMailable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -35,18 +37,15 @@ class NoticePaid extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['slack'];
+        return ['mail', 'slack'];
     }
 
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
+    public function toMail(object $notifiable): Mailable
     {
-        return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+        return (new InvoicePaidMailable())->to($notifiable->email);
     }
 
     /**

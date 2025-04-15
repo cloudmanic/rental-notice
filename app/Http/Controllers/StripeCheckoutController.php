@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Notification;
 use App\Notifications\NoticePaid;
 
 class StripeCheckoutController extends Controller
@@ -21,16 +20,8 @@ class StripeCheckoutController extends Controller
      * @param  \App\Models\Notice  $notice
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function create(Request $request, Notice $notice)
+    public function create(Notice $notice)
     {
-        $user = $request->user();
-
-        $user->notify(new NoticePaid($notice));
-
-        //Notification::route('slack', '#rental-notice')->notify(new NoticePaid($notice));
-
-        return 'woots';
-
         // Require Stripe PHP SDK
         if (!class_exists('Stripe\\Stripe')) {
             abort(500, 'Stripe PHP SDK is not installed. Run composer require stripe/stripe-php');
@@ -91,7 +82,7 @@ class StripeCheckoutController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function success()
+    public function success(Request $request)
     {
         // Get the notice id from the session
         $noticeId = session('checkout_notice_id');
@@ -110,6 +101,10 @@ class StripeCheckoutController extends Controller
         }
         $notice->status = Notice::STATUS_SERVICE_PENDING;
         $notice->save();
+
+        // Send notices that payment was successful. Email to user, slack to us.
+        $user = $request->user();
+        $user->notify(new NoticePaid($notice));
 
         // Build the success message
         $tenants = $notice->tenants->map(function ($tenant) {
