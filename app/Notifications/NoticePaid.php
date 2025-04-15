@@ -4,12 +4,12 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use App\Models\Notice;
-//use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Slack\SlackMessage;
 
-class NoticePaid extends Notification
+class NoticePaid extends Notification implements ShouldQueue
 {
     use Queueable;
 

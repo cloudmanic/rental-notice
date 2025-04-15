@@ -153,12 +153,4 @@ class User extends Authenticatable
             'email.unique' => 'This email is already registered',
         ];
     }
-
-    /**
-     * Route notifications for the Slack channel.
-     */
-    public function routeNotificationForSlack(Notification $notification): mixed
-    {
-        return '#rental-notice';
-    }
 }

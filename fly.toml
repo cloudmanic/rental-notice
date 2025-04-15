@@ -23,6 +23,7 @@ primary_region = 'sea'
   LOG_STDERR_FORMATTER = 'Monolog\Formatter\JsonFormatter'
   SESSION_DRIVER = 'database'
   SESSION_SECURE_COOKIE = 'true'
+  QUEUE_CONNECTION = 'database'
   DB_CONNECTION = 'sqlite'
   DB_DATABASE = '/data/rental-notice.sqlite' 
 
