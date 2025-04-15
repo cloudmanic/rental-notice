@@ -27,16 +27,6 @@ class Preview extends Component
         }
     }
 
-    public function proceedToPayment()
-    {
-        // TODO: Implement payment logic here
-
-        // Redirect to payment page (you'll need to create this later)
-        // For now, we'll redirect to the notice show page
-        return redirect()->route('notices.index')
-            ->with('success', 'Notice status updated to pending payment.');
-    }
-
     /**
      * Keep the notice in draft status and redirect to the notices index
      */
