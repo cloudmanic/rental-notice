@@ -10,6 +10,12 @@ class Show extends Component
 {
     public Notice $notice;
 
+    /**
+     * Mount the component with the given notice.
+     *
+     * @param  \App\Models\Notice  $notice
+     * @return void
+     */
     #[Layout('layouts.app')]
     public function mount(Notice $notice)
     {
@@ -21,6 +27,11 @@ class Show extends Component
         }
     }
 
+    /**
+     * Render the component.
+     *
+     * @return \Illuminate\View\View
+     */
     public function render()
     {
         return view('livewire.notices.show');

@@ -44,8 +44,11 @@ class NoticeController extends Controller
         }
 
         try {
-            // Check if watermark is requested
+            // Set watermark to false if notice status is SERVICE_PENDING or SERVED
             $watermarked = true;
+            if ($notice->status === Notice::STATUS_SERVICE_PENDING || $notice->status === Notice::STATUS_SERVED) {
+                $watermarked = false;
+            }
 
             // Generate the PDF using our NoticeService
             $pdfPath = $this->noticeService->generatePdfNotice($notice, $watermarked);

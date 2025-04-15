@@ -10,6 +10,12 @@ class Preview extends Component
 {
     public Notice $notice;
 
+    /**
+     * Mount the component with the notice instance
+     *
+     * @param Notice $notice
+     * @return void
+     */
     #[Layout('layouts.app')]
     public function mount(Notice $notice)
     {
@@ -37,6 +43,9 @@ class Preview extends Component
             ->with('notice', 'Notice has been kept as a draft.');
     }
 
+    /**
+     * Save the notice as a draft and redirect to the notices index
+     */
     public function saveAsDraft()
     {
         // Redirect to the notices list
@@ -44,11 +53,17 @@ class Preview extends Component
             ->with('success', 'Notice kept as a draft successfully.');
     }
 
+    /**
+     * Redirect to the edit page of the notice
+     */
     public function backToEdit()
     {
         return redirect()->route('notices.edit', $this->notice->id);
     }
 
+    /**
+     * Redirect to the notices index
+     */
     public function render()
     {
         return view('livewire.notices.preview');
