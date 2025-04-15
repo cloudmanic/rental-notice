@@ -309,8 +309,8 @@ class Create extends Component
             $notice->tenants()->attach($tenant['id']);
         }
 
-        // Dispatch job to generate the PDF with watermark (draft)
-        GenerateNoticePdfJob::dispatch($notice, true);
+        // Dispatch job to generate the PDF with watermark (draft) before payment
+        GenerateNoticePdfJob::dispatch($notice);
 
         // Redirect to loading page instead of preview
         return redirect()->route('notices.generating', $notice->id);

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use App\Notifications\NoticePaid;
+use App\Jobs\GenerateNoticePdfJob;
 
 class StripeCheckoutController extends Controller
 {
@@ -119,6 +120,9 @@ class StripeCheckoutController extends Controller
             'user_id' => Auth::id(),
             'message' => $message,
         ]);
+
+        // Dispatch job to generate the PDF with no watermark (final)
+        GenerateNoticePdfJob::dispatch($notice);
 
         session()->flash('success', $message);
         return to_route('notices.index');
