@@ -11,6 +11,7 @@ use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Services\ActivityService;
+use App\Jobs\GenerateNoticePdfJob;
 
 class Create extends Component
 {
@@ -75,6 +76,11 @@ class Create extends Component
     public $searchTenant = '';
     public $selectedTenantId = null;
 
+    /*
+     * Render the component view.
+     *
+     * @return \Illuminate\View\View
+     */
     #[Layout('layouts.app')]
     public function render()
     {
@@ -109,6 +115,12 @@ class Create extends Component
         ]);
     }
 
+    /**
+     * Mount the component with initial data.
+     *
+     * @param Request $request
+     * @return void
+     */
     public function mount(Request $request)
     {
         $this->states = config('states');
@@ -297,10 +309,18 @@ class Create extends Component
             $notice->tenants()->attach($tenant['id']);
         }
 
-        // Redirect to preview page instead of index
-        return redirect()->route('notices.preview', $notice->id);
+        // Dispatch job to generate the PDF with watermark (draft)
+        GenerateNoticePdfJob::dispatch($notice, true);
+
+        // Redirect to loading page instead of preview
+        return redirect()->route('notices.generating', $notice->id);
     }
 
+    /**
+     * Create a new agent from the modal form.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function createAgent()
     {
         $accountId = Auth::user()->account->id;
@@ -522,7 +542,12 @@ class Create extends Component
         return redirect()->route('notices.create');
     }
 
-    // Methods for handling multiple tenants
+    /**
+     * Add a tenant to the selected tenants list.
+     *
+     * @param int $id
+     * @return void
+     */
     public function addTenant($id)
     {
         $tenant = Tenant::find($id);
@@ -542,6 +567,12 @@ class Create extends Component
         $this->searchTenant = '';
     }
 
+    /**
+     * Remove a tenant from the selected tenants list.
+     *
+     * @param int $id
+     * @return void
+     */
     public function removeTenant($id)
     {
         $this->selectedTenants = array_filter($this->selectedTenants, function ($tenant) use ($id) {

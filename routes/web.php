@@ -108,6 +108,7 @@ Route::middleware('auth')->group(function () {
     Route::get('notices/create', NoticesCreate::class)->name('notices.create');
     Route::get('notices/{notice}', App\Livewire\Notices\Show::class)->name('notices.show');
     Route::get('notices/{notice}/edit', App\Livewire\Notices\Edit::class)->name('notices.edit');
+    Route::get('notices/{notice}/generating', App\Livewire\Notices\Generating::class)->name('notices.generating');
     Route::get('notices/{notice}/preview', NoticesPreview::class)->name('notices.preview');
     Route::get('notices/{notice}/pdf', [NoticeController::class, 'generatePdf'])->name('notices.pdf');
     Route::get('notices/{notice}/shipping-form', [NoticeController::class, 'generateShippingForm'])->name('notices.shipping-form');
