@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Notifications\Notification;
 
 class User extends Authenticatable
 {
@@ -151,5 +152,13 @@ class User extends Authenticatable
         return [
             'email.unique' => 'This email is already registered',
         ];
+    }
+
+    /**
+     * Route notifications for the Slack channel.
+     */
+    public function routeNotificationForSlack(Notification $notification): mixed
+    {
+        return '#rental-notice';
     }
 }

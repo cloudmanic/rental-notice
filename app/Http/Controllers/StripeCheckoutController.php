@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use App\Models\Notice;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\NoticePaid;
 
 class StripeCheckoutController extends Controller
 {
@@ -18,8 +21,16 @@ class StripeCheckoutController extends Controller
      * @param  \App\Models\Notice  $notice
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function create(Notice $notice)
+    public function create(Request $request, Notice $notice)
     {
+        $user = $request->user();
+
+        $user->notify(new NoticePaid($notice));
+
+        //Notification::route('slack', '#rental-notice')->notify(new NoticePaid($notice));
+
+        return 'woots';
+
         // Require Stripe PHP SDK
         if (!class_exists('Stripe\\Stripe')) {
             abort(500, 'Stripe PHP SDK is not installed. Run composer require stripe/stripe-php');
