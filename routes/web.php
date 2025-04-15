@@ -111,6 +111,8 @@ Route::middleware('auth')->group(function () {
     Route::get('agents/create', App\Livewire\Agents\Create::class)->name('agents.create');
     Route::get('agents/{agent}/edit', App\Livewire\Agents\Edit::class)->name('agents.edit');
 
-    // Stripe Checkout Route
+    // Stripe Checkout Routes
+    Route::get('/stripe/checkout/success', [StripeCheckoutController::class, 'success'])->name('stripe.checkout.success');
+    Route::get('/stripe/checkout/cancel', [StripeCheckoutController::class, 'cancel'])->name('stripe.checkout.cancel');
     Route::get('/stripe/checkout/{notice}', [StripeCheckoutController::class, 'create'])->name('stripe.checkout');
 });
