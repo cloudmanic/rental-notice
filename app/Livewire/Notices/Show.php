@@ -6,7 +6,7 @@ use App\Models\Notice;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class Show extends Component
 {
@@ -39,7 +39,7 @@ class Show extends Component
     public function uploadCertificatePdf()
     {
         // Validate only super admins can upload
-        if (!auth()->user()->isSuperAdmin()) {
+        if (!auth()->user()->isSuperAdmin() && !session('impersonating')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -55,8 +55,11 @@ class Show extends Component
 
         // Update notice with certificate PDF path
         $this->notice->update([
-            'certificate_pdf' => $path
+            'certificate_pdf' => $path,
+            'status' => Notice::STATUS_SERVED // We know once we update the certificate, the status is served
         ]);
+
+        Log::info('Certificate PDF uploaded for notice ID: ' . $this->notice->id);
 
         // Reset file upload and set success message
         $this->certificatePdf = null;

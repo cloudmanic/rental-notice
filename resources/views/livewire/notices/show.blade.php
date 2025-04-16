@@ -67,7 +67,7 @@
             @endif
 
             <!-- Super Admin Certificate PDF Upload Button -->
-            @if(auth()->user()->isSuperAdmin() && !$notice->certificate_pdf)
+            @if((auth()->user()->isSuperAdmin() || session('impersonating')) && !$notice->certificate_pdf)
             <div x-data="{ open: false }" class="relative">
                 <button @click="open = !open" type="button"
                     class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
