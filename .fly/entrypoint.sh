@@ -7,6 +7,7 @@ for f in /var/www/html/.fly/scripts/*.sh; do
 done
 chown -R www-data:www-data /var/www/html
 chown -R www-data:www-data /data
+chown -R www-data:www-data /root
 
 if [ $# -gt 0 ]; then
     # If we passed a command, run it as root

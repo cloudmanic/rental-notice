@@ -34,9 +34,10 @@ class NoticeController extends Controller
      * Generate and serve a PDF for a notice.
      * 
      * @param Notice $notice
+     * @param Request $request
      * @return Response
      */
-    public function generatePdf(Notice $notice)
+    public function generatePdf(Notice $notice, Request $request)
     {
         // Authorization check - can only view notices in your own account
         if ($notice->account_id !== Auth::user()->account->id) {
@@ -60,10 +61,18 @@ class NoticeController extends Controller
                 abort(404, 'PDF generation failed');
             }
 
-            // Return the PDF as a download
+            // Check if download is requested via URL parameter
+            $disposition = 'inline';
+            $filename = 'notice-' . uniqid() . '.pdf';
+
+            if ($request->has('download') && $request->query('download') === 'true') {
+                $disposition = 'attachment';
+            }
+
+            // Return the PDF with appropriate Content-Disposition
             return response()->file($fullPath, [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="notice-' . uniqid() . '.pdf"'
+                'Content-Disposition' => $disposition . '; filename="' . $filename . '"'
             ]);
         } catch (\Exception $e) {
             // Log the error
@@ -81,9 +90,10 @@ class NoticeController extends Controller
      * Generate and serve a PDF for a shipping confirmation form (PS3817).
      * 
      * @param Notice $notice
+     * @param Request $request
      * @return Response
      */
-    public function generateShippingForm(Notice $notice)
+    public function generateShippingForm(Notice $notice, Request $request)
     {
         // Authorization check - can only view notices in your own account
         if ($notice->account_id !== Auth::user()->account->id) {
@@ -104,10 +114,18 @@ class NoticeController extends Controller
                 abort(404, 'Shipping form generation failed');
             }
 
-            // Return the PDF as a download
+            // Check if download is requested via URL parameter
+            $disposition = 'inline';
+            $filename = 'shipping-form-' . uniqid() . '.pdf';
+
+            if ($request->has('download') && $request->query('download') === 'true') {
+                $disposition = 'attachment';
+            }
+
+            // Return the PDF with appropriate Content-Disposition
             return response()->file($fullPath, [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="shipping-form-' . uniqid() . '.pdf"'
+                'Content-Disposition' => $disposition . '; filename="' . $filename . '"'
             ]);
         } catch (\Exception $e) {
             // Log the error
@@ -126,9 +144,10 @@ class NoticeController extends Controller
      * The shipping form will appear after the notice in the PDF.
      * 
      * @param Notice $notice
+     * @param Request $request
      * @return Response
      */
-    public function generateCompletePackage(Notice $notice)
+    public function generateCompletePackage(Notice $notice, Request $request)
     {
         // Authorization check - can only view notices in your own account
         if ($notice->account_id !== Auth::user()->account->id) {
@@ -149,10 +168,18 @@ class NoticeController extends Controller
                 abort(404, 'Complete package generation failed');
             }
 
-            // Return the PDF as a download
+            // Check if download is requested via URL parameter
+            $disposition = 'inline';
+            $filename = 'complete-package-' . uniqid() . '.pdf';
+
+            if ($request->has('download') && $request->query('download') === 'true') {
+                $disposition = 'attachment';
+            }
+
+            // Return the PDF with appropriate Content-Disposition
             return response()->file($fullPath, [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="complete-package-' . uniqid() . '.pdf"'
+                'Content-Disposition' => $disposition . '; filename="' . $filename . '"'
             ]);
         } catch (\Exception $e) {
             // Log the error

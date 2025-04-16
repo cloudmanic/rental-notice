@@ -74,8 +74,10 @@ RUN composer install --optimize-autoloader --no-dev \
     sed -i 's|php_admin_value\[open_basedir\] = /var/www/html:/dev/stdout:/tmp|php_admin_value[open_basedir] = /var/www/html:/dev/stdout:/tmp:/data/rental-notice.sqlite|' /etc/php/8.2/fpm/pool.d/www.conf
 
 
-
-
+# 5. Setup PDFCPU config (we really do not need to copy it over, as it really wants to write the directory)
+RUN mkdir -p /root/.config/pdfcpu
+COPY .fly/pdfcpu/config.yml /root/.config/pdfcpu/config.yml
+RUN chown -R www-data:www-data /root/.config
 
 # Multi-stage build: Build static assets
 # This allows us to not include Node within the final container

@@ -29,7 +29,8 @@ primary_region = 'sea'
   QUEUE_CONNECTION = 'database'
   DB_CONNECTION = 'sqlite'
   DB_DATABASE = '/data/rental-notice.sqlite'
-  AWS_DEFAULT_REGION = 'us-east-1'  
+  AWS_DEFAULT_REGION = 'us-east-1'
+  AWS_BUCKET = 'rental-notice'  
 
 [http_service]
   internal_port = 8080
@@ -41,3 +42,4 @@ primary_region = 'sea'
 
 [[vm]]
   size = 'shared-cpu-1x'
+  memory = '512mb'

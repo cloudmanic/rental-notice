@@ -70,3 +70,7 @@ This ensures consistent pricing and simplifies the management of different prici
 # SSH Support To Support Servers
 
 We use SSH to connect to support servers. As a result we install ssh keys into our docker container, and need them for local development. For security reasons we leave out `.fly/ssh/id_ed25519` using `.gitignore`. Contact another member of the development team to get this key. This key is injected into the build process via our Ci/CD and stored as a secret at github.
+
+## Fly.io Commands
+
+-   `fly logs -a rental-notice` <--- realtime logs
