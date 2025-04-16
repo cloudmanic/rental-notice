@@ -113,6 +113,7 @@ Route::middleware('auth')->group(function () {
     Route::get('notices/{notice}/pdf', [NoticeController::class, 'generatePdf'])->name('notices.pdf');
     Route::get('notices/{notice}/shipping-form', [NoticeController::class, 'generateShippingForm'])->name('notices.shipping-form');
     Route::get('notices/{notice}/complete-package', [NoticeController::class, 'generateCompletePackage'])->name('notices.complete-package');
+    Route::get('notices/{notice}/certificate-pdf', [NoticeController::class, 'getCertificatePdf'])->name('notices.certificate-pdf');
 
     // Tenant Routes
     Route::get('tenants', TenantsIndex::class)->name('tenants.index');

@@ -192,4 +192,60 @@ class NoticeController extends Controller
             abort(500, 'Failed to generate complete package: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Serve the certificate PDF for a notice.
+     * 
+     * @param Notice $notice
+     * @param Request $request
+     * @return Response
+     */
+    public function getCertificatePdf(Notice $notice, Request $request)
+    {
+        // Authorization check - can only view notices in your own account
+        if ($notice->account_id !== Auth::user()->account->id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        try {
+            // Check if certificate PDF exists
+            if (empty($notice->certificate_pdf)) {
+                abort(404, 'Certificate PDF not found');
+            }
+
+            // Check if download is requested via URL parameter
+            $disposition = 'inline';
+            $filename = 'certificate-' . $notice->id . '.pdf';
+
+            if ($request->has('download') && $request->query('download') === 'true') {
+                $disposition = 'attachment';
+            }
+
+            // Get the URL to the S3 file
+            $url = Storage::disk('s3')->url($notice->certificate_pdf);
+
+            // Get the contents of the file from S3
+            $contents = Storage::disk('s3')->get($notice->certificate_pdf);
+
+            if (empty($contents)) {
+                abort(404, 'Certificate PDF file could not be retrieved');
+            }
+
+            // Return the PDF with appropriate Content-Disposition
+            return response($contents, 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => $disposition . '; filename="' . $filename . '"'
+            ]);
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Certificate PDF retrieval failed: ' . $e->getMessage(), [
+                'notice_id' => $notice->id,
+                'certificate_path' => $notice->certificate_pdf,
+                'exception' => $e
+            ]);
+
+            // Return error response
+            abort(500, 'Failed to retrieve certificate PDF: ' . $e->getMessage());
+        }
+    }
 }
