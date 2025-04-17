@@ -7,7 +7,7 @@ use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Illuminate\Support\Sleep;
 
-class ExampleTest extends DuskTestCase
+class ScrapePropertyManagersTest extends DuskTestCase
 {
     /**
      * A basic browser test example. //->assertSee('Oregon');
