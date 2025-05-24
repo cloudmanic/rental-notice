@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Notice;
-use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -11,6 +11,13 @@ use Symfony\Component\Process\Process;
 
 class NoticeService
 {
+    protected DateService $dateService;
+
+    public function __construct(DateService $dateService)
+    {
+        $this->dateService = $dateService;
+    }
+
     /**
      * Generate a JSON notice file based on a template for the given notice
      *
@@ -73,11 +80,8 @@ class NoticeService
             return number_format((float) $amount, 2);
         };
 
-        // Calculate the posted date (today unless it's a weekend, then Monday)
-        $postedDate = Carbon::now();
-        if ($postedDate->isWeekend()) {
-            $postedDate = $postedDate->next('Monday');
-        }
+        // Calculate the posted date using DateService
+        $postedDate = $this->dateService->getNextMailingDate();
 
         // Current date
         $updateTextField('date', $postedDate->format('m/d/Y'));
@@ -147,9 +151,8 @@ class NoticeService
         $updateCheckbox('checkBoxFirstClass', true);
         $updateCheckbox('checkBoxOtherFormPayment', $notice->payment_other_means);
 
-        // Calculate the serve by date (15 days from posted date) (start next day, add 4 mailing, 10 service)
-        $serveByDate = clone $postedDate;
-        $serveByDate->addDays(15);
+        // Calculate the serve by date using DateService
+        $serveByDate = $this->dateService->calculateServiceDate($postedDate);
 
         // Service date information - just using current date for now, these should be updated when services actually happen
         // $updateTextField('personalServiceDate', $currentDate);
@@ -585,5 +588,73 @@ class NoticeService
         }
 
         return $mergedPdfStoragePath;
+    }
+
+    /**
+     * Generate a Certificate of Mailing PDF for the given notices
+     *
+     * @param  array  $notices  Array of Notice models or collection
+     * @param  array  $options  Additional options for the certificate
+     * @return string The path to the generated PDF file in storage
+     */
+    public function generateCertificateOfMailing($notices, array $options = []): string
+    {
+        // Convert to collection if array
+        $noticesCollection = collect($notices);
+
+        // Prepare data for the template
+        $tenantAddresses = [];
+        $noticeType = '';
+
+        foreach ($noticesCollection as $notice) {
+            // Get notice type from the first notice
+            if (empty($noticeType) && $notice->noticeType) {
+                $noticeType = $notice->noticeType->name;
+            }
+
+            // Get all tenants for this notice
+            $tenants = $notice->tenants()->get();
+
+            foreach ($tenants as $tenant) {
+                $address = $tenant->full_name.' - ';
+                $address .= $tenant->address_1;
+                if ($tenant->address_2) {
+                    $address .= ', '.$tenant->address_2;
+                }
+                $address .= ', '.$tenant->city.', '.$tenant->state.' '.$tenant->zip;
+
+                $tenantAddresses[] = $address;
+            }
+        }
+
+        // Set default values for options
+        $defaultMailingDate = $this->dateService->getNextMailingDate();
+        $mailingDate = $options['mailingDate'] ?? $this->dateService->formatMailingDate($defaultMailingDate);
+
+        // Generate PDF from Blade template
+        $pdf = Pdf::loadView('pdfs.certificate-of-mailing', [
+            'mailingDate' => $mailingDate,
+            'noticeType' => $noticeType,
+            'tenantAddresses' => $tenantAddresses,
+            'companyName' => config('constants.oregonpastduerent_com.company_name'),
+            'companyAddress' => config('constants.oregonpastduerent_com.company_address'),
+            'companyPhone' => config('constants.oregonpastduerent_com.company_phone'),
+            'companyEmail' => config('constants.oregonpastduerent_com.support_email'),
+            'postOfficeName' => config('constants.oregonpastduerent_com.post_office_name'),
+            'postOfficeAddress' => config('constants.oregonpastduerent_com.post_office_address'),
+        ]);
+
+        // Generate unique filename
+        $fileName = 'certificate_of_mailing_'.time().'.pdf';
+        $storagePath = 'notices/certificates/'.$fileName;
+
+        // Make sure the directory exists
+        Storage::disk('local')->makeDirectory('notices/certificates');
+
+        // Save the PDF to storage
+        $pdfContent = $pdf->output();
+        Storage::disk('local')->put($storagePath, $pdfContent);
+
+        return $storagePath;
     }
 }

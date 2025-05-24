@@ -300,6 +300,11 @@ class Create extends Component
         $this->updateWarningMessage();
     }
 
+    /**
+     * Create a new notice.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function createNotice()
     {
         $user = Auth::user();

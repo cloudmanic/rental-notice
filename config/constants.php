@@ -4,8 +4,18 @@ return [
 
     // oregonpastduerent.com
     'oregonpastduerent_com' => [
-        'company_phone' => '(503) 343-0040',
+        'company_name' => 'Oregon Past Due Rent',
+        'company_address' => '901 Brutscher Street, D112, Newberg, OR 97132',
+        'company_phone' => '971-264-0170',
         'support_email' => 'help@oregonpastduerent.com',
+        'post_office_name' => 'Newberg Post Office',
+        'post_office_address' => '116 N Everest Rd, Newberg, OR 97132',
+    ],
+
+    // Mailing configuration
+    'mailing' => [
+        'cutoff_time' => env('MAILING_CUTOFF_TIME', '13:00'), // 1:00 PM PST in 24-hour format
+        'cutoff_timezone' => env('MAILING_CUTOFF_TIMEZONE', 'America/Los_Angeles'), // PST timezone
     ],
 
 ];

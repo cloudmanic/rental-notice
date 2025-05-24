@@ -8,6 +8,7 @@ use App\Models\Notice;
 use App\Models\NoticeType;
 use App\Models\Tenant;
 use App\Models\User;
+use App\Services\DateService;
 use App\Services\NoticeService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
@@ -123,7 +124,8 @@ class NoticeServiceTest extends TestCase
         }
 
         // Call the service method
-        $noticeService = new NoticeService;
+        $dateService = new DateService;
+        $noticeService = new NoticeService($dateService);
         $storagePath = $noticeService->generateJsonNotice($notice);
 
         // Check if file exists
@@ -232,7 +234,8 @@ class NoticeServiceTest extends TestCase
         $this->mockPdfcpuProcess();
 
         // Call the service method
-        $noticeService = new NoticeService;
+        $dateService = new DateService;
+        $noticeService = new NoticeService($dateService);
         $pdfPath = $noticeService->generatePdfNotice($notice);
 
         // Check if file exists
@@ -304,7 +307,8 @@ class NoticeServiceTest extends TestCase
             ->andReturn(true);
 
         // Call the service with watermark=true
-        $noticeService = new NoticeService;
+        $dateService = new DateService;
+        $noticeService = new NoticeService($dateService);
         $pdfPath = $noticeService->generatePdfNotice($notice, true);
 
         // Verify the path is correct
@@ -365,7 +369,8 @@ class NoticeServiceTest extends TestCase
         $this->setUpShippingFormTemplateFiles();
 
         // Call the service method
-        $noticeService = new NoticeService;
+        $dateService = new DateService;
+        $noticeService = new NoticeService($dateService);
         $storagePath = $noticeService->generateJsonShippingForm($notice);
 
         // Check if file exists
@@ -477,7 +482,8 @@ class NoticeServiceTest extends TestCase
         });
 
         // Call the service method
-        $noticeService = new NoticeService;
+        $dateService = new DateService;
+        $noticeService = new NoticeService($dateService);
         $pdfPath = $noticeService->generatePdfShippingForm($notice);
 
         // Check if file exists - use our own assertion since File::exists is mocked
@@ -674,6 +680,111 @@ class NoticeServiceTest extends TestCase
             // This will handle moving any temporary files to replace the original
             return true;
         });
+    }
+
+    #[Test]
+    public function it_generates_certificate_of_mailing_pdf()
+    {
+        // Create account first
+        $account = Account::factory()->create();
+
+        // Create a user connected to the account
+        $user = User::factory()->create();
+        $user->accounts()->attach($account->id);
+
+        // Create a notice type
+        $noticeType = NoticeType::factory()->create(['name' => '10-day']);
+
+        // Create an agent connected to the account
+        $agent = Agent::factory()->create([
+            'account_id' => $account->id,
+        ]);
+
+        // Create tenants connected to the account
+        $tenant1 = Tenant::factory()->create([
+            'account_id' => $account->id,
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'address_1' => '123 Main Street',
+            'address_2' => 'Apt 4B',
+            'city' => 'Portland',
+            'state' => 'OR',
+            'zip' => '97201',
+        ]);
+
+        $tenant2 = Tenant::factory()->create([
+            'account_id' => $account->id,
+            'first_name' => 'Jane',
+            'last_name' => 'Smith',
+            'address_1' => '456 Oak Avenue',
+            'address_2' => null,
+            'city' => 'Portland',
+            'state' => 'OR',
+            'zip' => '97202',
+        ]);
+
+        // Create notices
+        $notice1 = Notice::factory()->create([
+            'account_id' => $account->id,
+            'user_id' => $user->id,
+            'notice_type_id' => $noticeType->id,
+            'agent_id' => $agent->id,
+        ]);
+
+        $notice2 = Notice::factory()->create([
+            'account_id' => $account->id,
+            'user_id' => $user->id,
+            'notice_type_id' => $noticeType->id,
+            'agent_id' => $agent->id,
+        ]);
+
+        // Attach tenants to notices
+        $notice1->tenants()->attach([$tenant1->id]);
+        $notice2->tenants()->attach([$tenant2->id]);
+
+        // Mock the PDF facade
+        $mockPdf = \Mockery::mock();
+        $mockPdf->shouldReceive('output')->andReturn('PDF content');
+
+        $this->app->bind('dompdf.wrapper', function () use ($mockPdf) {
+            $wrapper = \Mockery::mock(\Barryvdh\DomPDF\ServiceProvider::class);
+            $wrapper->shouldReceive('loadView')
+                ->once()
+                ->withArgs(function ($view, $data) {
+                    return $view === 'pdfs.certificate-of-mailing' &&
+                        isset($data['mailingDate']) &&
+                        isset($data['noticeType']) &&
+                        isset($data['tenantAddresses']) &&
+                        isset($data['companyName']) &&
+                        isset($data['companyAddress']) &&
+                        isset($data['companyPhone']) &&
+                        isset($data['companyEmail']) &&
+                        isset($data['postOfficeName']) &&
+                        isset($data['postOfficeAddress']) &&
+                        $data['noticeType'] === '10-day' &&
+                        count($data['tenantAddresses']) === 2;
+                })
+                ->andReturn($mockPdf);
+
+            return $wrapper;
+        });
+
+        // Call the service method
+        $dateService = new DateService;
+        $noticeService = new NoticeService($dateService);
+        $pdfPath = $noticeService->generateCertificateOfMailing([$notice1, $notice2]);
+
+        // Check if file exists
+        Storage::assertExists($pdfPath);
+
+        // Verify the path contains expected structure
+        $this->assertStringContainsString('notices/certificates/', $pdfPath);
+        $this->assertStringContainsString('certificate_of_mailing_', $pdfPath);
+        $this->assertStringEndsWith('.pdf', $pdfPath);
+
+        // Verify the PDF content was saved
+        $savedContent = Storage::get($pdfPath);
+        $this->assertEquals('PDF content', $savedContent);
     }
 
     private function getFieldValue($textfields, $fieldName)
