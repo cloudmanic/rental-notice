@@ -80,6 +80,9 @@ class Create extends Component
 
     public $selectedTenantId = null;
 
+    // Warning message property
+    public $warningMessage = null;
+
     /*
      * Render the component view.
      *
@@ -159,6 +162,9 @@ class Create extends Component
             $this->messageType = session('messageType', 'success');
             $this->showMessage = true;
         }
+
+        // Check warning conditions on mount
+        $this->updateWarningMessage();
     }
 
     // Count how many other charges are currently visible based on filled data
@@ -236,6 +242,62 @@ class Create extends Component
         $this->notice['tenant_id'] = '';
         $this->searchTenant = '';
         $this->selectedTenantId = null;
+    }
+
+    /**
+     * Check and update warning message based on current date/time and selected notice type.
+     *
+     * @return void
+     */
+    public function updateWarningMessage()
+    {
+        $this->warningMessage = null;
+
+        // Get current PST date and time
+        $now = now()->setTimezone('America/Los_Angeles');
+        $currentDay = $now->day;
+        $currentHour = $now->hour;
+
+        // Only show warnings if it's before 1pm PST
+        if ($currentHour >= 13) {
+            return;
+        }
+
+        // Warning conditions based on the requirements
+        if ($currentDay < 5) {
+            // Before the 5th - show warning regardless of notice type selection
+            $this->warningMessage = 'If you are serving notice to someone who is late this month, you need to wait until the 5th for a 13-day notice or the 8th for a 10-day notice.';
+
+            return; // Exit early since this warning applies regardless of selection
+        }
+
+        // For warnings that depend on notice type selection
+        if (empty($this->notice['notice_type_id'])) {
+            return;
+        }
+
+        $noticeType = NoticeType::find($this->notice['notice_type_id']);
+        if (! $noticeType) {
+            return;
+        }
+
+        $is10DayNotice = str_contains($noticeType->name, '10-Day');
+
+        // Check notice-type-specific warnings
+        if ($currentDay >= 5 && $currentDay < 8 && $is10DayNotice) {
+            // Between 5th and 8th, and they selected a 10-day notice
+            $this->warningMessage = 'If you are serving notice to someone who is late this month, you can only serve a 13-day notice until the 8th of the month.';
+        }
+    }
+
+    /**
+     * Handle when notice type is changed.
+     *
+     * @return void
+     */
+    public function updatedNoticeNoticeTypeId()
+    {
+        $this->updateWarningMessage();
     }
 
     public function createNotice()
