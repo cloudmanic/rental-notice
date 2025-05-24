@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Notice;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -827,5 +828,71 @@ class NoticeService
         }
 
         return $combinedStoragePath;
+    }
+
+    /**
+     * Generate Agent Cover Letter PDF explaining the enclosed documents
+     *
+     * @param  \App\Models\Notice  $notice  The notice to generate cover letter for
+     * @return string The path to the generated PDF file in storage
+     */
+    public function generateAgentCoverLetter($notice): string
+    {
+        // Get the agent from the notice
+        $agent = $notice->agent;
+
+        if (! $agent) {
+            throw new \Exception('No agent associated with this notice');
+        }
+
+        // Get company information from config
+        $companyConfig = config('constants.oregonpastduerent_com');
+
+        // Get tenants for the notice
+        $tenants = $notice->tenants()->get();
+
+        // Get current date
+        $currentDate = Carbon::now()->format('F j, Y');
+
+        // Generate PDF from Blade template
+        $pdf = Pdf::loadView('pdfs.agent-cover-letter', [
+            // Company information
+            'companyName' => $companyConfig['company_name'],
+            'companyAddress1' => $companyConfig['company_address_1'],
+            'companyAddress2' => $companyConfig['company_address_2'],
+            'companyCity' => $companyConfig['company_city'],
+            'companyState' => $companyConfig['company_state'],
+            'companyZip' => $companyConfig['company_zip'],
+            'companyPhone' => $companyConfig['company_phone'],
+            'companyEmail' => $companyConfig['support_email'],
+            'portalUrl' => $companyConfig['portal_url'],
+
+            // Agent information
+            'agentName' => $agent->name,
+            'agentCompany' => $agent->company,
+            'agentAddress1' => $agent->address_1,
+            'agentAddress2' => $agent->address_2,
+            'agentCity' => $agent->city,
+            'agentState' => $agent->state,
+            'agentZip' => $agent->zip,
+
+            // Letter content
+            'currentDate' => $currentDate,
+            'tenantCount' => $tenants->count(),
+            'noticeType' => $notice->noticeType->name,
+        ]);
+
+        // Generate unique filename
+        $fileName = 'agent_cover_letter_'.$notice->id.'_'.time().'.pdf';
+        $storagePath = 'notices/cover_letters/'.$fileName;
+
+        // Make sure the directory exists
+        Storage::disk('local')->makeDirectory('notices/cover_letters');
+
+        // Save the PDF to storage
+        $pdfContent = $pdf->output();
+        Storage::disk('local')->put($storagePath, $pdfContent);
+
+        return $storagePath;
     }
 }

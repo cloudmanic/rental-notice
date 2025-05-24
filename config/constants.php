@@ -12,6 +12,7 @@ return [
         'company_zip' => '97132',
         'company_phone' => '971-264-0170',
         'support_email' => 'help@oregonpastduerent.com',
+        'portal_url' => 'https://oregonpastduerent.com',
         'post_office_name' => 'Newberg Post Office',
         'post_office_address' => '116 N Everest Rd, Newberg, OR 97132',
     ],

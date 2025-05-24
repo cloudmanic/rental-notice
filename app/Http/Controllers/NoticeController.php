@@ -337,6 +337,54 @@ class NoticeController extends Controller
     }
 
     /**
+     * Generate and serve agent cover letter PDF for a notice.
+     *
+     * @return Response
+     */
+    public function generateAgentCoverLetter(Notice $notice, Request $request)
+    {
+        // Authorization check - only super admins can generate cover letters
+        if (! Auth::user()->isSuperAdmin() && ! session('impersonating')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        try {
+            // Generate the agent cover letter PDF using our NoticeService
+            $pdfPath = $this->noticeService->generateAgentCoverLetter($notice);
+
+            // Get the full path to the generated PDF file
+            $fullPath = Storage::disk('local')->path($pdfPath);
+
+            if (! file_exists($fullPath)) {
+                abort(404, 'Agent cover letter generation failed');
+            }
+
+            // Check if download is requested via URL parameter
+            $disposition = 'inline';
+            $filename = 'agent-cover-letter-'.$notice->id.'.pdf';
+
+            if ($request->has('download') && $request->query('download') === 'true') {
+                $disposition = 'attachment';
+            }
+
+            // Return the PDF with appropriate Content-Disposition
+            return response()->file($fullPath, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => $disposition.'; filename="'.$filename.'"',
+            ]);
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Agent Cover Letter Generation failed: '.$e->getMessage(), [
+                'notice_id' => $notice->id,
+                'exception' => $e,
+            ]);
+
+            // Return error response
+            abort(500, 'Failed to generate agent cover letter: '.$e->getMessage());
+        }
+    }
+
+    /**
      * Legacy method - maintained for backward compatibility
      *
      * @deprecated Use generateTenantAddressSheets instead
