@@ -8,7 +8,7 @@
                         clip-rule="evenodd" />
                 </svg>
             </a>
-            <h1 class="text-2xl font-semibold text-gray-900">Edit Notice #{{ $notice->id }}</h1>
+            <h1 class="text-2xl font-semibold text-gray-900">Edit Notice #{{ $notice['id'] }}</h1>
         </div>
     </div>
 
@@ -330,7 +330,7 @@
     </div>
 
     <div class="mt-8 flex items-center justify-end gap-x-6">
-        <a href="{{ route('notices.show', $notice->id) }}"
+        <a href="{{ route('notices.show', $notice['id']) }}"
             class="text-sm font-semibold leading-6 text-gray-900 hover:text-gray-700">
             Cancel
         </a>
