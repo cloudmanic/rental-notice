@@ -241,11 +241,11 @@ class NoticeController extends Controller
     }
 
     /**
-     * Generate and serve address sheets PDF for all tenants on a notice.
+     * Generate and serve tenant address sheets PDF for all tenants on a notice.
      *
      * @return Response
      */
-    public function generateAddressSheets(Notice $notice, Request $request)
+    public function generateTenantAddressSheets(Notice $notice, Request $request)
     {
         // Authorization check - only super admins can generate address sheets
         if (! Auth::user()->isSuperAdmin() && ! session('impersonating')) {
@@ -260,12 +260,12 @@ class NoticeController extends Controller
             $fullPath = Storage::disk('local')->path($pdfPath);
 
             if (! file_exists($fullPath)) {
-                abort(404, 'Address sheets generation failed');
+                abort(404, 'Tenant address sheets generation failed');
             }
 
             // Check if download is requested via URL parameter
             $disposition = 'inline';
-            $filename = 'address-sheets-'.$notice->id.'.pdf';
+            $filename = 'tenant-address-sheets-'.$notice->id.'.pdf';
 
             if ($request->has('download') && $request->query('download') === 'true') {
                 $disposition = 'attachment';
@@ -278,13 +278,71 @@ class NoticeController extends Controller
             ]);
         } catch (\Exception $e) {
             // Log the error
-            Log::error('Address Sheets Generation failed: '.$e->getMessage(), [
+            Log::error('Tenant Address Sheets Generation failed: '.$e->getMessage(), [
                 'notice_id' => $notice->id,
                 'exception' => $e,
             ]);
 
             // Return error response
-            abort(500, 'Failed to generate address sheets: '.$e->getMessage());
+            abort(500, 'Failed to generate tenant address sheets: '.$e->getMessage());
         }
+    }
+
+    /**
+     * Generate and serve agent address sheet PDF for a notice.
+     *
+     * @return Response
+     */
+    public function generateAgentAddressSheet(Notice $notice, Request $request)
+    {
+        // Authorization check - only super admins can generate address sheets
+        if (! Auth::user()->isSuperAdmin() && ! session('impersonating')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        try {
+            // Generate the agent address sheet PDF using our NoticeService
+            $pdfPath = $this->noticeService->generateAgentAddressSheet($notice);
+
+            // Get the full path to the generated PDF file
+            $fullPath = Storage::disk('local')->path($pdfPath);
+
+            if (! file_exists($fullPath)) {
+                abort(404, 'Agent address sheet generation failed');
+            }
+
+            // Check if download is requested via URL parameter
+            $disposition = 'inline';
+            $filename = 'agent-address-sheet-'.$notice->id.'.pdf';
+
+            if ($request->has('download') && $request->query('download') === 'true') {
+                $disposition = 'attachment';
+            }
+
+            // Return the PDF with appropriate Content-Disposition
+            return response()->file($fullPath, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => $disposition.'; filename="'.$filename.'"',
+            ]);
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Agent Address Sheet Generation failed: '.$e->getMessage(), [
+                'notice_id' => $notice->id,
+                'exception' => $e,
+            ]);
+
+            // Return error response
+            abort(500, 'Failed to generate agent address sheet: '.$e->getMessage());
+        }
+    }
+
+    /**
+     * Legacy method - maintained for backward compatibility
+     *
+     * @deprecated Use generateTenantAddressSheets instead
+     */
+    public function generateAddressSheets(Notice $notice, Request $request)
+    {
+        return $this->generateTenantAddressSheets($notice, $request);
     }
 }

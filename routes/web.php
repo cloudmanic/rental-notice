@@ -114,6 +114,8 @@ Route::middleware('auth')->group(function () {
     Route::get('notices/{notice}/complete-package', [NoticeController::class, 'generateCompletePackage'])->name('notices.complete-package');
     Route::get('notices/{notice}/certificate-pdf', [NoticeController::class, 'getCertificatePdf'])->name('notices.certificate-pdf');
     Route::get('notices/{notice}/address-sheets', [NoticeController::class, 'generateAddressSheets'])->name('notices.address-sheets');
+    Route::get('notices/{notice}/tenant-address-sheets', [NoticeController::class, 'generateTenantAddressSheets'])->name('notices.tenant-address-sheets');
+    Route::get('notices/{notice}/agent-address-sheet', [NoticeController::class, 'generateAgentAddressSheet'])->name('notices.agent-address-sheet');
 
     // Tenant Routes
     Route::get('tenants', TenantsIndex::class)->name('tenants.index');

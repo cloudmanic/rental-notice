@@ -78,7 +78,7 @@
 
     <div class="header">
         <h2>{{ $companyName }}</h2>
-        <p>{{ $companyAddress }}</p>
+        <p>{{ $companyAddress1 }}@if($companyAddress2), {{ $companyAddress2 }}@endif, {{ $companyCity }}, {{ $companyState }} {{ $companyZip }}</p>
         <p>Phone: {{ $companyPhone }} | Email: {{ $companyEmail }}</p>
     </div>
 

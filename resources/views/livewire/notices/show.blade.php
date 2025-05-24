@@ -72,7 +72,7 @@
                     </svg>
                 </button>
                 <div x-show="open" @click.away="open = false"
-                    class="absolute right-0 mt-2 bg-white shadow-lg rounded-lg p-3 z-10 w-56">
+                    class="absolute right-0 mt-2 bg-white shadow-lg rounded-lg p-3 z-10 w-80">
                     <a href="{{ route('notices.pdf', $notice->id) }}" target="_blank"
                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
@@ -93,8 +93,9 @@
                         </svg>
                         Download Notice
                     </a>
-                    
-                    @if($notice->certificate_pdf && ($notice->status === 'served' || ($notice->status === 'service_pending' && (auth()->user()->isSuperAdmin() || session('impersonating')))))
+
+                    @if($notice->certificate_pdf && ($notice->status === 'served' || ($notice->status ===
+                    'service_pending' && (auth()->user()->isSuperAdmin() || session('impersonating')))))
                     <hr class="my-2">
                     <a href="{{ route('notices.certificate-pdf', $notice->id) }}" target="_blank"
                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md flex items-center">
@@ -115,26 +116,45 @@
                         Download Certificate
                     </a>
                     @endif
-                    
+
                     @if((auth()->user()->isSuperAdmin() || session('impersonating')))
                     <hr class="my-2">
-                    <a href="{{ route('notices.address-sheets', $notice->id) }}" target="_blank"
+                    <a href="{{ route('notices.tenant-address-sheets', $notice->id) }}" target="_blank"
                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76" />
                         </svg>
-                        View Address Sheets
+                        View Tenant Address Sheets
                     </a>
-                    <a href="{{ route('notices.address-sheets', $notice->id) }}?download=true"
+                    <a href="{{ route('notices.tenant-address-sheets', $notice->id) }}?download=true"
                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
-                        Download Address Sheets
+                        Download Tenant Address Sheets
+                    </a>
+                    <hr class="my-2">
+                    <a href="{{ route('notices.agent-address-sheet', $notice->id) }}" target="_blank"
+                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        View Agent Address Sheet
+                    </a>
+                    <a href="{{ route('notices.agent-address-sheet', $notice->id) }}?download=true"
+                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Download Agent Address Sheet
                     </a>
                     @endif
                 </div>

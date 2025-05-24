@@ -57,21 +57,23 @@
 
 <body>
     <div class="address-block from">
-        <strong>{{ $agentName }}</strong><br>
-        {{ $agentAddress1 }}<br>
-        @if($agentAddress2)
-        {{ $agentAddress2 }}<br>
+        <strong>{{ $fromName }}</strong><br>
+        {{ $fromAddress1 }}<br>
+        @if($fromAddress2)
+        {{ $fromAddress2 }}<br>
         @endif
-        {{ $agentCity }}, {{ $agentState }} {{ $agentZip }}
+        @if($fromCity && $fromState && $fromZip)
+        {{ $fromCity }}, {{ $fromState }} {{ $fromZip }}
+        @endif
     </div>
 
     <div class="address-block to">
-        <strong>{{ $tenantName }}</strong><br>
-        {{ $tenantAddress1 }}<br>
-        @if($tenantAddress2)
-        {{ $tenantAddress2 }}<br>
+        <strong>{{ $toName }}</strong><br>
+        {{ $toAddress1 }}<br>
+        @if($toAddress2)
+        {{ $toAddress2 }}<br>
         @endif
-        {{ $tenantCity }}, {{ $tenantState }} {{ $tenantZip }}
+        {{ $toCity }}, {{ $toState }} {{ $toZip }}
     </div>
 
     <!-- Fold line at bottom third mark -->

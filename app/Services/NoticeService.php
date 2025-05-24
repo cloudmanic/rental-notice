@@ -637,7 +637,11 @@ class NoticeService
             'noticeType' => $noticeType,
             'tenantAddresses' => $tenantAddresses,
             'companyName' => config('constants.oregonpastduerent_com.company_name'),
-            'companyAddress' => config('constants.oregonpastduerent_com.company_address'),
+            'companyAddress1' => config('constants.oregonpastduerent_com.company_address_1'),
+            'companyAddress2' => config('constants.oregonpastduerent_com.company_address_2'),
+            'companyCity' => config('constants.oregonpastduerent_com.company_city'),
+            'companyState' => config('constants.oregonpastduerent_com.company_state'),
+            'companyZip' => config('constants.oregonpastduerent_com.company_zip'),
             'companyPhone' => config('constants.oregonpastduerent_com.company_phone'),
             'companyEmail' => config('constants.oregonpastduerent_com.support_email'),
             'postOfficeName' => config('constants.oregonpastduerent_com.post_office_name'),
@@ -659,42 +663,38 @@ class NoticeService
     }
 
     /**
-     * Generate Address Sheets PDF for mailing envelopes
+     * Generate Tenant Address Sheets PDF (company to tenant)
      *
      * @param  \App\Models\Tenant  $tenant  The tenant to generate address sheet for
-     * @param  \App\Models\Notice  $notice  The notice to get agent information from
+     * @param  \App\Models\Notice  $notice  The notice to get context from
      * @return string The path to the generated PDF file in storage
      */
-    public function generateAddressSheets($tenant, $notice): string
+    public function generateTenantAddressSheets($tenant, $notice): string
     {
-        // Get the agent from the notice
-        $agent = $notice->agent;
-
-        if (! $agent) {
-            throw new \Exception('No agent associated with this notice');
-        }
+        // Get company information from config
+        $companyConfig = config('constants.oregonpastduerent_com');
 
         // Generate PDF from Blade template
         $pdf = Pdf::loadView('pdfs.address-sheets', [
-            // Agent information (from)
-            'agentName' => $agent->name,
-            'agentAddress1' => $agent->address_1,
-            'agentAddress2' => $agent->address_2,
-            'agentCity' => $agent->city,
-            'agentState' => $agent->state,
-            'agentZip' => $agent->zip,
+            // Company information (from)
+            'fromName' => $companyConfig['company_name'],
+            'fromAddress1' => $companyConfig['company_address_1'],
+            'fromAddress2' => $companyConfig['company_address_2'],
+            'fromCity' => $companyConfig['company_city'],
+            'fromState' => $companyConfig['company_state'],
+            'fromZip' => $companyConfig['company_zip'],
 
             // Tenant information (to)
-            'tenantName' => $tenant->full_name,
-            'tenantAddress1' => $tenant->address_1,
-            'tenantAddress2' => $tenant->address_2,
-            'tenantCity' => $tenant->city,
-            'tenantState' => $tenant->state,
-            'tenantZip' => $tenant->zip,
+            'toName' => $tenant->full_name,
+            'toAddress1' => $tenant->address_1,
+            'toAddress2' => $tenant->address_2,
+            'toCity' => $tenant->city,
+            'toState' => $tenant->state,
+            'toZip' => $tenant->zip,
         ]);
 
         // Generate unique filename
-        $fileName = 'address_sheet_'.$notice->id.'_'.$tenant->id.'_'.time().'.pdf';
+        $fileName = 'tenant_address_sheet_'.$notice->id.'_'.$tenant->id.'_'.time().'.pdf';
         $storagePath = 'notices/address_sheets/'.$fileName;
 
         // Make sure the directory exists
@@ -705,6 +705,67 @@ class NoticeService
         Storage::disk('local')->put($storagePath, $pdfContent);
 
         return $storagePath;
+    }
+
+    /**
+     * Generate Agent Address Sheet PDF (company to agent)
+     *
+     * @param  \App\Models\Notice  $notice  The notice to get agent information from
+     * @return string The path to the generated PDF file in storage
+     */
+    public function generateAgentAddressSheet($notice): string
+    {
+        // Get the agent from the notice
+        $agent = $notice->agent;
+
+        if (! $agent) {
+            throw new \Exception('No agent associated with this notice');
+        }
+
+        // Get company information from config
+        $companyConfig = config('constants.oregonpastduerent_com');
+
+        // Generate PDF from Blade template
+        $pdf = Pdf::loadView('pdfs.address-sheets', [
+            // Company information (from)
+            'fromName' => $companyConfig['company_name'],
+            'fromAddress1' => $companyConfig['company_address_1'],
+            'fromAddress2' => $companyConfig['company_address_2'],
+            'fromCity' => $companyConfig['company_city'],
+            'fromState' => $companyConfig['company_state'],
+            'fromZip' => $companyConfig['company_zip'],
+
+            // Agent information (to)
+            'toName' => $agent->name,
+            'toAddress1' => $agent->address_1,
+            'toAddress2' => $agent->address_2,
+            'toCity' => $agent->city,
+            'toState' => $agent->state,
+            'toZip' => $agent->zip,
+        ]);
+
+        // Generate unique filename
+        $fileName = 'agent_address_sheet_'.$notice->id.'_'.time().'.pdf';
+        $storagePath = 'notices/address_sheets/'.$fileName;
+
+        // Make sure the directory exists
+        Storage::disk('local')->makeDirectory('notices/address_sheets');
+
+        // Save the PDF to storage
+        $pdfContent = $pdf->output();
+        Storage::disk('local')->put($storagePath, $pdfContent);
+
+        return $storagePath;
+    }
+
+    /**
+     * Legacy method - maintained for backward compatibility
+     *
+     * @deprecated Use generateTenantAddressSheets instead
+     */
+    public function generateAddressSheets($tenant, $notice): string
+    {
+        return $this->generateTenantAddressSheets($tenant, $notice);
     }
 
     /**
@@ -725,7 +786,7 @@ class NoticeService
         // Generate individual PDFs for each tenant
         $individualPdfs = [];
         foreach ($tenants as $tenant) {
-            $pdfPath = $this->generateAddressSheets($tenant, $notice);
+            $pdfPath = $this->generateTenantAddressSheets($tenant, $notice);
             $individualPdfs[] = Storage::disk('local')->path($pdfPath);
         }
 

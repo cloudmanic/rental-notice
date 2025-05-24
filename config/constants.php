@@ -5,7 +5,11 @@ return [
     // oregonpastduerent.com
     'oregonpastduerent_com' => [
         'company_name' => 'Oregon Past Due Rent',
-        'company_address' => '901 Brutscher Street, D112, Newberg, OR 97132',
+        'company_address_1' => '901 Brutscher Street',
+        'company_address_2' => 'Suite D112',
+        'company_city' => 'Newberg',
+        'company_state' => 'OR',
+        'company_zip' => '97132',
         'company_phone' => '971-264-0170',
         'support_email' => 'help@oregonpastduerent.com',
         'post_office_name' => 'Newberg Post Office',

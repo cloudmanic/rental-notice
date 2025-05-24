@@ -756,7 +756,11 @@ class NoticeServiceTest extends TestCase
                         isset($data['noticeType']) &&
                         isset($data['tenantAddresses']) &&
                         isset($data['companyName']) &&
-                        isset($data['companyAddress']) &&
+                        isset($data['companyAddress1']) &&
+                        isset($data['companyAddress2']) &&
+                        isset($data['companyCity']) &&
+                        isset($data['companyState']) &&
+                        isset($data['companyZip']) &&
                         isset($data['companyPhone']) &&
                         isset($data['companyEmail']) &&
                         isset($data['postOfficeName']) &&
