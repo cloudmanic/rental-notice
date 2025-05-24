@@ -48,7 +48,7 @@
                         </div>
                         <div>
                             <p class="text-xs text-gray-500">
-                                {{ $activity->created_at->diffForHumans() }}
+                                {{ $activity->created_at->setTimezone('America/Los_Angeles')->format('M j, Y g:i A') }} PST
                             </p>
                         </div>
                     </div>
