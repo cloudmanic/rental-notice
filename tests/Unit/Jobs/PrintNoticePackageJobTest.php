@@ -20,6 +20,7 @@ class PrintNoticePackageJobTest extends TestCase
         parent::setUp();
         $this->seed(\Database\Seeders\NoticeTypeSeeder::class);
     }
+
     /**
      * Test that the print job handles successfully.
      */
@@ -63,44 +64,6 @@ class PrintNoticePackageJobTest extends TestCase
     }
 
     /**
-     * Test that the print job handles remote directory creation failure.
-     */
-    public function test_print_job_handles_remote_directory_creation_failure()
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Failed to create remote directory');
-
-        // Create a notice
-        $notice = Notice::factory()->create(['status' => 'paid']);
-
-        // Mock the NoticeService
-        $noticeService = Mockery::mock(NoticeService::class);
-        $noticeService->shouldReceive('generateCompletePrintPackage')
-            ->once()
-            ->andReturn('/tmp/test.pdf');
-
-        $this->app->instance(NoticeService::class, $noticeService);
-
-        // Mock Process to fail on first SSH call (mkdir)
-        $processMock = Mockery::mock('overload:'.Process::class);
-        $processMock->shouldReceive('setTimeout')->andReturnSelf();
-        $processMock->shouldReceive('run')->andReturnSelf();
-        $processMock->shouldReceive('isSuccessful')->andReturn(false);
-        $processMock->shouldReceive('getErrorOutput')->andReturn('Connection refused');
-
-        // Mock Log facade
-        Log::shouldReceive('info')->zeroOrMoreTimes();
-        Log::shouldReceive('error')->once();
-
-        // Create a temporary test file
-        file_put_contents('/tmp/test.pdf', 'test content');
-
-        // Execute the job
-        $job = new PrintNoticePackageJob($notice);
-        $job->handle($noticeService);
-    }
-
-    /**
      * Test that the print job handles SCP failure.
      */
     public function test_print_job_handles_scp_failure()
@@ -119,18 +82,11 @@ class PrintNoticePackageJobTest extends TestCase
 
         $this->app->instance(NoticeService::class, $noticeService);
 
-        // Counter to track calls
-        $callCount = 0;
-        
-        // Mock Process to succeed on mkdir but fail on SCP
+        // Mock Process to fail on SCP
         $processMock = Mockery::mock('overload:'.Process::class);
         $processMock->shouldReceive('setTimeout')->andReturnSelf();
         $processMock->shouldReceive('run')->andReturnSelf();
-        $processMock->shouldReceive('isSuccessful')
-            ->andReturnUsing(function() use (&$callCount) {
-                $callCount++;
-                return $callCount == 1; // First call (mkdir) succeeds, second call (scp) fails
-            });
+        $processMock->shouldReceive('isSuccessful')->andReturn(false);
         $processMock->shouldReceive('getErrorOutput')->andReturn('Connection refused');
 
         // Mock Log facade

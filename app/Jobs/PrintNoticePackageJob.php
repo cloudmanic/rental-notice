@@ -47,16 +47,13 @@ class PrintNoticePackageJob implements ShouldQueue
 
             // Build unique filename for the print server
             $remoteFilename = 'notice_'.$this->notice->id.'_'.time().'.pdf';
-            $remotePath = '~/print_queue/'.$remoteFilename;
+            $remotePath = '/tmp/'.$remoteFilename;
 
             // Get SSH connection details
             $host = env('PRINT_SERVER_HOST');
             $port = env('PRINT_SERVER_PORT', 22);
             $username = env('PRINT_SERVER_USERNAME');
             $printer = env('PRINT_SERVER_PRINTER', 'Brother_HL_L2405W');
-
-            // Ensure the print queue directory exists on the remote server
-            $this->ensureRemoteDirectoryExists($host, $port, $username);
 
             // SCP the file to the print server
             $this->scpFileToServer($localPath, $remotePath, $host, $port, $username);
@@ -105,33 +102,6 @@ class PrintNoticePackageJob implements ShouldQueue
         }
 
         Log::info('File copied to print server successfully');
-    }
-
-    /**
-     * Ensure the remote directory exists.
-     */
-    private function ensureRemoteDirectoryExists(string $host, string $port, string $username): void
-    {
-        $command = [
-            'ssh',
-            '-p',
-            $port,
-            "{$username}@{$host}",
-            'mkdir -p ~/print_queue',
-        ];
-
-        $process = new Process($command);
-        $process->setTimeout(30);
-
-        Log::info('Creating remote directory', ['command' => implode(' ', $command)]);
-
-        $process->run();
-
-        if (! $process->isSuccessful()) {
-            throw new \RuntimeException('Failed to create remote directory: '.$process->getErrorOutput());
-        }
-
-        Log::info('Remote directory created successfully');
     }
 
     /**

@@ -17,6 +17,7 @@ class PrintNoticePackageTest extends TestCase
         parent::setUp();
         $this->seed(\Database\Seeders\NoticeTypeSeeder::class);
     }
+
     /**
      * Test print command with valid notice.
      */
