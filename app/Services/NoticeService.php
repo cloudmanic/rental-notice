@@ -869,7 +869,6 @@ class NoticeService
 
             // Agent information
             'agentName' => $agent->name,
-            'agentCompany' => $agent->company,
             'agentAddress1' => $agent->address_1,
             'agentAddress2' => $agent->address_2,
             'agentCity' => $agent->city,
