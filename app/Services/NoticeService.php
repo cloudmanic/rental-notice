@@ -657,4 +657,114 @@ class NoticeService
 
         return $storagePath;
     }
+
+    /**
+     * Generate Address Sheets PDF for mailing envelopes
+     *
+     * @param  \App\Models\Tenant  $tenant  The tenant to generate address sheet for
+     * @param  \App\Models\Notice  $notice  The notice to get agent information from
+     * @return string The path to the generated PDF file in storage
+     */
+    public function generateAddressSheets($tenant, $notice): string
+    {
+        // Get the agent from the notice
+        $agent = $notice->agent;
+
+        if (! $agent) {
+            throw new \Exception('No agent associated with this notice');
+        }
+
+        // Generate PDF from Blade template
+        $pdf = Pdf::loadView('pdfs.address-sheets', [
+            // Agent information (from)
+            'agentName' => $agent->name,
+            'agentAddress1' => $agent->address_1,
+            'agentAddress2' => $agent->address_2,
+            'agentCity' => $agent->city,
+            'agentState' => $agent->state,
+            'agentZip' => $agent->zip,
+
+            // Tenant information (to)
+            'tenantName' => $tenant->full_name,
+            'tenantAddress1' => $tenant->address_1,
+            'tenantAddress2' => $tenant->address_2,
+            'tenantCity' => $tenant->city,
+            'tenantState' => $tenant->state,
+            'tenantZip' => $tenant->zip,
+        ]);
+
+        // Generate unique filename
+        $fileName = 'address_sheet_'.$notice->id.'_'.$tenant->id.'_'.time().'.pdf';
+        $storagePath = 'notices/address_sheets/'.$fileName;
+
+        // Make sure the directory exists
+        Storage::disk('local')->makeDirectory('notices/address_sheets');
+
+        // Save the PDF to storage
+        $pdfContent = $pdf->output();
+        Storage::disk('local')->put($storagePath, $pdfContent);
+
+        return $storagePath;
+    }
+
+    /**
+     * Generate a combined Address Sheets PDF for all tenants on a notice
+     *
+     * @param  \App\Models\Notice  $notice  The notice to generate address sheets for
+     * @return string The path to the generated PDF file in storage
+     */
+    public function generateCombinedAddressSheets($notice): string
+    {
+        // Get all tenants for this notice
+        $tenants = $notice->tenants()->get();
+
+        if ($tenants->isEmpty()) {
+            throw new \Exception('No tenants associated with this notice');
+        }
+
+        // Generate individual PDFs for each tenant
+        $individualPdfs = [];
+        foreach ($tenants as $tenant) {
+            $pdfPath = $this->generateAddressSheets($tenant, $notice);
+            $individualPdfs[] = Storage::disk('local')->path($pdfPath);
+        }
+
+        // Generate the output filename for the combined PDF
+        $combinedFileName = 'combined_address_sheets_'.$notice->id.'_'.time().'.pdf';
+        $combinedStoragePath = 'notices/address_sheets/'.$combinedFileName;
+        $combinedFullPath = Storage::disk('local')->path($combinedStoragePath);
+
+        // Make sure the output directory exists
+        $outputDir = dirname($combinedFullPath);
+        if (! File::isDirectory($outputDir)) {
+            File::makeDirectory($outputDir, 0755, true);
+        }
+
+        // If there's only one tenant, just copy the file
+        if (count($individualPdfs) === 1) {
+            File::copy($individualPdfs[0], $combinedFullPath);
+        } else {
+            // Merge all PDFs using pdfcpu
+            $process = new Process(array_merge(
+                ['pdfcpu', 'merge', '-mode=create', $combinedFullPath],
+                $individualPdfs
+            ));
+
+            $process->run();
+
+            // Check if the merge process was successful
+            if (! $process->isSuccessful()) {
+                throw new ProcessFailedException($process);
+            }
+        }
+
+        // Clean up individual PDFs
+        foreach ($individualPdfs as $pdfPath) {
+            if (File::exists($pdfPath)) {
+                File::delete($pdfPath);
+            }
+        }
+
+        return $combinedStoragePath;
+    }
 }

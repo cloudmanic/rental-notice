@@ -239,4 +239,52 @@ class NoticeController extends Controller
             abort(500, 'Failed to retrieve certificate PDF: '.$e->getMessage());
         }
     }
+
+    /**
+     * Generate and serve address sheets PDF for all tenants on a notice.
+     *
+     * @return Response
+     */
+    public function generateAddressSheets(Notice $notice, Request $request)
+    {
+        // Authorization check - only super admins can generate address sheets
+        if (! Auth::user()->isSuperAdmin() && ! session('impersonating')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        try {
+            // Generate the combined address sheets PDF using our NoticeService
+            $pdfPath = $this->noticeService->generateCombinedAddressSheets($notice);
+
+            // Get the full path to the generated PDF file
+            $fullPath = Storage::disk('local')->path($pdfPath);
+
+            if (! file_exists($fullPath)) {
+                abort(404, 'Address sheets generation failed');
+            }
+
+            // Check if download is requested via URL parameter
+            $disposition = 'inline';
+            $filename = 'address-sheets-'.$notice->id.'.pdf';
+
+            if ($request->has('download') && $request->query('download') === 'true') {
+                $disposition = 'attachment';
+            }
+
+            // Return the PDF with appropriate Content-Disposition
+            return response()->file($fullPath, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => $disposition.'; filename="'.$filename.'"',
+            ]);
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Address Sheets Generation failed: '.$e->getMessage(), [
+                'notice_id' => $notice->id,
+                'exception' => $e,
+            ]);
+
+            // Return error response
+            abort(500, 'Failed to generate address sheets: '.$e->getMessage());
+        }
+    }
 }
