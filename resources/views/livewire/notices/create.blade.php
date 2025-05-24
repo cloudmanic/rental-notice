@@ -22,7 +22,7 @@
             <div class="ml-3">
                 <h3 class="text-sm font-medium text-blue-800">Same Day Service Available</h3>
                 <div class="mt-1 text-sm text-blue-700">
-                    Notices submitted before 1:00 PM PST will be served the same day.
+                    Notices submitted before 1:00 PM PDT will be served the same day.
                 </div>
             </div>
         </div>
