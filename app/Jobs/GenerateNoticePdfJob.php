@@ -10,6 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class GenerateNoticePdfJob implements ShouldQueue
 {
@@ -51,6 +52,28 @@ class GenerateNoticePdfJob implements ShouldQueue
                 'notice_id' => $this->notice->id,
                 'watermarked' => $watermarked,
                 'path' => $pdfPath,
+            ]);
+
+            // Generate the certificate of mailing PDF
+            $certificatePath = $noticeService->generateCertificateOfMailing([$this->notice]);
+
+            // Upload certificate to S3 and store path in database
+            $localFullPath = Storage::disk('local')->path($certificatePath);
+            $s3Path = $this->notice->account_id.'/certificate_'.$this->notice->id.'.pdf';
+
+            $result = Storage::disk('s3')->put($s3Path, file_get_contents($localFullPath));
+
+            if (! $result) {
+                throw new \Exception('Failed to upload certificate PDF to S3');
+            }
+
+            // Update the notice with the certificate path
+            $this->notice->update(['certificate_pdf' => $s3Path]);
+
+            Log::info('Certificate of mailing generated successfully', [
+                'notice_id' => $this->notice->id,
+                'path' => $certificatePath,
+                's3_path' => $s3Path,
             ]);
         } catch (\Exception $e) {
             Log::error('PDF generation failed', [
