@@ -895,4 +895,98 @@ class NoticeService
 
         return $storagePath;
     }
+
+    /**
+     * Generate Complete Print Package PDF with all documents in proper order
+     *
+     * @param  \App\Models\Notice  $notice  The notice to generate print package for
+     * @return string The path to the generated PDF file in storage
+     */
+    public function generateCompletePrintPackage($notice): string
+    {
+        // Get all tenants for this notice
+        $tenants = $notice->tenants()->get();
+
+        if ($tenants->isEmpty()) {
+            throw new \Exception('No tenants associated with this notice');
+        }
+
+        // Array to store all individual PDF paths
+        $individualPdfs = [];
+
+        // First, generate documents for each tenant
+        foreach ($tenants as $tenant) {
+            // 1. Address sheet for tenant
+            $tenantAddressSheetPath = $this->generateTenantAddressSheets($tenant, $notice);
+            $individualPdfs[] = Storage::disk('local')->path($tenantAddressSheetPath);
+
+            // 2. Copy of notice (we need to generate this for each tenant)
+            $noticePdfPath = $this->generatePdfNotice($notice, false);
+            $individualPdfs[] = Storage::disk('local')->path($noticePdfPath);
+        }
+
+        // Then add agent-related documents
+        // 3. Address sheet for agent
+        $agentAddressSheetPath = $this->generateAgentAddressSheet($notice);
+        $individualPdfs[] = Storage::disk('local')->path($agentAddressSheetPath);
+
+        // 4. Agent cover letter
+        $agentCoverLetterPath = $this->generateAgentCoverLetter($notice);
+        $individualPdfs[] = Storage::disk('local')->path($agentCoverLetterPath);
+
+        // 5. Another copy of notice for agent
+        $agentNoticePdfPath = $this->generatePdfNotice($notice, false);
+        $individualPdfs[] = Storage::disk('local')->path($agentNoticePdfPath);
+
+        // 6. Certificate of mailing (if it exists)
+        if ($notice->certificate_pdf) {
+            // Get the certificate from S3
+            $certificateContents = Storage::disk('s3')->get($notice->certificate_pdf);
+
+            // Save it temporarily to local storage
+            $tempCertificatePath = 'notices/temp/certificate_'.$notice->id.'_'.time().'.pdf';
+            Storage::disk('local')->put($tempCertificatePath, $certificateContents);
+            $individualPdfs[] = Storage::disk('local')->path($tempCertificatePath);
+        } else {
+            // Generate certificate if it doesn't exist
+            $certificatePath = $this->generateCertificateOfMailing([$notice]);
+            $individualPdfs[] = Storage::disk('local')->path($certificatePath);
+        }
+
+        // Generate the output filename for the complete package
+        $packageFileName = 'complete_print_package_'.$notice->id.'_'.time().'.pdf';
+        $packageStoragePath = 'notices/print_packages/'.$packageFileName;
+        $packageFullPath = Storage::disk('local')->path($packageStoragePath);
+
+        // Make sure the output directory exists
+        $outputDir = dirname($packageFullPath);
+        if (! File::isDirectory($outputDir)) {
+            File::makeDirectory($outputDir, 0755, true);
+        }
+
+        // Merge all PDFs using pdfcpu
+        $process = new Process(array_merge(
+            ['pdfcpu', 'merge', '-mode=create', $packageFullPath],
+            $individualPdfs
+        ));
+
+        $process->run();
+
+        // Check if the merge process was successful
+        if (! $process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        // Clean up temporary files
+        foreach ($individualPdfs as $pdfPath) {
+            if (File::exists($pdfPath)) {
+                // Only delete files in temp or those we generated for this process
+                if (strpos($pdfPath, '/temp/') !== false || strpos($pdfPath, time()) !== false) {
+                    File::delete($pdfPath);
+                }
+            }
+        }
+
+        return $packageStoragePath;
+    }
 }

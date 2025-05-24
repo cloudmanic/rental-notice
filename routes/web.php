@@ -117,6 +117,7 @@ Route::middleware('auth')->group(function () {
     Route::get('notices/{notice}/tenant-address-sheets', [NoticeController::class, 'generateTenantAddressSheets'])->name('notices.tenant-address-sheets');
     Route::get('notices/{notice}/agent-address-sheet', [NoticeController::class, 'generateAgentAddressSheet'])->name('notices.agent-address-sheet');
     Route::get('notices/{notice}/agent-cover-letter', [NoticeController::class, 'generateAgentCoverLetter'])->name('notices.agent-cover-letter');
+    Route::get('notices/{notice}/complete-print-package', [NoticeController::class, 'generateCompletePrintPackage'])->name('notices.complete-print-package');
 
     // Tenant Routes
     Route::get('tenants', TenantsIndex::class)->name('tenants.index');

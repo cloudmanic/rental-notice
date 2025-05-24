@@ -385,6 +385,49 @@ class NoticeController extends Controller
     }
 
     /**
+     * Generate and serve complete print package PDF with all documents.
+     *
+     * @return Response
+     */
+    public function generateCompletePrintPackage(Notice $notice, Request $request)
+    {
+        // Authorization check - only super admins can generate print packages
+        if (! Auth::user()->isSuperAdmin() && ! session('impersonating')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        try {
+            // Generate the complete print package PDF using our NoticeService
+            $pdfPath = $this->noticeService->generateCompletePrintPackage($notice);
+
+            // Get the full path to the generated PDF file
+            $fullPath = Storage::disk('local')->path($pdfPath);
+
+            if (! file_exists($fullPath)) {
+                abort(404, 'Complete print package generation failed');
+            }
+
+            // Always download this package
+            $filename = 'complete-print-package-'.$notice->id.'.pdf';
+
+            // Return the PDF with attachment disposition
+            return response()->file($fullPath, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+            ]);
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Complete Print Package Generation failed: '.$e->getMessage(), [
+                'notice_id' => $notice->id,
+                'exception' => $e,
+            ]);
+
+            // Return error response
+            abort(500, 'Failed to generate complete print package: '.$e->getMessage());
+        }
+    }
+
+    /**
      * Legacy method - maintained for backward compatibility
      *
      * @deprecated Use generateTenantAddressSheets instead
