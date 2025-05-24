@@ -4,10 +4,10 @@ namespace App\Livewire\Notices;
 
 use App\Models\Notice;
 use App\Models\NoticeType;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\Attributes\Layout;
-use Illuminate\Support\Facades\Auth;
 
 class Index extends Component
 {
@@ -15,9 +15,13 @@ class Index extends Component
 
     // Search and filter properties
     public $search = '';
+
     public $statusFilter = '';
+
     public $noticeTypeFilter = '';
+
     public $sortField = 'created_at';
+
     public $sortDirection = 'desc';
 
     // We need to reset pagination when search params change
@@ -66,15 +70,15 @@ class Index extends Component
             ->when($this->search, function ($query) {
                 return $query->where(function ($query) {
                     $query->whereHas('noticeType', function ($q) {
-                        $q->where('name', 'like', '%' . $this->search . '%');
+                        $q->where('name', 'like', '%'.$this->search.'%');
                     })
                         ->orWhereHas('tenants', function ($q) {
-                            $q->where('first_name', 'like', '%' . $this->search . '%')
-                                ->orWhere('last_name', 'like', '%' . $this->search . '%')
-                                ->orWhere('email', 'like', '%' . $this->search . '%');
+                            $q->where('first_name', 'like', '%'.$this->search.'%')
+                                ->orWhere('last_name', 'like', '%'.$this->search.'%')
+                                ->orWhere('email', 'like', '%'.$this->search.'%');
                         })
                         ->orWhereHas('agent', function ($q) {
-                            $q->where('name', 'like', '%' . $this->search . '%');
+                            $q->where('name', 'like', '%'.$this->search.'%');
                         });
                 });
             })
@@ -95,7 +99,7 @@ class Index extends Component
 
         return view('livewire.notices.index', [
             'notices' => $notices,
-            'noticeTypes' => $noticeTypes
+            'noticeTypes' => $noticeTypes,
         ]);
     }
 }

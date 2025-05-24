@@ -3,9 +3,8 @@
 namespace App\Livewire\Notices;
 
 use App\Models\Notice;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
-use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 
 class Generating extends Component
 {
@@ -23,15 +22,15 @@ class Generating extends Component
     /**
      * Mount the component with the notice instance.
      *
-     * @param Notice $notice
      * @return void
      */
     public function mount(Notice $notice)
     {
         $this->notice = $notice;
 
-        if (!$this->notice) {
+        if (! $this->notice) {
             session()->flash('error', 'Notice not found or access denied.');
+
             return redirect()->route('notices.index');
         }
     }
@@ -44,7 +43,7 @@ class Generating extends Component
     public function checkPdfStatus()
     {
         // Check if the draft PDF has been generated
-        if ($this->notice && !empty($this->notice->draft_pdf)) {
+        if ($this->notice && ! empty($this->notice->draft_pdf)) {
             // PDF is ready, redirect to the preview page
             return redirect()->route('notices.preview', $this->notice->id);
         }

@@ -1,25 +1,25 @@
 <?php
 
-use App\Livewire\Dashboard\Index as DashboardIndex;
-use App\Livewire\Notices\Index as NoticesIndex;
-use App\Livewire\Notices\Create as NoticesCreate;
-use App\Livewire\Notices\Preview as NoticesPreview;
-use App\Http\Controllers\NoticeController;
-use App\Livewire\Tenants\Index as TenantsIndex;
-use App\Livewire\Tenants\Create as TenantsCreate;
-use App\Livewire\Tenants\Edit as TenantsEdit;
-use App\Livewire\Agents\Index as AgentsIndex;
-use App\Livewire\Profile\Edit as ProfileEdit;
-use App\Livewire\Account\Edit as AccountEdit;
-use App\Livewire\Accounts\Index as AccountsIndex;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AccountImpersonationController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\MarketingController;
-use App\Http\Controllers\Auth\AccountImpersonationController;
-use \App\Http\Controllers\StripeCheckoutController;
+use App\Http\Controllers\NoticeController;
+use App\Http\Controllers\StripeCheckoutController;
+use App\Livewire\Account\Edit as AccountEdit;
+use App\Livewire\Accounts\Index as AccountsIndex;
+use App\Livewire\Agents\Index as AgentsIndex;
+use App\Livewire\Dashboard\Index as DashboardIndex;
+use App\Livewire\Notices\Create as NoticesCreate;
+use App\Livewire\Notices\Index as NoticesIndex;
+use App\Livewire\Notices\Preview as NoticesPreview;
+use App\Livewire\Profile\Edit as ProfileEdit;
+use App\Livewire\Tenants\Create as TenantsCreate;
+use App\Livewire\Tenants\Edit as TenantsEdit;
+use App\Livewire\Tenants\Index as TenantsIndex;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,11 +73,10 @@ Route::middleware('auth')->group(function () {
 
         $user->notify(new App\Notifications\NoticePaid($notice));
 
-        //\Illuminate\Support\Facades\Mail::to($request->user())->send(new \App\Mail\NoticePaid());
+        // \Illuminate\Support\Facades\Mail::to($request->user())->send(new \App\Mail\NoticePaid());
 
         return 'woots';
     })->name('slack-test');
-
 
     // Logout Route
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');

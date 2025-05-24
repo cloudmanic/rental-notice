@@ -2,12 +2,12 @@
 
 namespace App\Livewire\Profile;
 
-use Livewire\Component;
-use Livewire\Attributes\Layout;
+use App\Services\ActivityService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
-use App\Services\ActivityService;
+use Livewire\Component;
 
 class Edit extends Component
 {
@@ -49,7 +49,7 @@ class Edit extends Component
         $this->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|email|max:255|unique:users,email,'.$user->id,
         ]);
 
         $user->update([
@@ -59,7 +59,7 @@ class Edit extends Component
         ]);
 
         // Log the profile update activity
-        ActivityService::log($this->first_name . "'s profile information was updated.", null, null, null, 'User');
+        ActivityService::log($this->first_name."'s profile information was updated.", null, null, null, 'User');
 
         // For flash message in UI
         session()->flash('message', 'Profile successfully updated.');
@@ -76,8 +76,9 @@ class Edit extends Component
         ]);
 
         // Verify current password
-        if (!Hash::check($this->current_password, $user->password)) {
+        if (! Hash::check($this->current_password, $user->password)) {
             $this->addError('current_password', 'The provided password does not match your current password.');
+
             return;
         }
 
@@ -89,7 +90,7 @@ class Edit extends Component
         $this->reset(['current_password', 'password', 'password_confirmation']);
 
         // Log the password update activity
-        ActivityService::log($this->first_name . "'s password was updated.", null, null, null, 'User');
+        ActivityService::log($this->first_name."'s password was updated.", null, null, null, 'User');
 
         // For flash message in UI
         session()->flash('password_message', 'Password successfully updated.');

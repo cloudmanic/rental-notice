@@ -10,8 +10,8 @@ use App\Models\Tenant;
 use App\Models\User;
 use App\Services\NoticeService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Process\Process;
 use Tests\TestCase;
@@ -111,19 +111,19 @@ class NoticeServiceTest extends TestCase
 
         // Set up the templates directory for the test
         $templateDir = base_path('templates');
-        if (!file_exists($templateDir)) {
+        if (! file_exists($templateDir)) {
             mkdir($templateDir, 0777, true);
         }
 
         // Create a simple template file for testing if it doesn't exist
         $templatePath = base_path('templates/10-day-notice-template.json');
-        if (!file_exists($templatePath)) {
+        if (! file_exists($templatePath)) {
             $templateContent = file_get_contents(base_path('templates/10-day-notice-template.json'));
             file_put_contents($templatePath, $templateContent);
         }
 
         // Call the service method
-        $noticeService = new NoticeService();
+        $noticeService = new NoticeService;
         $storagePath = $noticeService->generateJsonNotice($notice);
 
         // Check if file exists
@@ -232,7 +232,7 @@ class NoticeServiceTest extends TestCase
         $this->mockPdfcpuProcess();
 
         // Call the service method
-        $noticeService = new NoticeService();
+        $noticeService = new NoticeService;
         $pdfPath = $noticeService->generatePdfNotice($notice);
 
         // Check if file exists
@@ -242,7 +242,7 @@ class NoticeServiceTest extends TestCase
         $this->assertEquals('pdf', pathinfo($pdfPath, PATHINFO_EXTENSION));
 
         // Verify the file name format
-        $this->assertStringContainsString('notice_' . $notice->id, $pdfPath);
+        $this->assertStringContainsString('notice_'.$notice->id, $pdfPath);
     }
 
     #[Test]
@@ -283,15 +283,15 @@ class NoticeServiceTest extends TestCase
         File::shouldReceive('move')
             ->once()
             ->withArgs(function ($source, $dest) {
-                return str_ends_with($source, '.temp.pdf') && !str_ends_with($dest, '.temp.pdf');
+                return str_ends_with($source, '.temp.pdf') && ! str_ends_with($dest, '.temp.pdf');
             })
             ->andReturn(true);
 
-        // Specific expectation for the flattened PDF move operation    
+        // Specific expectation for the flattened PDF move operation
         File::shouldReceive('move')
             ->once()
             ->withArgs(function ($source, $dest) {
-                return str_ends_with($source, '.flattened.pdf') && !str_ends_with($dest, '.flattened.pdf');
+                return str_ends_with($source, '.flattened.pdf') && ! str_ends_with($dest, '.flattened.pdf');
             })
             ->andReturn(true);
 
@@ -299,16 +299,16 @@ class NoticeServiceTest extends TestCase
         File::shouldReceive('move')
             ->once()
             ->withArgs(function ($source, $dest) {
-                return str_ends_with($source, '.secured.pdf') && !str_ends_with($dest, '.secured.pdf');
+                return str_ends_with($source, '.secured.pdf') && ! str_ends_with($dest, '.secured.pdf');
             })
             ->andReturn(true);
 
         // Call the service with watermark=true
-        $noticeService = new NoticeService();
+        $noticeService = new NoticeService;
         $pdfPath = $noticeService->generatePdfNotice($notice, true);
 
         // Verify the path is correct
-        $this->assertStringContainsString('notice_' . $notice->id, $pdfPath);
+        $this->assertStringContainsString('notice_'.$notice->id, $pdfPath);
         $this->assertStringEndsWith('.pdf', $pdfPath);
     }
 
@@ -365,7 +365,7 @@ class NoticeServiceTest extends TestCase
         $this->setUpShippingFormTemplateFiles();
 
         // Call the service method
-        $noticeService = new NoticeService();
+        $noticeService = new NoticeService;
         $storagePath = $noticeService->generateJsonShippingForm($notice);
 
         // Check if file exists
@@ -396,7 +396,7 @@ class NoticeServiceTest extends TestCase
         $this->assertEquals('Portland, OR 97201', $this->getFieldValue($textfields, 'toLine4'));
 
         // Verify the filename format
-        $this->assertStringContainsString('shipping_' . $notice->id, $storagePath);
+        $this->assertStringContainsString('shipping_'.$notice->id, $storagePath);
     }
 
     #[Test]
@@ -477,11 +477,11 @@ class NoticeServiceTest extends TestCase
         });
 
         // Call the service method
-        $noticeService = new NoticeService();
+        $noticeService = new NoticeService;
         $pdfPath = $noticeService->generatePdfShippingForm($notice);
 
         // Check if file exists - use our own assertion since File::exists is mocked
-        $this->assertStringContainsString('shipping_' . $notice->id, $pdfPath);
+        $this->assertStringContainsString('shipping_'.$notice->id, $pdfPath);
         $this->assertStringEndsWith('.pdf', $pdfPath);
     }
 
@@ -492,7 +492,7 @@ class NoticeServiceTest extends TestCase
     {
         // Set up the templates directory
         $templateDir = base_path('templates');
-        if (!file_exists($templateDir)) {
+        if (! file_exists($templateDir)) {
             mkdir($templateDir, 0777, true);
         }
 
@@ -545,6 +545,7 @@ class NoticeServiceTest extends TestCase
                 if (strpos($path, 'templates/10-day-notice-template') !== false) {
                     return true;
                 }
+
                 return file_exists($path);
             });
 
@@ -555,6 +556,7 @@ class NoticeServiceTest extends TestCase
                 if ($path === base_path('templates/10-day-notice-template.json')) {
                     return $jsonTemplate;
                 }
+
                 // Use real file_get_contents for other files
                 return file_get_contents($path);
             });
@@ -566,6 +568,7 @@ class NoticeServiceTest extends TestCase
                 if (strpos($path, 'storage') !== false) {
                     return true;
                 }
+
                 return is_dir($path);
             });
 
@@ -583,7 +586,7 @@ class NoticeServiceTest extends TestCase
     {
         // Set up the templates directory
         $templateDir = base_path('templates');
-        if (!file_exists($templateDir)) {
+        if (! file_exists($templateDir)) {
             mkdir($templateDir, 0777, true);
         }
 
@@ -619,6 +622,7 @@ class NoticeServiceTest extends TestCase
                 ) {
                     return true;
                 }
+
                 return file_exists($path);
             });
 
@@ -629,6 +633,7 @@ class NoticeServiceTest extends TestCase
                 if ($path === base_path('templates/ps3817-form.json')) {
                     return $jsonTemplate;
                 }
+
                 // For other templates, use the existing mock or real file_get_contents
                 return file_get_contents($path);
             });

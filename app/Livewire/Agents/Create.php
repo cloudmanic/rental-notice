@@ -3,11 +3,11 @@
 namespace App\Livewire\Agents;
 
 use App\Models\Agent;
-use Livewire\Component;
-use Livewire\Attributes\Layout;
-use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\Rule;
 use App\Services\ActivityService;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Rule;
+use Livewire\Component;
 
 class Create extends Component
 {
@@ -46,13 +46,13 @@ class Create extends Component
     {
         $validated = $this->validate();
 
-        $agent = new Agent();
+        $agent = new Agent;
         $agent->account_id = Auth::user()->account->id;
         $agent->fill($validated);
         $agent->save();
 
         // Log the agent creation activity
-        ActivityService::log("{name} was added as a new agent.", null, null, $agent->id, 'Agent');
+        ActivityService::log('{name} was added as a new agent.', null, null, $agent->id, 'Agent');
 
         session()->flash('message', 'Agent added successfully.');
         session()->flash('message-type', 'success');

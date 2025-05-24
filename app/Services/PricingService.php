@@ -11,7 +11,7 @@ class PricingService
     /**
      * Get notice types available for an account based on their plan date
      *
-     * @param Account $account The account to get notice types for
+     * @param  Account  $account  The account to get notice types for
      * @return Collection Collection of available notice types
      */
     public function getNoticeTypesForAccount(Account $account): Collection
@@ -20,7 +20,7 @@ class PricingService
         $planDate = $account->notice_type_plan_date ?? NoticeType::getMostRecentPlanDate();
 
         // If still no plan date (no notice types exist yet), return empty collection
-        if (!$planDate) {
+        if (! $planDate) {
             return collect();
         }
 
@@ -43,8 +43,7 @@ class PricingService
     /**
      * Set the most recent plan date for an account
      *
-     * @param Account $account The account to update
-     * @return void
+     * @param  Account  $account  The account to update
      */
     public function setAccountToMostRecentPlan(Account $account): void
     {
@@ -54,8 +53,6 @@ class PricingService
 
     /**
      * Get the standard price for a notice.
-     *
-     * @return float
      */
     public function getStandardPrice(): float
     {
@@ -64,9 +61,6 @@ class PricingService
 
     /**
      * Get the bulk pricing for notices based on quantity.
-     *
-     * @param int $quantity
-     * @return float|null
      */
     public function getBulkPrice(int $quantity): ?float
     {
@@ -84,8 +78,6 @@ class PricingService
 
     /**
      * Get all bulk price tiers.
-     *
-     * @return array
      */
     public function getBulkPrices(): array
     {
@@ -93,26 +85,23 @@ class PricingService
             [
                 'quantity' => 10,
                 'price' => 14.00,
-                'savings' => '6.7%'
+                'savings' => '6.7%',
             ],
             [
                 'quantity' => 20,
                 'price' => 13.00,
-                'savings' => '13.3%'
+                'savings' => '13.3%',
             ],
             [
                 'quantity' => 50,
                 'price' => 12.00,
-                'savings' => '20%'
-            ]
+                'savings' => '20%',
+            ],
         ];
     }
 
     /**
      * Check if the given quantity is eligible for bulk pricing.
-     *
-     * @param int $quantity
-     * @return bool
      */
     public function isEligibleForBulkPricing(int $quantity): bool
     {

@@ -25,7 +25,7 @@ class Index extends Component
     {
         $accounts = Account::query()
             ->when($this->search, function ($query) {
-                return $query->where('name', 'like', '%' . $this->search . '%');
+                return $query->where('name', 'like', '%'.$this->search.'%');
             })
             ->orderBy('name')
             ->paginate(50);

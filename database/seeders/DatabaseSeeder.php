@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\Account;
-use App\Models\Tenant;
-use App\Models\Notice;
 use App\Models\Agent;
+use App\Models\Notice;
 use App\Models\NoticeType;
-use Illuminate\Support\Carbon;
+use App\Models\Tenant;
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -50,7 +50,7 @@ class DatabaseSeeder extends Seeder
             }
 
             // Attach user to account if not already attached
-            if (!$firstAccount->users()->where('user_id', $firstOwner->id)->exists()) {
+            if (! $firstAccount->users()->where('user_id', $firstOwner->id)->exists()) {
                 $firstAccount->users()->attach($firstOwner, ['is_owner' => true]);
             }
 
@@ -60,11 +60,11 @@ class DatabaseSeeder extends Seeder
                 User::TYPE_ADMIN,
                 User::TYPE_CONTRIBUTOR,
                 User::TYPE_CONTRIBUTOR,
-                User::TYPE_CONTRIBUTOR
+                User::TYPE_CONTRIBUTOR,
             ];
 
             for ($i = 0; $i < 5; $i++) {
-                $email = 'first_account_user_' . ($i + 1) . '@example.com';
+                $email = 'first_account_user_'.($i + 1).'@example.com';
                 $user = User::firstOrCreate(
                     ['email' => $email],
                     [
@@ -81,7 +81,7 @@ class DatabaseSeeder extends Seeder
                     $user->update(['type' => $userTypes[$i]]);
                 }
 
-                if (!$firstAccount->users()->where('user_id', $user->id)->exists()) {
+                if (! $firstAccount->users()->where('user_id', $user->id)->exists()) {
                     $firstAccount->users()->attach($user, ['is_owner' => false]);
                 }
             }
@@ -111,7 +111,7 @@ class DatabaseSeeder extends Seeder
             }
 
             // Attach user to account if not already attached
-            if (!$secondAccount->users()->where('user_id', $secondOwner->id)->exists()) {
+            if (! $secondAccount->users()->where('user_id', $secondOwner->id)->exists()) {
                 $secondAccount->users()->attach($secondOwner, ['is_owner' => true]);
             }
 
@@ -125,7 +125,7 @@ class DatabaseSeeder extends Seeder
             ];
 
             for ($i = 0; $i < 5; $i++) {
-                $email = 'second_account_user_' . ($i + 1) . '@example.com';
+                $email = 'second_account_user_'.($i + 1).'@example.com';
                 $user = User::firstOrCreate(
                     ['email' => $email],
                     [
@@ -142,7 +142,7 @@ class DatabaseSeeder extends Seeder
                     $user->update(['type' => $userTypes[$i]]);
                 }
 
-                if (!$secondAccount->users()->where('user_id', $user->id)->exists()) {
+                if (! $secondAccount->users()->where('user_id', $user->id)->exists()) {
                     $secondAccount->users()->attach($user, ['is_owner' => false]);
                 }
             }
@@ -172,7 +172,7 @@ class DatabaseSeeder extends Seeder
             }
 
             // Attach user to account if not already attached
-            if (!$thirdAccount->users()->where('user_id', $thirdOwner->id)->exists()) {
+            if (! $thirdAccount->users()->where('user_id', $thirdOwner->id)->exists()) {
                 $thirdAccount->users()->attach($thirdOwner, ['is_owner' => true]);
             }
 
@@ -184,7 +184,7 @@ class DatabaseSeeder extends Seeder
             ];
 
             for ($i = 0; $i < 3; $i++) {
-                $email = 'third_account_user_' . ($i + 1) . '@example.com';
+                $email = 'third_account_user_'.($i + 1).'@example.com';
                 $user = User::firstOrCreate(
                     ['email' => $email],
                     [
@@ -201,7 +201,7 @@ class DatabaseSeeder extends Seeder
                     $user->update(['type' => $userTypes[$i]]);
                 }
 
-                if (!$thirdAccount->users()->where('user_id', $user->id)->exists()) {
+                if (! $thirdAccount->users()->where('user_id', $user->id)->exists()) {
                     $thirdAccount->users()->attach($user, ['is_owner' => false]);
                 }
             }

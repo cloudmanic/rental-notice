@@ -3,32 +3,37 @@
 namespace App\Livewire\Tenants;
 
 use App\Models\Tenant;
-use Livewire\Component;
-use Livewire\Attributes\Layout;
-use Illuminate\Contracts\View\View;
 use App\Services\ActivityService;
+use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 class Edit extends Component
 {
     public Tenant $tenant;
 
     public $first_name;
+
     public $last_name;
+
     public $email;
+
     public $phone;
+
     public $address_1;
+
     public $address_2;
+
     public $city;
+
     public $state;
+
     public $zip;
 
     public bool $showDeleteModal = false;
 
     /**
      * Mount the component.
-     *
-     * @param  Tenant  $tenant
-     * @return void
      */
     public function mount(Tenant $tenant): void
     {
@@ -66,8 +71,6 @@ class Edit extends Component
 
     /**
      * Update the tenant.
-     *
-     * @return void
      */
     public function update(): void
     {
@@ -77,7 +80,7 @@ class Edit extends Component
 
         // Log the tenant update activity
         ActivityService::log(
-            "{name}'s information was updated.", 
+            "{name}'s information was updated.",
             $this->tenant->id,
             null,
             null,
@@ -105,12 +108,12 @@ class Edit extends Component
         // Save tenant information before deletion
         $tenantId = $this->tenant->id;
         $tenantName = $this->tenant->full_name;
-        
+
         $this->tenant->delete();
 
         // Log the tenant deletion activity
         ActivityService::log(
-            "Tenant {$tenantName} was deleted.", 
+            "Tenant {$tenantName} was deleted.",
             null, // We don't use tenant_id since it's deleted
             null,
             null,

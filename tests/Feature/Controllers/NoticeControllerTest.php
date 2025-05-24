@@ -11,8 +11,8 @@ use App\Models\User;
 use App\Services\NoticeService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Mockery;
 use Tests\TestCase;
 
@@ -63,7 +63,7 @@ class NoticeControllerTest extends TestCase
         $mockService = Mockery::mock(NoticeService::class);
 
         // The PDF path we expect the service to return
-        $pdfPath = 'notices/notice_' . $notice->id . '_' . time() . '.pdf';
+        $pdfPath = 'notices/notice_'.$notice->id.'_'.time().'.pdf';
 
         // Set up the mock to return our fake PDF path
         $mockService->shouldReceive('generatePdfNotice')
@@ -172,7 +172,7 @@ class NoticeControllerTest extends TestCase
         $mockService = Mockery::mock(NoticeService::class);
 
         // The PDF path we expect the service to return
-        $pdfPath = 'notices/complete_package_' . $notice->id . '_' . time() . '.pdf';
+        $pdfPath = 'notices/complete_package_'.$notice->id.'_'.time().'.pdf';
 
         // Set up the mock to return our fake PDF path
         $mockService->shouldReceive('generateCompletePdfPackage')

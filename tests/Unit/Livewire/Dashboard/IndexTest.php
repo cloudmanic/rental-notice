@@ -3,15 +3,14 @@
 namespace Tests\Unit\Livewire\Dashboard;
 
 use App\Livewire\Dashboard\Index;
-use App\Models\Activity;
 use App\Models\Account;
+use App\Models\Activity;
 use App\Models\Agent;
 use App\Models\Notice;
 use App\Models\NoticeType;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\Test;
 use ReflectionMethod;
 use Tests\TestCase;
@@ -21,7 +20,9 @@ class IndexTest extends TestCase
     use RefreshDatabase;
 
     protected $account;
+
     protected $user;
+
     protected $noticeType;
 
     protected function setUp(): void
@@ -67,7 +68,7 @@ class IndexTest extends TestCase
         $notice = Notice::factory()->create([
             'account_id' => $this->account->id,
             'user_id' => $this->user->id,
-            'notice_type_id' => $this->noticeType->id
+            'notice_type_id' => $this->noticeType->id,
         ]);
 
         // Create an activity for this notice
@@ -141,7 +142,7 @@ class IndexTest extends TestCase
      */
     private function callDetermineActivityType(Activity $activity)
     {
-        $dashboardComponent = new Index();
+        $dashboardComponent = new Index;
 
         $reflection = new ReflectionMethod($dashboardComponent, 'determineActivityType');
         $reflection->setAccessible(true);

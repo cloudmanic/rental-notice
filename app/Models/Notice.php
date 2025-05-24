@@ -2,18 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Notice extends Model
 {
     use HasFactory;
 
     const STATUS_DRAFT = 'draft';
+
     const STATUS_PENDING_PAYMENT = 'pending_payment';
+
     const STATUS_SERVICE_PENDING = 'service_pending';
+
     const STATUS_SERVED = 'served';
+
     const STATUS_ERROR = 'error';
 
     protected $fillable = [
@@ -89,6 +93,7 @@ class Notice extends Model
         if ($this->agent_address_2) {
             $address .= ", {$this->agent_address_2}";
         }
+
         return "{$address}, {$this->agent_city}, {$this->agent_state} {$this->agent_zip}";
     }
 
@@ -138,7 +143,7 @@ class Notice extends Model
             'final_pdf' => ['nullable', 'string'],
             'certificate_pdf' => ['nullable', 'string'],
 
-            'status' => ['required', 'string', 'in:' . implode(',', self::statuses())],
+            'status' => ['required', 'string', 'in:'.implode(',', self::statuses())],
             'error_message' => ['nullable', 'string', 'max:1000'],
         ];
     }

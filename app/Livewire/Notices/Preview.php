@@ -3,8 +3,8 @@
 namespace App\Livewire\Notices;
 
 use App\Models\Notice;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 class Preview extends Component
 {
@@ -13,7 +13,6 @@ class Preview extends Component
     /**
      * Mount the component with the notice instance
      *
-     * @param Notice $notice
      * @return void
      */
     #[Layout('layouts.app')]

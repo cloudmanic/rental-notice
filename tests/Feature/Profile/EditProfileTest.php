@@ -5,7 +5,6 @@ namespace Tests\Feature\Profile;
 use App\Models\Account;
 use App\Models\Activity;
 use App\Models\User;
-use App\Services\ActivityService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
@@ -19,6 +18,7 @@ class EditProfileTest extends TestCase
     use WithFaker;
 
     protected $account;
+
     protected $user;
 
     protected function setUp(): void

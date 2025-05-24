@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Validation\Rules\Password;
 
 class Tenant extends Model
 {
@@ -46,6 +45,7 @@ class Tenant extends Model
         if ($this->address_2) {
             $address .= ", {$this->address_2}";
         }
+
         return "{$address}, {$this->city}, {$this->state} {$this->zip}";
     }
 

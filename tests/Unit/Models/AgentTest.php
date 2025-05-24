@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
-use App\Models\Agent;
 use App\Models\Account;
+use App\Models\Agent;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class AgentTest extends TestCase
 {
@@ -67,7 +67,7 @@ class AgentTest extends TestCase
             'email',
         ];
 
-        $agent = new Agent();
+        $agent = new Agent;
         $fillable = $agent->getFillable();
 
         $this->assertEquals(sort($expectedFillable), sort($fillable));
@@ -78,12 +78,12 @@ class AgentTest extends TestCase
     {
         $agent = Agent::factory()->create([
             'name' => 'Original Name',
-            'email' => 'original@example.com'
+            'email' => 'original@example.com',
         ]);
 
         $agent->update([
             'name' => 'Updated Name',
-            'email' => 'updated@example.com'
+            'email' => 'updated@example.com',
         ]);
 
         $this->assertEquals('Updated Name', $agent->name);
@@ -93,7 +93,7 @@ class AgentTest extends TestCase
         $this->assertDatabaseHas('agents', [
             'id' => $agent->id,
             'name' => 'Updated Name',
-            'email' => 'updated@example.com'
+            'email' => 'updated@example.com',
         ]);
     }
 

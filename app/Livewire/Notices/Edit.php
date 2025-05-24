@@ -2,20 +2,24 @@
 
 namespace App\Livewire\Notices;
 
-use App\Models\Notice;
 use App\Models\Agent;
+use App\Models\Notice;
 use App\Models\NoticeType;
 use App\Models\Tenant;
-use Livewire\Component;
-use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 class Edit extends Component
 {
     public Notice $notice;
+
     public $selectedTenants = [];
+
     public $search = '';
+
     public $searchTenant = '';
+
     public $visibleCharges = 0;
 
     // Tenant search results
@@ -57,10 +61,10 @@ class Edit extends Component
     {
         $accountId = Auth::user()->account->id;
 
-        // Filter notice types based on the account's plan date
+        // Filter notice types based on the account's plan date (exact match)
         $accountPlanDate = Auth::user()->account->notice_type_plan_date;
         $noticeTypes = NoticeType::when($accountPlanDate, function ($query) use ($accountPlanDate) {
-            return $query->where('plan_date', '<=', $accountPlanDate);
+            return $query->where('plan_date', '=', $accountPlanDate);
         })->get();
 
         $agents = Agent::where('account_id', $accountId)->get();
@@ -69,9 +73,9 @@ class Edit extends Component
         if (strlen($this->searchTenant) >= 2) {
             $this->tenants = Tenant::where('account_id', $accountId)
                 ->where(function ($query) {
-                    $query->where('first_name', 'like', '%' . $this->searchTenant . '%')
-                        ->orWhere('last_name', 'like', '%' . $this->searchTenant . '%')
-                        ->orWhere('email', 'like', '%' . $this->searchTenant . '%');
+                    $query->where('first_name', 'like', '%'.$this->searchTenant.'%')
+                        ->orWhere('last_name', 'like', '%'.$this->searchTenant.'%')
+                        ->orWhere('email', 'like', '%'.$this->searchTenant.'%');
                 })
                 ->get();
         }
@@ -90,7 +94,7 @@ class Edit extends Component
         for ($i = 1; $i <= 5; $i++) {
             $titleField = "other_{$i}_title";
             $priceField = "other_{$i}_price";
-            if (!empty($this->notice->$titleField) || $this->notice->$priceField > 0) {
+            if (! empty($this->notice->$titleField) || $this->notice->$priceField > 0) {
                 $this->visibleCharges = $i;
             }
         }
@@ -117,8 +121,8 @@ class Edit extends Component
         for ($i = $index; $i < 5; $i++) {
             $currentTitleField = "other_{$i}_title";
             $currentPriceField = "other_{$i}_price";
-            $nextTitleField = "other_" . ($i + 1) . "_title";
-            $nextPriceField = "other_" . ($i + 1) . "_price";
+            $nextTitleField = 'other_'.($i + 1).'_title';
+            $nextPriceField = 'other_'.($i + 1).'_price';
 
             if ($i < 5) {
                 $this->notice->$currentTitleField = $this->notice->$nextTitleField ?? '';
@@ -139,12 +143,12 @@ class Edit extends Component
     public function addTenant($id)
     {
         $tenant = Tenant::find($id);
-        if (!$tenant) {
+        if (! $tenant) {
             return;
         }
 
         // Check if this tenant is already selected
-        if (!in_array($id, array_column($this->selectedTenants, 'id'))) {
+        if (! in_array($id, array_column($this->selectedTenants, 'id'))) {
             $this->selectedTenants[] = [
                 'id' => $tenant->id,
                 'name' => $tenant->full_name,
@@ -173,9 +177,9 @@ class Edit extends Component
         $accountId = $user->account->id;
         $accountPlanDate = $user->account->notice_type_plan_date;
 
-        // Get allowed notice type IDs based on plan date
+        // Get allowed notice type IDs based on plan date (exact match)
         $allowedNoticeTypeIds = NoticeType::when($accountPlanDate, function ($query) use ($accountPlanDate) {
-            return $query->where('plan_date', '<=', $accountPlanDate);
+            return $query->where('plan_date', '=', $accountPlanDate);
         })->pluck('id')->toArray();
 
         $validatedData = $this->validate([

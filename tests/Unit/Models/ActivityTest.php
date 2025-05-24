@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\Activity;
 use App\Models\Account;
+use App\Models\Activity;
 use App\Models\Agent;
 use App\Models\Notice;
 use App\Models\NoticeType;
@@ -20,7 +20,7 @@ class ActivityTest extends TestCase
     #[Test]
     public function it_has_correct_fillable_attributes()
     {
-        $activity = new Activity();
+        $activity = new Activity;
         $this->assertEquals([
             'account_id',
             'user_id',
@@ -67,13 +67,13 @@ class ActivityTest extends TestCase
         $notice = Notice::factory()->create([
             'account_id' => $account->id,
             'user_id' => $user->id,
-            'notice_type_id' => $noticeType->id
+            'notice_type_id' => $noticeType->id,
         ]);
 
         // Now create the activity linked to this notice
         $activity = Activity::factory()->create([
             'account_id' => $account->id,
-            'notice_id' => $notice->id
+            'notice_id' => $notice->id,
         ]);
 
         $this->assertInstanceOf(Notice::class, $activity->notice);

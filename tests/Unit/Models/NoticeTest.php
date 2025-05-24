@@ -2,22 +2,22 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
 use App\Models\Notice;
+use Tests\TestCase;
 
 class NoticeTest extends TestCase
 {
-    public function testNoticeStatusPendingPayment()
+    public function test_notice_status_pending_payment()
     {
-        $notice = new Notice();
+        $notice = new Notice;
         $notice->status = Notice::STATUS_PENDING_PAYMENT;
 
         $this->assertEquals('pending_payment', $notice->status);
     }
 
-    public function testNoticeStatusServed()
+    public function test_notice_status_served()
     {
-        $notice = new Notice();
+        $notice = new Notice;
         $notice->status = 'served';
 
         $this->assertEquals('served', $notice->status);

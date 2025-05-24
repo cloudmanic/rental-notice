@@ -3,24 +3,25 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Notifications\Notification;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, CanResetPassword;
+    use CanResetPassword, HasFactory, Notifiable;
 
     // User types
     public const TYPE_SUPER_ADMIN = 'Super Admin';
+
     public const TYPE_ADMIN = 'Admin';
+
     public const TYPE_CONTRIBUTOR = 'Contributor';
 
     /**
@@ -62,7 +63,7 @@ class User extends Authenticatable
         ];
     }
 
-    /* 
+    /*
     * Get the account that the user belongs to.
     * For now we just return the first account as there will only be one account per user.
     */
@@ -141,7 +142,7 @@ class User extends Authenticatable
                 'string',
                 'email',
                 'max:255',
-                $isUpdate ? 'unique:users,email,' . request()->user()->id : 'unique:users',
+                $isUpdate ? 'unique:users,email,'.request()->user()->id : 'unique:users',
             ],
             'password' => $isUpdate ? ['nullable'] : ['required', Password::defaults()],
         ];

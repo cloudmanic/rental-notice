@@ -3,23 +3,24 @@
 namespace App\Livewire\Notices;
 
 use App\Models\Notice;
+use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\Layout;
-use Illuminate\Support\Facades\Log;
 
 class Show extends Component
 {
     use WithFileUploads;
 
     public Notice $notice;
+
     public $certificatePdf;
+
     public $uploadSuccess = false;
 
     /**
      * Mount the component with the given notice.
      *
-     * @param  \App\Models\Notice  $notice
      * @return void
      */
     #[Layout('layouts.app')]
@@ -28,7 +29,7 @@ class Show extends Component
         $this->notice = $notice->load(['noticeType', 'tenants', 'agent', 'user']);
 
         // Authorization check - can only view notices in your own account
-        if ($this->notice->account_id !== auth()->user()->account->id && !auth()->user()->isSuperAdmin()) {
+        if ($this->notice->account_id !== auth()->user()->account->id && ! auth()->user()->isSuperAdmin()) {
             abort(403, 'Unauthorized action.');
         }
     }
@@ -39,7 +40,7 @@ class Show extends Component
     public function uploadCertificatePdf()
     {
         // Validate only super admins can upload
-        if (!auth()->user()->isSuperAdmin() && !session('impersonating')) {
+        if (! auth()->user()->isSuperAdmin() && ! session('impersonating')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -48,7 +49,7 @@ class Show extends Component
         ]);
 
         // Generate a unique filename
-        $filename = $this->notice->account_id . '/certificate_' . $this->notice->id . '.pdf';
+        $filename = $this->notice->account_id.'/certificate_'.$this->notice->id.'.pdf';
 
         // Store file in S3
         $path = $this->certificatePdf->storeAs('', $filename, 's3');
@@ -56,10 +57,10 @@ class Show extends Component
         // Update notice with certificate PDF path
         $this->notice->update([
             'certificate_pdf' => $path,
-            'status' => Notice::STATUS_SERVED // We know once we update the certificate, the status is served
+            'status' => Notice::STATUS_SERVED, // We know once we update the certificate, the status is served
         ]);
 
-        Log::info('Certificate PDF uploaded for notice ID: ' . $this->notice->id);
+        Log::info('Certificate PDF uploaded for notice ID: '.$this->notice->id);
 
         // Reset file upload and set success message
         $this->certificatePdf = null;

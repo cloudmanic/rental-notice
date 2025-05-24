@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\PricingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use App\Services\PricingService;
 
 class MarketingController extends Controller
 {

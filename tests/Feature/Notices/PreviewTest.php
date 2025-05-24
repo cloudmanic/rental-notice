@@ -17,6 +17,7 @@ class PreviewTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private Account $account;
 
     protected function setUp(): void

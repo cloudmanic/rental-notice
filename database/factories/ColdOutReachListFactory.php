@@ -20,8 +20,8 @@ class ColdOutReachListFactory extends Factory
         // Generate a company domain
         $companyName = $this->faker->company();
         $domain = strtolower(
-            preg_replace('/[^a-zA-Z0-9]/', '', $companyName) .
-                '.' .
+            preg_replace('/[^a-zA-Z0-9]/', '', $companyName).
+                '.'.
                 $this->faker->randomElement(['com', 'net', 'org', 'io'])
         );
 
@@ -61,7 +61,7 @@ class ColdOutReachListFactory extends Factory
      */
     public function propertyManager(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'type' => 'Property Manager',
         ]);
     }
@@ -71,7 +71,7 @@ class ColdOutReachListFactory extends Factory
      */
     public function realEstateAgent(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'type' => 'Real Estate Agent',
         ]);
     }

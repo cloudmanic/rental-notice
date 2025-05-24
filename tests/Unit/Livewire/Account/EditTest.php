@@ -7,7 +7,6 @@ use App\Models\Account;
 use App\Models\Activity;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\Test;
@@ -18,6 +17,7 @@ class EditTest extends TestCase
     use RefreshDatabase;
 
     protected $account;
+
     protected $user;
 
     protected function setUp(): void
@@ -26,14 +26,14 @@ class EditTest extends TestCase
 
         // Create an account and user for testing
         $this->account = Account::factory()->create([
-            'name' => 'Test Company'
+            'name' => 'Test Company',
         ]);
 
         $this->user = User::factory()->create([
             'first_name' => 'John',
             'last_name' => 'Doe',
             'email' => 'john@example.com',
-            'password' => Hash::make('password123')
+            'password' => Hash::make('password123'),
         ]);
 
         $this->account->users()->attach($this->user, ['is_owner' => true]);
@@ -78,7 +78,7 @@ class EditTest extends TestCase
         $this->assertDatabaseHas('activities', [
             'description' => 'Account name was updated to Updated Company Name.',
             'event' => 'Account',
-            'account_id' => $this->account->id
+            'account_id' => $this->account->id,
         ]);
     }
 
@@ -117,12 +117,12 @@ class EditTest extends TestCase
 
         // Assert the account was deleted
         $this->assertDatabaseMissing('accounts', [
-            'id' => $accountId
+            'id' => $accountId,
         ]);
 
         // Assert user is not deleted (important!)
         $this->assertDatabaseHas('users', [
-            'id' => $this->user->id
+            'id' => $this->user->id,
         ]);
     }
 }

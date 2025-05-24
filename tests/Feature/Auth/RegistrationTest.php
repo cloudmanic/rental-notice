@@ -2,12 +2,12 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Models\User;
 use App\Models\Account;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class RegistrationTest extends TestCase
 {
@@ -41,7 +41,7 @@ class RegistrationTest extends TestCase
         $this->assertDatabaseHas('account_to_user', [
             'user_id' => $user->id,
             'account_id' => $account->id,
-            'is_owner' => 1
+            'is_owner' => 1,
         ]);
 
         $response->assertRedirect(route('dashboard'));

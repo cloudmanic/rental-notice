@@ -2,22 +2,23 @@
 
 namespace Tests\Feature\Agents;
 
-use App\Models\Agent;
+use App\Livewire\Agents\Create;
+use App\Livewire\Agents\Edit;
+use App\Livewire\Agents\Index;
 use App\Models\Account;
+use App\Models\Agent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
-use App\Livewire\Agents\Index;
-use App\Livewire\Agents\Create;
-use App\Livewire\Agents\Edit;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class AgentFeatureTest extends TestCase
 {
     use RefreshDatabase;
 
     protected $account;
+
     protected $user;
 
     protected function setUp(): void
@@ -55,14 +56,14 @@ class AgentFeatureTest extends TestCase
 
         // Create agents for the current account
         $agents = Agent::factory()->count(3)->create([
-            'account_id' => $this->account->id
+            'account_id' => $this->account->id,
         ]);
 
         // Create an agent for another account that should not be visible
         $otherAccount = Account::factory()->create();
         $otherAgent = Agent::factory()->create([
             'account_id' => $otherAccount->id,
-            'name' => 'Other Account Agent'
+            'name' => 'Other Account Agent',
         ]);
 
         // Make a direct request to the page
@@ -86,22 +87,22 @@ class AgentFeatureTest extends TestCase
         $agentA = Agent::factory()->create([
             'account_id' => $this->account->id,
             'name' => 'John Smith',
-            'email' => 'john@example.com'
+            'email' => 'john@example.com',
         ]);
 
         $agentB = Agent::factory()->create([
             'account_id' => $this->account->id,
             'name' => 'Jane Doe',
-            'email' => 'jane@example.com'
+            'email' => 'jane@example.com',
         ]);
 
         // Test the Livewire component directly
         Livewire::test(Index::class)
             ->set('search', 'John')
             ->assertSee('John Smith');
-            // The assertDontSee('Jane Doe') is unreliable in the rendered component
-            // Instead, let's check what agents are returned to the view
-            // and test that the name filtering works correctly
+        // The assertDontSee('Jane Doe') is unreliable in the rendered component
+        // Instead, let's check what agents are returned to the view
+        // and test that the name filtering works correctly
     }
 
     #[Test]
@@ -158,7 +159,7 @@ class AgentFeatureTest extends TestCase
             'address_2' => 'Apt 4B',
             'city' => 'Portland',
             'state' => 'OR',
-            'zip' => '97205'
+            'zip' => '97205',
         ];
 
         // Test just the successful creation and database assertion
@@ -177,7 +178,7 @@ class AgentFeatureTest extends TestCase
         $this->assertDatabaseHas('agents', [
             'account_id' => $this->account->id,
             'name' => $agentData['name'],
-            'email' => $agentData['email']
+            'email' => $agentData['email'],
         ]);
     }
 
@@ -202,7 +203,7 @@ class AgentFeatureTest extends TestCase
                 'address_1' => 'required',
                 'city' => 'required',
                 'state' => 'required',
-                'zip' => 'regex'
+                'zip' => 'regex',
             ]);
     }
 
@@ -212,7 +213,7 @@ class AgentFeatureTest extends TestCase
         $this->actingAs($this->user);
 
         $agent = Agent::factory()->create([
-            'account_id' => $this->account->id
+            'account_id' => $this->account->id,
         ]);
 
         $response = $this->get(route('agents.edit', $agent));
@@ -230,7 +231,7 @@ class AgentFeatureTest extends TestCase
         $agent = Agent::factory()->create([
             'account_id' => $this->account->id,
             'name' => 'Original Name',
-            'email' => 'original@example.com'
+            'email' => 'original@example.com',
         ]);
 
         // Better approach: Modify the agent directly in the test
@@ -248,7 +249,7 @@ class AgentFeatureTest extends TestCase
         $this->assertDatabaseHas('agents', [
             'id' => $agent->id,
             'name' => 'Updated Name',
-            'email' => 'updated@example.com'
+            'email' => 'updated@example.com',
         ]);
     }
 
@@ -258,7 +259,7 @@ class AgentFeatureTest extends TestCase
         $this->actingAs($this->user);
 
         $agent = Agent::factory()->create([
-            'account_id' => $this->account->id
+            'account_id' => $this->account->id,
         ]);
 
         Livewire::test(Edit::class, ['agent' => $agent])
@@ -269,7 +270,7 @@ class AgentFeatureTest extends TestCase
             ->assertHasErrors([
                 'name',
                 'email',
-                'address_1'
+                'address_1',
             ]);
     }
 
@@ -279,7 +280,7 @@ class AgentFeatureTest extends TestCase
         $this->actingAs($this->user);
 
         $agent = Agent::factory()->create([
-            'account_id' => $this->account->id
+            'account_id' => $this->account->id,
         ]);
 
         Livewire::test(Edit::class, ['agent' => $agent])
@@ -289,7 +290,7 @@ class AgentFeatureTest extends TestCase
 
         // Assert the agent was deleted from the database
         $this->assertDatabaseMissing('agents', [
-            'id' => $agent->id
+            'id' => $agent->id,
         ]);
     }
 
@@ -299,7 +300,7 @@ class AgentFeatureTest extends TestCase
         $this->actingAs($this->user);
 
         $agent = Agent::factory()->create([
-            'account_id' => $this->account->id
+            'account_id' => $this->account->id,
         ]);
 
         Livewire::test(Edit::class, ['agent' => $agent])
@@ -310,7 +311,7 @@ class AgentFeatureTest extends TestCase
 
         // Assert the agent still exists in the database
         $this->assertDatabaseHas('agents', [
-            'id' => $agent->id
+            'id' => $agent->id,
         ]);
     }
 
@@ -325,7 +326,7 @@ class AgentFeatureTest extends TestCase
         $otherUser->accounts()->attach($otherAccount->id);
 
         $otherAgent = Agent::factory()->create([
-            'account_id' => $otherAccount->id
+            'account_id' => $otherAccount->id,
         ]);
 
         // We need to modify our test logic since the route binding behavior

@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Stripe\Stripe;
-use Stripe\Checkout\Session;
-use App\Models\Notice;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use App\Notifications\NoticePaid;
 use App\Jobs\GenerateNoticePdfJob;
+use App\Models\Notice;
+use App\Notifications\NoticePaid;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
+use Stripe\Checkout\Session;
+use Stripe\Stripe;
 
 class StripeCheckoutController extends Controller
 {
@@ -18,13 +18,12 @@ class StripeCheckoutController extends Controller
      * Create a Stripe Checkout session for the given notice
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Notice  $notice
      * @return \Illuminate\Http\RedirectResponse
      */
     public function create(Notice $notice)
     {
         // Require Stripe PHP SDK
-        if (!class_exists('Stripe\\Stripe')) {
+        if (! class_exists('Stripe\\Stripe')) {
             abort(500, 'Stripe PHP SDK is not installed. Run composer require stripe/stripe-php');
         }
 
@@ -42,7 +41,7 @@ class StripeCheckoutController extends Controller
 
         // Get the notice type and stripe price ID
         $noticeType = $notice->noticeType;
-        if (!$noticeType || !$noticeType->stripe_price_id) {
+        if (! $noticeType || ! $noticeType->stripe_price_id) {
             abort(404, 'No valid stripe price ID found for this notice type');
         }
 
@@ -56,7 +55,7 @@ class StripeCheckoutController extends Controller
             'stripe_price_id' => $noticeType->stripe_price_id,
         ]);
 
-        // Create a session link to redirect the user to for payment. 
+        // Create a session link to redirect the user to for payment.
         Stripe::setApiKey(config('services.stripe.secret'));
 
         $session = Session::create([
@@ -88,7 +87,7 @@ class StripeCheckoutController extends Controller
         // Get the notice id from the session
         $noticeId = session('checkout_notice_id');
 
-        if (!$noticeId) {
+        if (! $noticeId) {
             abort(404, 'No notice found in session');
         }
 
@@ -97,7 +96,7 @@ class StripeCheckoutController extends Controller
 
         // Find the notice and update its status
         $notice = Notice::find($noticeId);
-        if (!$notice) {
+        if (! $notice) {
             abort(404, 'Notice not found');
         }
         $notice->status = Notice::STATUS_SERVICE_PENDING;
@@ -109,7 +108,7 @@ class StripeCheckoutController extends Controller
 
         // Build the success message
         $tenants = $notice->tenants->map(function ($tenant) {
-            return $tenant->first_name . ' ' . $tenant->last_name;
+            return $tenant->first_name.' '.$tenant->last_name;
         })->implode(', ');
 
         $message = "Payment was successfully processed. You will receive an email when the service to $tenants is complete.";
@@ -125,6 +124,7 @@ class StripeCheckoutController extends Controller
         GenerateNoticePdfJob::dispatch($notice);
 
         session()->flash('success', $message);
+
         return to_route('notices.index');
     }
 
@@ -138,7 +138,7 @@ class StripeCheckoutController extends Controller
         // Get the notice id from the session
         $noticeId = session('checkout_notice_id');
 
-        if (!$noticeId) {
+        if (! $noticeId) {
             abort(404, 'No notice found in session');
         }
 
@@ -152,6 +152,7 @@ class StripeCheckoutController extends Controller
         ]);
 
         session()->flash('error', 'Payment was cancelled or failed.');
+
         return to_route('notices.index');
     }
 }

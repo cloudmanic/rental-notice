@@ -18,7 +18,9 @@ class ActivityStreamTest extends TestCase
     use RefreshDatabase;
 
     protected $account;
+
     protected $user;
+
     protected $noticeType;
 
     protected function setUp(): void
@@ -77,7 +79,7 @@ class ActivityStreamTest extends TestCase
         $notice = Notice::factory()->create([
             'account_id' => $this->account->id,
             'user_id' => $this->user->id,
-            'notice_type_id' => $this->noticeType->id
+            'notice_type_id' => $this->noticeType->id,
         ]);
 
         $noticeActivity = Activity::factory()->create([

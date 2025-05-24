@@ -2,22 +2,23 @@
 
 namespace Tests\Feature\Tenants;
 
-use App\Models\Tenant;
+use App\Livewire\Tenants\Create;
+use App\Livewire\Tenants\Edit;
+use App\Livewire\Tenants\Index;
 use App\Models\Account;
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
-use App\Livewire\Tenants\Index;
-use App\Livewire\Tenants\Create;
-use App\Livewire\Tenants\Edit;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class TenantFeatureTest extends TestCase
 {
     use RefreshDatabase;
 
     protected $account;
+
     protected $user;
 
     protected function setUp(): void
@@ -54,7 +55,7 @@ class TenantFeatureTest extends TestCase
 
         // Create tenants for the current account
         $tenants = Tenant::factory()->count(3)->create([
-            'account_id' => $this->account->id
+            'account_id' => $this->account->id,
         ]);
 
         // Create a tenant for another account that should not be visible
@@ -62,7 +63,7 @@ class TenantFeatureTest extends TestCase
         $otherTenant = Tenant::factory()->create([
             'account_id' => $otherAccount->id,
             'first_name' => 'Other',
-            'last_name' => 'Tenant'
+            'last_name' => 'Tenant',
         ]);
 
         // Make a direct request to the page
@@ -87,14 +88,14 @@ class TenantFeatureTest extends TestCase
             'account_id' => $this->account->id,
             'first_name' => 'John',
             'last_name' => 'Smith',
-            'email' => 'john@example.com'
+            'email' => 'john@example.com',
         ]);
 
         $tenantB = Tenant::factory()->create([
             'account_id' => $this->account->id,
             'first_name' => 'Jane',
             'last_name' => 'Doe',
-            'email' => 'jane@example.com'
+            'email' => 'jane@example.com',
         ]);
 
         // Test the Livewire component directly
@@ -117,7 +118,7 @@ class TenantFeatureTest extends TestCase
             'address_1' => '123 Maple Street',
             'city' => 'Portland',
             'state' => 'OR',
-            'zip' => '97214'
+            'zip' => '97214',
         ]);
 
         Livewire::test(Index::class)
@@ -182,7 +183,7 @@ class TenantFeatureTest extends TestCase
             'address_2' => 'Apt 4B',
             'city' => 'Portland',
             'state' => 'OR',
-            'zip' => '97205'
+            'zip' => '97205',
         ];
 
         // Test the successful creation and database assertion
@@ -203,7 +204,7 @@ class TenantFeatureTest extends TestCase
             'account_id' => $this->account->id,
             'first_name' => $tenantData['first_name'],
             'last_name' => $tenantData['last_name'],
-            'email' => $tenantData['email']
+            'email' => $tenantData['email'],
         ]);
     }
 
@@ -230,7 +231,7 @@ class TenantFeatureTest extends TestCase
                 'address_1' => 'required',
                 'city' => 'required',
                 'state' => 'required',
-                'zip' => 'required'
+                'zip' => 'required',
             ]);
     }
 
@@ -284,7 +285,7 @@ class TenantFeatureTest extends TestCase
         $this->actingAs($this->user);
 
         $tenant = Tenant::factory()->create([
-            'account_id' => $this->account->id
+            'account_id' => $this->account->id,
         ]);
 
         $response = $this->get(route('tenants.edit', $tenant));
@@ -304,7 +305,7 @@ class TenantFeatureTest extends TestCase
             'account_id' => $this->account->id,
             'first_name' => 'Original',
             'last_name' => 'Name',
-            'email' => 'original@example.com'
+            'email' => 'original@example.com',
         ]);
 
         // Update the tenant through the Livewire component
@@ -319,7 +320,7 @@ class TenantFeatureTest extends TestCase
             'id' => $tenant->id,
             'first_name' => 'Updated',
             'last_name' => 'Person',
-            'email' => 'updated@example.com'
+            'email' => 'updated@example.com',
         ]);
     }
 
@@ -329,7 +330,7 @@ class TenantFeatureTest extends TestCase
         $this->actingAs($this->user);
 
         $tenant = Tenant::factory()->create([
-            'account_id' => $this->account->id
+            'account_id' => $this->account->id,
         ]);
 
         Livewire::test(Edit::class, ['tenant' => $tenant])
@@ -342,7 +343,7 @@ class TenantFeatureTest extends TestCase
                 'first_name',
                 'last_name',
                 'email',
-                'address_1'
+                'address_1',
             ]);
     }
 
@@ -352,7 +353,7 @@ class TenantFeatureTest extends TestCase
         $this->actingAs($this->user);
 
         $tenant = Tenant::factory()->create([
-            'account_id' => $this->account->id
+            'account_id' => $this->account->id,
         ]);
 
         Livewire::test(Edit::class, ['tenant' => $tenant])
@@ -362,7 +363,7 @@ class TenantFeatureTest extends TestCase
 
         // Assert the tenant was deleted from the database
         $this->assertDatabaseMissing('tenants', [
-            'id' => $tenant->id
+            'id' => $tenant->id,
         ]);
     }
 
@@ -372,7 +373,7 @@ class TenantFeatureTest extends TestCase
         $this->actingAs($this->user);
 
         $tenant = Tenant::factory()->create([
-            'account_id' => $this->account->id
+            'account_id' => $this->account->id,
         ]);
 
         Livewire::test(Edit::class, ['tenant' => $tenant])
@@ -383,7 +384,7 @@ class TenantFeatureTest extends TestCase
 
         // Assert the tenant still exists in the database
         $this->assertDatabaseHas('tenants', [
-            'id' => $tenant->id
+            'id' => $tenant->id,
         ]);
     }
 
@@ -400,16 +401,16 @@ class TenantFeatureTest extends TestCase
         $otherTenant = Tenant::factory()->create([
             'account_id' => $otherAccount->id,
             'first_name' => 'Other',
-            'last_name' => 'Account'
+            'last_name' => 'Account',
         ]);
 
         // Check that when we view the index page, we don't see the other account's tenants
         $response = $this->get(route('tenants.index'));
-        $response->assertDontSee($otherTenant->first_name . ' ' . $otherTenant->last_name);
+        $response->assertDontSee($otherTenant->first_name.' '.$otherTenant->last_name);
 
         // Check that we're only getting our own tenants when using the Livewire component
         Livewire::test(Index::class)
-            ->assertDontSee($otherTenant->first_name . ' ' . $otherTenant->last_name);
+            ->assertDontSee($otherTenant->first_name.' '.$otherTenant->last_name);
     }
 
     #[Test]
@@ -419,7 +420,7 @@ class TenantFeatureTest extends TestCase
 
         // Create more than the per-page limit of tenants
         Tenant::factory()->count(30)->create([
-            'account_id' => $this->account->id
+            'account_id' => $this->account->id,
         ]);
 
         $response = $this->get(route('tenants.index'));

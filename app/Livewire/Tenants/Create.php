@@ -3,12 +3,11 @@
 namespace App\Livewire\Tenants;
 
 use App\Models\Tenant;
-use Livewire\Component;
-use Livewire\Attributes\Layout;
-use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\Rule;
-use Livewire\Attributes\Computed;
 use App\Services\ActivityService;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Rule;
+use Livewire\Component;
 
 class Create extends Component
 {
@@ -41,7 +40,6 @@ class Create extends Component
     #[Rule('required|string|max:10|regex:/^\d{5}(-\d{4})?$/')]
     public $zip = '';
 
-
     /**
      * The construct....
      *
@@ -63,7 +61,7 @@ class Create extends Component
         $this->state = $value;
     }
 
-    /* 
+    /*
      * Validate the phone input.
      */
     public function updatedPhone($value)
@@ -73,24 +71,24 @@ class Create extends Component
         if (strlen($cleaned) > 0) {
             $formatted = $cleaned;
             if (strlen($cleaned) >= 3) {
-                $formatted = substr($cleaned, 0, 3) . '-' . substr($cleaned, 3);
+                $formatted = substr($cleaned, 0, 3).'-'.substr($cleaned, 3);
             }
             if (strlen($cleaned) >= 6) {
-                $formatted = substr($formatted, 0, 7) . '-' . substr($cleaned, 6);
+                $formatted = substr($formatted, 0, 7).'-'.substr($cleaned, 6);
             }
             $this->phone = substr($formatted, 0, 12);
         }
     }
 
-    /* 
+    /*
      * Validate the ZIP input.
      */
     public function updatedZip($value)
     {
         // Format ZIP as XXXXX or XXXXX-XXXX
         $cleaned = preg_replace('/[^0-9-]/', '', $value);
-        if (strlen($cleaned) > 5 && !str_contains($cleaned, '-')) {
-            $this->zip = substr($cleaned, 0, 5) . '-' . substr($cleaned, 5, 4);
+        if (strlen($cleaned) > 5 && ! str_contains($cleaned, '-')) {
+            $this->zip = substr($cleaned, 0, 5).'-'.substr($cleaned, 5, 4);
         } else {
             $this->zip = substr($cleaned, 0, 10);
         }
@@ -103,14 +101,14 @@ class Create extends Component
     {
         $validated = $this->validate();
 
-        $tenant = new Tenant();
+        $tenant = new Tenant;
         $tenant->account_id = Auth::user()->account->id;
         $tenant->fill($validated);
         $tenant->save();
 
         // Log the tenant creation activity
         ActivityService::log(
-            "{name} was added as a new tenant.", 
+            '{name} was added as a new tenant.',
             $tenant->id,
             null,
             null,

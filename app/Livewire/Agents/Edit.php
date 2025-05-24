@@ -3,31 +3,35 @@
 namespace App\Livewire\Agents;
 
 use App\Models\Agent;
-use Livewire\Component;
-use Livewire\Attributes\Layout;
-use Illuminate\Contracts\View\View;
 use App\Services\ActivityService;
+use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 class Edit extends Component
 {
     public Agent $agent;
 
     public $name;
+
     public $email;
+
     public $phone;
+
     public $address_1;
+
     public $address_2;
+
     public $city;
+
     public $state;
+
     public $zip;
 
     public bool $showDeleteModal = false;
 
     /**
      * Mount the component.
-     *
-     * @param  Agent  $agent
-     * @return void
      */
     public function mount(Agent $agent): void
     {
@@ -73,8 +77,6 @@ class Edit extends Component
 
     /**
      * Update the agent.
-     *
-     * @return void
      */
     public function update(): void
     {
@@ -83,7 +85,7 @@ class Edit extends Component
         $this->agent->update($validated);
 
         // Log the agent update activity
-        ActivityService::log("{name} agent information was updated.", null, null, $this->agent->id, 'Agent');
+        ActivityService::log('{name} agent information was updated.', null, null, $this->agent->id, 'Agent');
 
         session()->flash('message', 'Agent successfully updated.');
         session()->flash('message-type', 'success');

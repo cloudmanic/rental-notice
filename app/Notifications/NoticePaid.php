@@ -2,12 +2,11 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
-use App\Models\Notice;
-use Illuminate\Mail\Mailable;
 use App\Mail\NoticePaid as InvoicePaidMailable;
+use App\Models\Notice;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Mail\Mailable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Slack\SlackMessage;
 
@@ -17,8 +16,6 @@ class NoticePaid extends Notification implements ShouldQueue
 
     /**
      * The notice instance.
-     *
-     * @var \App\Models\Notice
      */
     public Notice $notice;
 
@@ -45,7 +42,7 @@ class NoticePaid extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): Mailable
     {
-        return (new InvoicePaidMailable())->to($notifiable->email);
+        return (new InvoicePaidMailable)->to($notifiable->email);
     }
 
     /**
@@ -109,7 +106,6 @@ class NoticePaid extends Notification implements ShouldQueue
             ]
         }
         JSON;
-
 
         return (new SlackMessage)->usingBlockKitTemplate($template);
     }

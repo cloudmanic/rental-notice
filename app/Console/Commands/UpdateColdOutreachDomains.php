@@ -80,6 +80,7 @@ class UpdateColdOutreachDomains extends Command
                 foreach ($records as $record) {
                     if ($processedCount >= $limit) {
                         $this->info("Reached processing limit of {$limit}.");
+
                         return false; // Stop processing further chunks
                     }
 
@@ -88,6 +89,7 @@ class UpdateColdOutreachDomains extends Command
 
                     if (empty($record->company_name) || empty($record->state)) {
                         $this->warn("Skipping ID: {$record->id} due to missing company name or state.");
+
                         continue;
                     }
 
@@ -96,7 +98,7 @@ class UpdateColdOutreachDomains extends Command
                     $cleanCompanyName = str_replace(',', '', $cleanCompanyName);
                     $cleanCompanyName = trim($cleanCompanyName); // Remove any leading/trailing whitespace
 
-                    $searchTerm = $cleanCompanyName . ' ' . $record->state;
+                    $searchTerm = $cleanCompanyName.' '.$record->state;
                     $this->line("  Search Term: '{$searchTerm}'"); // Show the modified search term if debugging
 
                     $url = $this->searchGoogle($searchTerm, $debug);
@@ -143,9 +145,10 @@ class UpdateColdOutreachDomains extends Command
             $apiKey = config('services.google.search_api_key');
             $searchEngineId = config('services.google.search_engine_id');
 
-            if (!$apiKey || !$searchEngineId) {
+            if (! $apiKey || ! $searchEngineId) {
                 $this->error('Google Search API Key or Search Engine ID is not configured in config/services.php or .env');
                 Log::error('Google Search API Key or Search Engine ID is not configured.');
+
                 return null;
             }
 
@@ -153,7 +156,7 @@ class UpdateColdOutreachDomains extends Command
                 'key' => $apiKey,
                 'cx' => $searchEngineId,
                 'q' => $searchTerm,
-                'num' => 1 // Only request 1 result
+                'num' => 1, // Only request 1 result
             ]);
 
             if ($response->successful()) {
@@ -163,34 +166,44 @@ class UpdateColdOutreachDomains extends Command
                     if (isset($firstResult['link'])) {
                         $url = $firstResult['link'];
                         $domain = $this->extractDomain($url);
-                        if ($domain && !in_array($domain, $this->skipDomains)) {
+                        if ($domain && ! in_array($domain, $this->skipDomains)) {
                             return $url; // Return the first valid URL
                         } elseif ($debug && $domain) {
                             $this->line("  Skipping domain from first result: {$domain} ({$url})");
+
                             return null;
-                        } elseif ($debug && !$domain) {
+                        } elseif ($debug && ! $domain) {
                             $this->line("  Could not extract domain from first result URL: {$url}");
+
                             return null;
                         }
                     } else {
-                        if ($debug) $this->line('First search result item has no link.');
+                        if ($debug) {
+                            $this->line('First search result item has no link.');
+                        }
+
                         return null;
                     }
                 } else {
-                    if ($debug) $this->line('No search results found in API response.');
+                    if ($debug) {
+                        $this->line('No search results found in API response.');
+                    }
+
                     return null;
                 }
             } else {
-                $this->error('Error from Google Search API: ' . $response->status());
-                Log::error('Google Search API Error: ' . $response->body());
+                $this->error('Error from Google Search API: '.$response->status());
+                Log::error('Google Search API Error: '.$response->body());
                 if ($debug) {
-                    $this->line('Response Body: ' . $response->body());
+                    $this->line('Response Body: '.$response->body());
                 }
+
                 return null;
             }
         } catch (\Exception $e) {
-            $this->error('An error occurred during Google Search: ' . $e->getMessage());
-            Log::error('Google Search Exception: ' . $e->getMessage());
+            $this->error('An error occurred during Google Search: '.$e->getMessage());
+            Log::error('Google Search Exception: '.$e->getMessage());
+
             return null;
         }
 
@@ -206,6 +219,7 @@ class UpdateColdOutreachDomains extends Command
 
         if (isset($parsedUrl['host'])) {
             $host = Str::lower($parsedUrl['host']);
+
             return Str::startsWith($host, 'www.') ? Str::substr($host, 4) : $host;
         }
 

@@ -6,17 +6,17 @@ use App\Livewire\Account\Edit;
 use App\Models\Account;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class AccountManagementTest extends TestCase
 {
     use RefreshDatabase;
 
     protected $account;
+
     protected $user;
 
     protected function setUp(): void
@@ -25,14 +25,14 @@ class AccountManagementTest extends TestCase
 
         // Create an account and user for testing
         $this->account = Account::factory()->create([
-            'name' => 'Feature Test Company'
+            'name' => 'Feature Test Company',
         ]);
 
         $this->user = User::factory()->create([
             'first_name' => 'Feature',
             'last_name' => 'Tester',
             'email' => 'feature.test@example.com',
-            'password' => Hash::make('password123')
+            'password' => Hash::make('password123'),
         ]);
 
         $this->account->users()->attach($this->user, ['is_owner' => true]);
@@ -82,7 +82,7 @@ class AccountManagementTest extends TestCase
         // Verify the account name was updated in the database
         $this->assertDatabaseHas('accounts', [
             'id' => $this->account->id,
-            'name' => 'Updated Feature Company'
+            'name' => 'Updated Feature Company',
         ]);
     }
 }

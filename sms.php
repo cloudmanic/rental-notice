@@ -1,26 +1,24 @@
 <?php
 
-$user = "spicer@cloudmanic.com";
-$pass = "D********01";
+$user = 'spicer@cloudmanic.com';
+$pass = 'D********01';
 
-$did = "19712640170"; // your SMS‑enabled DID in E.164 (e.g. “1” + area + number)
-$dst = "15034510062"; // recipient number in E.164
-$message = "Hello from VoIP.ms API!"; // your message text
+$did = '19712640170'; // your SMS‑enabled DID in E.164 (e.g. “1” + area + number)
+$dst = '15034510062'; // recipient number in E.164
+$message = 'Hello from VoIP.ms API!'; // your message text
 
-//$method = "sendSMS";
-$method = "getSMS"; // API method to send SMS
+// $method = "sendSMS";
+$method = 'getSMS'; // API method to send SMS
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_URL, "https://voip.ms/api/v1/rest.php?type=1&api_username={$user}&api_password={$pass}&method={$method}&did={$did}&dst={$dst}&message=" . urlencode($message));
+curl_setopt($ch, CURLOPT_URL, "https://voip.ms/api/v1/rest.php?type=1&api_username={$user}&api_password={$pass}&method={$method}&did={$did}&dst={$dst}&message=".urlencode($message));
 $result = curl_exec($ch);
 curl_close($ch);
 
 echo $result;
 
 $response = json_decode($result, true);
-
-
 
 // /* Get Errors - Invalid_Client */
 // if ($response[status] != 'success') {
@@ -37,7 +35,6 @@ $response = json_decode($result, true);
 
 // /* Client Exists and Password OK */
 // echo "{$client[client]} - {$client[firstname]} {$client[lastname]}";
-
 
 // // VoIP.ms API endpoint
 // $apiUrl = 'https://voip.ms/api/v1/rest.php';

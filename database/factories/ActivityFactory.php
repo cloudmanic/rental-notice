@@ -48,7 +48,7 @@ class ActivityFactory extends Factory
         return $this->state(function (array $attributes) use ($tenant, $action) {
             return [
                 'tenant_id' => $tenant->id,
-                'description' => ucfirst($action) . ' tenant: ' . $tenant->name,
+                'description' => ucfirst($action).' tenant: '.$tenant->name,
                 'event' => 'Tenant',
             ];
         });
@@ -70,7 +70,7 @@ class ActivityFactory extends Factory
         $notice = Notice::factory()->create([
             'account_id' => $account->id,
             'user_id' => $user->id,
-            'notice_type_id' => $noticeType->id
+            'notice_type_id' => $noticeType->id,
         ]);
 
         $action = $this->faker->randomElement(['created', 'updated', 'sent', 'deleted', 'viewed']);
@@ -79,7 +79,7 @@ class ActivityFactory extends Factory
             return [
                 'account_id' => $account->id,
                 'notice_id' => $notice->id,
-                'description' => ucfirst($action) . ' notice #' . $notice->id,
+                'description' => ucfirst($action).' notice #'.$notice->id,
                 'event' => 'Notice',
             ];
         });
@@ -98,7 +98,7 @@ class ActivityFactory extends Factory
         return $this->state(function (array $attributes) use ($agent, $action) {
             return [
                 'agent_id' => $agent->id,
-                'description' => ucfirst($action) . ' agent: ' . $agent->name,
+                'description' => ucfirst($action).' agent: '.$agent->name,
                 'event' => 'Agent',
             ];
         });
@@ -116,7 +116,7 @@ class ActivityFactory extends Factory
         return $this->state(function (array $attributes) use ($action) {
             return [
                 'user_id' => null,
-                'description' => 'System ' . $action,
+                'description' => 'System '.$action,
                 'event' => 'System',
             ];
         });
@@ -135,7 +135,7 @@ class ActivityFactory extends Factory
         return $this->state(function (array $attributes) use ($account, $action) {
             return [
                 'account_id' => $account->id,
-                'description' => 'Account ' . $account->name . ' ' . $action,
+                'description' => 'Account '.$account->name.' '.$action,
                 'event' => 'Account',
             ];
         });

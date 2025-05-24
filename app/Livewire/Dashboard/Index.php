@@ -2,11 +2,11 @@
 
 namespace App\Livewire\Dashboard;
 
-use Livewire\Component;
 use App\Models\Activity;
-use Livewire\WithPagination;
-use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
@@ -14,9 +14,6 @@ class Index extends Component
 
     /**
      * Determine the type of activity based on event column or which ID is populated.
-     *
-     * @param Activity $activity
-     * @return string
      */
     protected function determineActivityType(Activity $activity): string
     {
@@ -24,7 +21,7 @@ class Index extends Component
         if ($activity->event) {
             return $activity->event;
         }
-        
+
         // Fall back to the old logic for backward compatibility
         if ($activity->tenant_id) {
             return 'Tenant';

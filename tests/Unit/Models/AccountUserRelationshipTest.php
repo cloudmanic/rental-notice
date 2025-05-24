@@ -5,8 +5,8 @@ namespace Tests\Unit;
 use App\Models\Account;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class AccountUserRelationshipTest extends TestCase
 {
@@ -16,7 +16,7 @@ class AccountUserRelationshipTest extends TestCase
     public function account_can_have_many_users()
     {
         $account = Account::factory()->create([
-            'name' => 'Test Property Management'
+            'name' => 'Test Property Management',
         ]);
 
         $owner = User::factory()->create();

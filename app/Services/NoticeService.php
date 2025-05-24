@@ -4,45 +4,45 @@ namespace App\Services;
 
 use App\Models\Notice;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
-use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class NoticeService
 {
     /**
      * Generate a JSON notice file based on a template for the given notice
-     * 
-     * @param Notice $notice The notice to generate JSON for
+     *
+     * @param  Notice  $notice  The notice to generate JSON for
      * @return string The path to the generated JSON file in storage
      */
     public function generateJsonNotice(Notice $notice): string
     {
         // Load the template
         $templatePath = base_path('templates/10-day-notice-template.json');
-        if (!File::exists($templatePath)) {
+        if (! File::exists($templatePath)) {
             throw new \Exception("Notice template file not found at {$templatePath}");
         }
 
         $templateJson = File::get($templatePath);
         $template = json_decode($templateJson, true);
 
-        if (!$template) {
-            throw new \Exception("Failed to parse notice template JSON");
+        if (! $template) {
+            throw new \Exception('Failed to parse notice template JSON');
         }
 
         // Get the tenants associated with this notice
         $tenants = $notice->tenants()->get();
 
         if ($tenants->isEmpty()) {
-            throw new \Exception("No tenants associated with this notice");
+            throw new \Exception('No tenants associated with this notice');
         }
 
         $agent = $notice->agent;
 
-        if (!$agent) {
-            throw new \Exception("No agent associated with this notice");
+        if (! $agent) {
+            throw new \Exception('No agent associated with this notice');
         }
 
         // Update template with notice data
@@ -70,7 +70,7 @@ class NoticeService
 
         // Format currency values
         $formatCurrency = function ($amount) {
-            return number_format((float)$amount, 2);
+            return number_format((float) $amount, 2);
         };
 
         // Calculate the posted date (today unless it's a weekend, then Monday)
@@ -85,15 +85,15 @@ class NoticeService
         // Tenant information
         $primaryTenant = $tenants->first();
 
-        $streetAddress = $primaryTenant->address_1 ?? "";
+        $streetAddress = $primaryTenant->address_1 ?? '';
 
         if ($primaryTenant->address_2) {
-            $streetAddress = $primaryTenant->address_1 . ', ' . $primaryTenant->address_2;
+            $streetAddress = $primaryTenant->address_1.', '.$primaryTenant->address_2;
         }
 
         $updateTextField('propertyName', $primaryTenant->address_1);
         $updateTextField('streetAddress', $streetAddress);
-        //$updateTextField('unitNumber', $primaryTenant->address_2 ?? '');
+        // $updateTextField('unitNumber', $primaryTenant->address_2 ?? '');
         $updateTextField('city', $primaryTenant->city);
         $updateTextField('state', $primaryTenant->state);
         $updateTextField('zip', $primaryTenant->zip);
@@ -124,7 +124,7 @@ class NoticeService
             $title = $notice->{$charge['title']} ?? '';
             $price = $notice->{$charge['price']} ?? 0;
 
-            if (!empty($title) && $price > 0) {
+            if (! empty($title) && $price > 0) {
                 $updateTextField($charge['desc_field'], $title);
                 $updateTextField($charge['amount_field'], $formatCurrency($price));
             } else {
@@ -139,7 +139,7 @@ class NoticeService
         // Agent information
         $updateTextField('signature', $agent->name);
         $updateTextField('agentAddress1', $agent->address_1);
-        $updateTextField('agentAddress2', $agent->city . ', ' . $agent->state . ' ' . $agent->zip);
+        $updateTextField('agentAddress2', $agent->city.', '.$agent->state.' '.$agent->zip);
         $updateTextField('agentPhone', $agent->phone);
         $updateTextField('agentEmail', $agent->email);
 
@@ -152,8 +152,8 @@ class NoticeService
         $serveByDate->addDays(15);
 
         // Service date information - just using current date for now, these should be updated when services actually happen
-        //$updateTextField('personalServiceDate', $currentDate);
-        //$updateTextField('postedServiceDate', $currentDate);
+        // $updateTextField('personalServiceDate', $currentDate);
+        // $updateTextField('postedServiceDate', $currentDate);
         $updateTextField('firstClassServiceDate', $serveByDate->format('m/d/Y'));
         $updateTextField('addendumServiceDate', $serveByDate->format('m/d/Y'));
 
@@ -161,8 +161,8 @@ class NoticeService
         $updateTextField('noticeId', "UII:$notice->id");
 
         // Generate unique filename based on notice ID
-        $fileName = 'notice_' . $notice->id . '_' . time() . '.json';
-        $storagePath = 'notices/' . $fileName;
+        $fileName = 'notice_'.$notice->id.'_'.time().'.json';
+        $storagePath = 'notices/'.$fileName;
 
         // Make sure the notices directory exists
         Storage::disk('local')->makeDirectory('notices');
@@ -175,10 +175,10 @@ class NoticeService
 
     /**
      * Generate a PDF notice file by filling the PDF template with JSON data
-     * 
-     * @param Notice $notice The notice to generate PDF for
-     * @param bool $watermarked Whether to add a "DRAFT" watermark to the PDF
-     * @param bool $refresh Whether to force regenerate the PDF even if it exists
+     *
+     * @param  Notice  $notice  The notice to generate PDF for
+     * @param  bool  $watermarked  Whether to add a "DRAFT" watermark to the PDF
+     * @param  bool  $refresh  Whether to force regenerate the PDF even if it exists
      * @return string The path to the generated PDF file in storage
      */
     public function generatePdfNotice(Notice $notice, bool $watermarked = false, bool $refresh = false): string
@@ -186,21 +186,21 @@ class NoticeService
         // Check if PDF already exists in the database
         $pdfColumn = $watermarked ? 'draft_pdf' : 'final_pdf';
 
-        if (!$refresh && !empty($notice->$pdfColumn)) {
+        if (! $refresh && ! empty($notice->$pdfColumn)) {
             // PDF exists in database, check if we have it locally
             $s3Path = $notice->$pdfColumn;
             $localFileName = basename($s3Path);
-            $localStoragePath = 'notices/' . $localFileName;
+            $localStoragePath = 'notices/'.$localFileName;
             $localFullPath = Storage::disk('local')->path($localStoragePath);
 
             // Check if PDF exists locally
-            if (!Storage::disk('local')->exists($localStoragePath)) {
+            if (! Storage::disk('local')->exists($localStoragePath)) {
                 // PDF not found locally, download from S3
                 $s3Contents = Storage::disk('s3')->get($s3Path);
 
                 // Ensure local directory exists
                 $localDir = dirname($localFullPath);
-                if (!File::isDirectory($localDir)) {
+                if (! File::isDirectory($localDir)) {
                     File::makeDirectory($localDir, 0755, true);
                 }
 
@@ -220,18 +220,18 @@ class NoticeService
         // Get the PDF template path
         $pdfTemplatePath = base_path('templates/10-day-notice-template.pdf');
 
-        if (!File::exists($pdfTemplatePath)) {
+        if (! File::exists($pdfTemplatePath)) {
             throw new \Exception("PDF template file not found at {$pdfTemplatePath}");
         }
 
         // Generate the output PDF filename
-        $pdfFileName = 'notice_' . $notice->id . '_' . time() . '.pdf';
-        $localStoragePath = 'notices/' . ($watermarked ? 'drafts/' : 'finals/') . $pdfFileName;
+        $pdfFileName = 'notice_'.$notice->id.'_'.time().'.pdf';
+        $localStoragePath = 'notices/'.($watermarked ? 'drafts/' : 'finals/').$pdfFileName;
         $localFullPath = Storage::disk('local')->path($localStoragePath);
 
         // Make sure the output directory exists
         $outputDir = dirname($localFullPath);
-        if (!File::isDirectory($outputDir)) {
+        if (! File::isDirectory($outputDir)) {
             File::makeDirectory($outputDir, 0755, true);
         }
 
@@ -242,19 +242,19 @@ class NoticeService
             'fill',
             $pdfTemplatePath,
             $jsonFullPath,
-            $localFullPath
+            $localFullPath,
         ]);
 
         $process->run();
 
         // Check if the process was successful
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
 
         // Check if the PDF was actually created
-        if (!File::exists($localFullPath)) {
-            throw new \Exception("Failed to generate PDF notice");
+        if (! File::exists($localFullPath)) {
+            throw new \Exception('Failed to generate PDF notice');
         }
 
         // Add watermark if requested
@@ -266,11 +266,11 @@ class NoticeService
         $this->lockPdfForms($localFullPath);
 
         // Upload to AWS S3
-        $s3Path = $notice->account_id . '/notice_' . ($watermarked ? 'draft_' : 'final_') . $notice->id . '.pdf';
+        $s3Path = $notice->account_id.'/notice_'.($watermarked ? 'draft_' : 'final_').$notice->id.'.pdf';
         $result = Storage::disk('s3')->put($s3Path, file_get_contents($localFullPath));
 
-        if (!$result) {
-            throw new \Exception("Failed to upload PDF to S3");
+        if (! $result) {
+            throw new \Exception('Failed to upload PDF to S3');
         }
 
         // Update the notice record
@@ -282,14 +282,13 @@ class NoticeService
 
     /**
      * Add a "DRAFT" watermark to the generated PDF
-     * 
-     * @param string $pdfPath The full path to the PDF file
-     * @return void
+     *
+     * @param  string  $pdfPath  The full path to the PDF file
      */
     private function addDraftWatermark(string $pdfPath): void
     {
         // Create a temporary file path for the watermarked PDF with proper extension
-        $tempPath = $pdfPath . '.temp.pdf';
+        $tempPath = $pdfPath.'.temp.pdf';
 
         // Execute pdfcpu command to add watermark
         // The correct syntax according to pdfcpu help documentation
@@ -303,13 +302,13 @@ class NoticeService
             'Draft Document',
             'scale:1, op:0.6',
             $pdfPath,
-            $tempPath
+            $tempPath,
         ]);
 
         $process->run();
 
         // Check if the watermark process was successful
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
 
@@ -319,9 +318,8 @@ class NoticeService
 
     /**
      * Lock the PDF forms so they cannot be edited
-     * 
-     * @param string $pdfPath The full path to the PDF file
-     * @return void
+     *
+     * @param  string  $pdfPath  The full path to the PDF file
      */
     private function lockPdfForms(string $pdfPath): void
     {
@@ -330,19 +328,19 @@ class NoticeService
             'pdfcpu',
             'form',
             'lock',
-            $pdfPath
+            $pdfPath,
         ]);
 
         $process->run();
 
         // Check if the form lock process was successful
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
 
         // Now encrypt the PDF with further restrictions
         // Create a temporary file path for the secured PDF
-        $tempPath = $pdfPath . '.secured.pdf';
+        $tempPath = $pdfPath.'.secured.pdf';
 
         // Execute pdfcpu command to encrypt the PDF with permissions that prevent form editing
         // We're setting an owner password but restricting permissions for all users
@@ -351,15 +349,15 @@ class NoticeService
             'encrypt',
             '-mode=rc4',         // Encryption mode
             '-perm=all',        // No permissions (can't edit, print, copy, etc.)
-            '-opw=' . env('PDF_PASSWORD'),       // Owner password
+            '-opw='.env('PDF_PASSWORD'),       // Owner password
             $pdfPath,            // Source PDF
-            $tempPath            // Output PDF
+            $tempPath,            // Output PDF
         ]);
 
         $process->run();
 
         // Check if the encryption process was successful
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
 
@@ -369,8 +367,8 @@ class NoticeService
 
     /**
      * Mark a notice as served
-     * 
-     * @param Notice $notice The notice to mark as served
+     *
+     * @param  Notice  $notice  The notice to mark as served
      * @return void
      */
     public function markAsServed($notice)
@@ -381,23 +379,23 @@ class NoticeService
 
     /**
      * Generate a JSON shipping confirmation form (PS3817) based on a template for the given notice
-     * 
-     * @param Notice $notice The notice for which to generate a shipping confirmation
+     *
+     * @param  Notice  $notice  The notice for which to generate a shipping confirmation
      * @return string The path to the generated JSON file in storage
      */
     public function generateJsonShippingForm(Notice $notice): string
     {
         // Load the template
         $templatePath = base_path('templates/ps3817-form.json');
-        if (!File::exists($templatePath)) {
+        if (! File::exists($templatePath)) {
             throw new \Exception("Shipping form template not found at {$templatePath}");
         }
 
         $templateJson = File::get($templatePath);
         $template = json_decode($templateJson, true);
 
-        if (!$template) {
-            throw new \Exception("Failed to parse shipping form template JSON");
+        if (! $template) {
+            throw new \Exception('Failed to parse shipping form template JSON');
         }
 
         // Update template with notice data
@@ -420,14 +418,14 @@ class NoticeService
         $tenants = $notice->tenants()->get();
 
         if ($tenants->isEmpty()) {
-            throw new \Exception("No tenants associated with this notice");
+            throw new \Exception('No tenants associated with this notice');
         }
 
         $primaryTenant = $tenants->first();
         $agent = $notice->agent;
 
-        if (!$agent) {
-            throw new \Exception("No agent associated with this notice");
+        if (! $agent) {
+            throw new \Exception('No agent associated with this notice');
         }
 
         // Set sender information (agent details)
@@ -450,7 +448,7 @@ class NoticeService
         // Use the primary tenant's address for the shipping address
         $updateTextField('toLine2', $primaryTenant->address_1);
 
-        if (!empty($primaryTenant->address_2)) {
+        if (! empty($primaryTenant->address_2)) {
             $updateTextField('toLine3', $primaryTenant->address_2);
             $updateTextField('toLine4', "{$primaryTenant->city}, {$primaryTenant->state} {$primaryTenant->zip}");
         } else {
@@ -459,8 +457,8 @@ class NoticeService
         }
 
         // Generate unique filename based on notice ID
-        $fileName = 'shipping_' . $notice->id . '_' . time() . '.json';
-        $storagePath = 'notices/' . $fileName;
+        $fileName = 'shipping_'.$notice->id.'_'.time().'.json';
+        $storagePath = 'notices/'.$fileName;
 
         // Make sure the notices directory exists
         Storage::disk('local')->makeDirectory('notices');
@@ -473,9 +471,9 @@ class NoticeService
 
     /**
      * Generate a PDF shipping confirmation form (PS3817) by filling the PDF template with JSON data
-     * 
-     * @param Notice $notice The notice for which to generate a shipping form
-     * @param bool $watermarked Whether to add a "DRAFT" watermark to the PDF
+     *
+     * @param  Notice  $notice  The notice for which to generate a shipping form
+     * @param  bool  $watermarked  Whether to add a "DRAFT" watermark to the PDF
      * @return string The path to the generated PDF file in storage
      */
     public function generatePdfShippingForm(Notice $notice, bool $watermarked = false): string
@@ -487,18 +485,18 @@ class NoticeService
         // Get the PDF template path
         $pdfTemplatePath = base_path('templates/ps3817-form.pdf');
 
-        if (!File::exists($pdfTemplatePath)) {
+        if (! File::exists($pdfTemplatePath)) {
             throw new \Exception("Shipping form template not found at {$pdfTemplatePath}");
         }
 
         // Generate the output PDF filename
-        $pdfFileName = 'shipping_' . $notice->id . '_' . time() . '.pdf';
-        $pdfStoragePath = 'notices/' . $pdfFileName;
+        $pdfFileName = 'shipping_'.$notice->id.'_'.time().'.pdf';
+        $pdfStoragePath = 'notices/'.$pdfFileName;
         $pdfFullPath = Storage::disk('local')->path($pdfStoragePath);
 
         // Make sure the output directory exists
         $outputDir = dirname($pdfFullPath);
-        if (!File::isDirectory($outputDir)) {
+        if (! File::isDirectory($outputDir)) {
             File::makeDirectory($outputDir, 0755, true);
         }
 
@@ -509,19 +507,19 @@ class NoticeService
             'fill',
             $pdfTemplatePath,
             $jsonFullPath,
-            $pdfFullPath
+            $pdfFullPath,
         ]);
 
         $process->run();
 
         // Check if the process was successful
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
 
         // Check if the PDF was actually created
-        if (!File::exists($pdfFullPath)) {
-            throw new \Exception("Failed to generate PDF shipping form");
+        if (! File::exists($pdfFullPath)) {
+            throw new \Exception('Failed to generate PDF shipping form');
         }
 
         // Add watermark if requested
@@ -537,9 +535,9 @@ class NoticeService
 
     /**
      * Generate a complete PDF package that includes both the notice and the shipping form
-     * 
-     * @param Notice $notice The notice to generate the complete package for
-     * @param bool $watermarked Whether to add a "DRAFT" watermark to the PDF
+     *
+     * @param  Notice  $notice  The notice to generate the complete package for
+     * @param  bool  $watermarked  Whether to add a "DRAFT" watermark to the PDF
      * @return string The path to the generated complete PDF file in storage
      */
     public function generateCompletePdfPackage(Notice $notice, bool $watermarked = false): string
@@ -553,13 +551,13 @@ class NoticeService
         $shippingFormPdfFullPath = Storage::disk('local')->path($shippingFormPdfPath);
 
         // Generate the output PDF filename for the merged document
-        $mergedPdfFileName = 'complete_package_' . $notice->id . '_' . time() . '.pdf';
-        $mergedPdfStoragePath = 'notices/' . $mergedPdfFileName;
+        $mergedPdfFileName = 'complete_package_'.$notice->id.'_'.time().'.pdf';
+        $mergedPdfStoragePath = 'notices/'.$mergedPdfFileName;
         $mergedPdfFullPath = Storage::disk('local')->path($mergedPdfStoragePath);
 
         // Make sure the output directory exists
         $outputDir = dirname($mergedPdfFullPath);
-        if (!File::isDirectory($outputDir)) {
+        if (! File::isDirectory($outputDir)) {
             File::makeDirectory($outputDir, 0755, true);
         }
 
@@ -571,19 +569,19 @@ class NoticeService
             '-mode=create',
             $mergedPdfFullPath,
             $noticePdfFullPath,
-            $shippingFormPdfFullPath
+            $shippingFormPdfFullPath,
         ]);
 
         $process->run();
 
         // Check if the merge process was successful
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
 
         // Check if the merged PDF was actually created
-        if (!File::exists($mergedPdfFullPath)) {
-            throw new \Exception("Failed to generate merged PDF package");
+        if (! File::exists($mergedPdfFullPath)) {
+            throw new \Exception('Failed to generate merged PDF package');
         }
 
         return $mergedPdfStoragePath;

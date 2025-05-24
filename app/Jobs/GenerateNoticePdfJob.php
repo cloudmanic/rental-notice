@@ -5,7 +5,6 @@ namespace App\Jobs;
 use App\Models\Notice;
 use App\Services\NoticeService;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -26,8 +25,7 @@ class GenerateNoticePdfJob implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param \App\Models\Notice $notice
-     * @param bool $watermarked
+     * @param  bool  $watermarked
      */
     public function __construct(Notice $notice)
     {
@@ -52,13 +50,13 @@ class GenerateNoticePdfJob implements ShouldQueue
             Log::info('PDF generated successfully', [
                 'notice_id' => $this->notice->id,
                 'watermarked' => $watermarked,
-                'path' => $pdfPath
+                'path' => $pdfPath,
             ]);
         } catch (\Exception $e) {
             Log::error('PDF generation failed', [
                 'notice_id' => $this->notice->id,
                 'watermarked' => $watermarked,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             throw $e; // Re-throw the exception so Laravel can handle the job failure

@@ -2,17 +2,15 @@
 
 namespace Tests\Browser;
 
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
-use Illuminate\Support\Sleep;
 
 class ScrapePropertyManagersTest extends DuskTestCase
 {
     /**
      * A basic browser test example. //->assertSee('Oregon');
      */
-    public function testBasicExample(): void
+    public function test_basic_example(): void
     {
         // Set up CSV file
         $csvPath = storage_path('app/property_managers.csv');
@@ -32,7 +30,7 @@ class ScrapePropertyManagersTest extends DuskTestCase
             'status',
             'company_name',
             'phone',
-            'email'
+            'email',
         ]);
 
         $this->browse(function (Browser $browser) use (&$collected, $csvFile) {
@@ -59,7 +57,7 @@ class ScrapePropertyManagersTest extends DuskTestCase
 
                     // Click the first link in this row using JavaScript
                     $browser->script("
-                        const links = document.querySelectorAll('#ctl00_MainContentPlaceHolder_ucLicenseLookup_gvSearchResults tbody tr:nth-child(" . ($idx + 1) . ") a');
+                        const links = document.querySelectorAll('#ctl00_MainContentPlaceHolder_ucLicenseLookup_gvSearchResults tbody tr:nth-child(".($idx + 1).") a');
                         if (links.length > 0) {
                             links[0].click();
                         }
@@ -100,7 +98,7 @@ class ScrapePropertyManagersTest extends DuskTestCase
                         // If there are 3+ lines, the middle line(s) become street_2
                         $street2 = implode(' ', array_slice($addressLines, 1, -1));
                         $cityStateZip = end($addressLines);
-                    } else if (count($addressLines) > 1) {
+                    } elseif (count($addressLines) > 1) {
                         // If there are 2 lines, the last one is city/state/zip
                         $cityStateZip = end($addressLines);
                     } else {
@@ -110,7 +108,7 @@ class ScrapePropertyManagersTest extends DuskTestCase
 
                     // Parse city, state, zip from the last line
                     $cityStateZipParts = [];
-                    if (!empty($cityStateZip)) {
+                    if (! empty($cityStateZip)) {
                         // Match pattern: City, ST ZIP
                         preg_match('/([^,]+),\s*(\w{2})\s+(\d{5}(?:-\d{4})?)/', $cityStateZip, $cityStateZipParts);
                     }
@@ -133,7 +131,7 @@ class ScrapePropertyManagersTest extends DuskTestCase
                     $companyName = $browser->text('#Grid2 > tbody > tr > td:nth-child(1)');
 
                     // Convert company name to proper case while keeping LLC uppercase
-                    if (!empty($companyName)) {
+                    if (! empty($companyName)) {
                         // Convert to lowercase first
                         $companyName = strtolower($companyName);
 
@@ -186,11 +184,11 @@ class ScrapePropertyManagersTest extends DuskTestCase
                         $status,
                         $companyName,
                         '', // phone
-                        ''  // email
+                        '',  // email
                     ]);
 
                     // Random pause to avoid detection and rate limiting
-                    $browser->pause(1000); //random_int(3000, 5000)
+                    $browser->pause(1000); // random_int(3000, 5000)
                 }
 
                 // // Remove duplicates from the $collected array using license_number as the unique key (not sure why this happens)
@@ -207,7 +205,7 @@ class ScrapePropertyManagersTest extends DuskTestCase
 
                 // $collected = $uniqueCollected;
 
-                //dd($collected, count($collected));
+                // dd($collected, count($collected));
 
                 // Check if there's a next page by finding the active list item and then its next sibling with an <a> tag
                 $hasNext = $browser->script("

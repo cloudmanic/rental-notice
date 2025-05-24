@@ -6,16 +6,17 @@ use App\Livewire\Profile\Edit;
 use App\Models\Account;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
-use Illuminate\Support\Facades\Hash;
 
 class EditTest extends TestCase
 {
     use RefreshDatabase;
 
     protected $account;
+
     protected $user;
 
     protected function setUp(): void

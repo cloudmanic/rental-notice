@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use App\Http\Controllers\Controller;
 
 class AccountImpersonationController extends Controller
 {
     /**
      * Impersonate the specified user.
      *
-     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\RedirectResponse
      */
     public function impersonate(User $user)
     {
         // Check if the current user has permission to impersonate
-        if (!Auth::user() || Auth::user()->type !== User::TYPE_SUPER_ADMIN) {
+        if (! Auth::user() || Auth::user()->type !== User::TYPE_SUPER_ADMIN) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -42,7 +41,7 @@ class AccountImpersonationController extends Controller
     public function leave()
     {
         // Check if we're actually impersonating
-        if (!Session::has('original_user_id')) {
+        if (! Session::has('original_user_id')) {
             return redirect()->route('dashboard');
         }
 
@@ -50,11 +49,12 @@ class AccountImpersonationController extends Controller
         $originalUserId = Session::get('original_user_id');
         $originalUser = User::find($originalUserId);
 
-        if (!$originalUser) {
+        if (! $originalUser) {
             // If original user somehow doesn't exist anymore, just log out
             Auth::logout();
             Session::forget('impersonating');
             Session::forget('original_user_id');
+
             return redirect()->route('login');
         }
 

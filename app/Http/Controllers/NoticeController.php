@@ -6,9 +6,9 @@ use App\Models\Notice;
 use App\Services\NoticeService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class NoticeController extends Controller
 {
@@ -22,7 +22,6 @@ class NoticeController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param NoticeService $noticeService
      * @return void
      */
     public function __construct(NoticeService $noticeService)
@@ -32,9 +31,7 @@ class NoticeController extends Controller
 
     /**
      * Generate and serve a PDF for a notice.
-     * 
-     * @param Notice $notice
-     * @param Request $request
+     *
      * @return Response
      */
     public function generatePdf(Notice $notice, Request $request)
@@ -57,13 +54,13 @@ class NoticeController extends Controller
             // Get the full path to the generated PDF file
             $fullPath = Storage::path($pdfPath);
 
-            if (!file_exists($fullPath)) {
+            if (! file_exists($fullPath)) {
                 abort(404, 'PDF generation failed');
             }
 
             // Check if download is requested via URL parameter
             $disposition = 'inline';
-            $filename = 'notice-' . uniqid() . '.pdf';
+            $filename = 'notice-'.uniqid().'.pdf';
 
             if ($request->has('download') && $request->query('download') === 'true') {
                 $disposition = 'attachment';
@@ -72,25 +69,23 @@ class NoticeController extends Controller
             // Return the PDF with appropriate Content-Disposition
             return response()->file($fullPath, [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => $disposition . '; filename="' . $filename . '"'
+                'Content-Disposition' => $disposition.'; filename="'.$filename.'"',
             ]);
         } catch (\Exception $e) {
             // Log the error
-            Log::error('PDF Generation failed: ' . $e->getMessage(), [
+            Log::error('PDF Generation failed: '.$e->getMessage(), [
                 'notice_id' => $notice->id,
-                'exception' => $e
+                'exception' => $e,
             ]);
 
             // Return error response
-            abort(500, 'Failed to generate PDF: ' . $e->getMessage());
+            abort(500, 'Failed to generate PDF: '.$e->getMessage());
         }
     }
 
     /**
      * Generate and serve a PDF for a shipping confirmation form (PS3817).
-     * 
-     * @param Notice $notice
-     * @param Request $request
+     *
      * @return Response
      */
     public function generateShippingForm(Notice $notice, Request $request)
@@ -110,13 +105,13 @@ class NoticeController extends Controller
             // Get the full path to the generated PDF file
             $fullPath = Storage::path($pdfPath);
 
-            if (!file_exists($fullPath)) {
+            if (! file_exists($fullPath)) {
                 abort(404, 'Shipping form generation failed');
             }
 
             // Check if download is requested via URL parameter
             $disposition = 'inline';
-            $filename = 'shipping-form-' . uniqid() . '.pdf';
+            $filename = 'shipping-form-'.uniqid().'.pdf';
 
             if ($request->has('download') && $request->query('download') === 'true') {
                 $disposition = 'attachment';
@@ -125,26 +120,24 @@ class NoticeController extends Controller
             // Return the PDF with appropriate Content-Disposition
             return response()->file($fullPath, [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => $disposition . '; filename="' . $filename . '"'
+                'Content-Disposition' => $disposition.'; filename="'.$filename.'"',
             ]);
         } catch (\Exception $e) {
             // Log the error
-            Log::error('Shipping Form PDF Generation failed: ' . $e->getMessage(), [
+            Log::error('Shipping Form PDF Generation failed: '.$e->getMessage(), [
                 'notice_id' => $notice->id,
-                'exception' => $e
+                'exception' => $e,
             ]);
 
             // Return error response
-            abort(500, 'Failed to generate shipping form: ' . $e->getMessage());
+            abort(500, 'Failed to generate shipping form: '.$e->getMessage());
         }
     }
 
     /**
      * Generate and serve a complete PDF package that includes both the notice and the shipping form.
      * The shipping form will appear after the notice in the PDF.
-     * 
-     * @param Notice $notice
-     * @param Request $request
+     *
      * @return Response
      */
     public function generateCompletePackage(Notice $notice, Request $request)
@@ -164,13 +157,13 @@ class NoticeController extends Controller
             // Get the full path to the generated PDF file
             $fullPath = Storage::disk('local')->path($pdfPath);
 
-            if (!file_exists($fullPath)) {
+            if (! file_exists($fullPath)) {
                 abort(404, 'Complete package generation failed');
             }
 
             // Check if download is requested via URL parameter
             $disposition = 'inline';
-            $filename = 'complete-package-' . uniqid() . '.pdf';
+            $filename = 'complete-package-'.uniqid().'.pdf';
 
             if ($request->has('download') && $request->query('download') === 'true') {
                 $disposition = 'attachment';
@@ -179,25 +172,23 @@ class NoticeController extends Controller
             // Return the PDF with appropriate Content-Disposition
             return response()->file($fullPath, [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => $disposition . '; filename="' . $filename . '"'
+                'Content-Disposition' => $disposition.'; filename="'.$filename.'"',
             ]);
         } catch (\Exception $e) {
             // Log the error
-            Log::error('Complete PDF Package Generation failed: ' . $e->getMessage(), [
+            Log::error('Complete PDF Package Generation failed: '.$e->getMessage(), [
                 'notice_id' => $notice->id,
-                'exception' => $e
+                'exception' => $e,
             ]);
 
             // Return error response
-            abort(500, 'Failed to generate complete package: ' . $e->getMessage());
+            abort(500, 'Failed to generate complete package: '.$e->getMessage());
         }
     }
 
     /**
      * Serve the certificate PDF for a notice.
-     * 
-     * @param Notice $notice
-     * @param Request $request
+     *
      * @return Response
      */
     public function getCertificatePdf(Notice $notice, Request $request)
@@ -215,7 +206,7 @@ class NoticeController extends Controller
 
             // Check if download is requested via URL parameter
             $disposition = 'inline';
-            $filename = 'certificate-' . $notice->id . '.pdf';
+            $filename = 'certificate-'.$notice->id.'.pdf';
 
             if ($request->has('download') && $request->query('download') === 'true') {
                 $disposition = 'attachment';
@@ -234,18 +225,18 @@ class NoticeController extends Controller
             // Return the PDF with appropriate Content-Disposition
             return response($contents, 200, [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => $disposition . '; filename="' . $filename . '"'
+                'Content-Disposition' => $disposition.'; filename="'.$filename.'"',
             ]);
         } catch (\Exception $e) {
             // Log the error
-            Log::error('Certificate PDF retrieval failed: ' . $e->getMessage(), [
+            Log::error('Certificate PDF retrieval failed: '.$e->getMessage(), [
                 'notice_id' => $notice->id,
                 'certificate_path' => $notice->certificate_pdf,
-                'exception' => $e
+                'exception' => $e,
             ]);
 
             // Return error response
-            abort(500, 'Failed to retrieve certificate PDF: ' . $e->getMessage());
+            abort(500, 'Failed to retrieve certificate PDF: '.$e->getMessage());
         }
     }
 }

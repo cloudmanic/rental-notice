@@ -43,8 +43,6 @@ class ColdOutReachList extends Model
 
     /**
      * Get the full name of the contact
-     *
-     * @return string
      */
     public function getFullNameAttribute(): string
     {
@@ -53,14 +51,12 @@ class ColdOutReachList extends Model
 
     /**
      * Get the full address of the contact
-     *
-     * @return string
      */
     public function getFullAddressAttribute(): string
     {
         $address = $this->street_1;
 
-        if (!empty($this->street_2)) {
+        if (! empty($this->street_2)) {
             $address .= ", {$this->street_2}";
         }
 

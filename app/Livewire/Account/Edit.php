@@ -12,7 +12,9 @@ use Livewire\Component;
 class Edit extends Component
 {
     public Account $account;
+
     public $name;
+
     public bool $showDeleteModal = false;
 
     /**

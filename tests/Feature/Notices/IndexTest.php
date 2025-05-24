@@ -2,13 +2,11 @@
 
 namespace Tests\Feature\Livewire\Notices;
 
-use App\Livewire\Notices\Index;
 use App\Models\Account;
 use App\Models\Notice;
 use App\Models\NoticeType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -17,6 +15,7 @@ class IndexTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private Account $account;
 
     protected function setUp(): void

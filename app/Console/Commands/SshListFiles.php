@@ -38,7 +38,7 @@ class SshListFiles extends Command
             '-p',
             $port,
             "{$username}@{$host}",
-            'lpr -P Brother_HL_L2405W ~/Downloads/10-day-notice-template.pdf'  // The command to run on the remote server
+            'lpr -P Brother_HL_L2405W ~/Downloads/10-day-notice-template.pdf',  // The command to run on the remote server
         ];
 
         // Create a new process
@@ -47,13 +47,13 @@ class SshListFiles extends Command
 
         // Run the process
         try {
-            $this->info("Running: " . implode(' ', $command));
+            $this->info('Running: '.implode(' ', $command));
 
             // Output will be echoed to the console in real-time
             $process->setTty(true);
             $exitCode = $process->run(function ($type, $buffer) {
                 // Process is running with TTY so this callback won't be called unless TTY is not available
-                if (Process::ERR === $type) {
+                if ($type === Process::ERR) {
                     $this->error($buffer);
                 } else {
                     $this->line($buffer);
@@ -61,19 +61,20 @@ class SshListFiles extends Command
             });
 
             // If TTY is not available, we'll fall back to showing the output after the process completes
-            if (!$process->isTtySupported()) {
-                $this->info("Output:");
+            if (! $process->isTtySupported()) {
+                $this->info('Output:');
                 $this->line($process->getOutput());
 
                 if ($process->getErrorOutput()) {
-                    $this->error("Error:");
+                    $this->error('Error:');
                     $this->error($process->getErrorOutput());
                 }
             }
 
             return $exitCode;
         } catch (\Exception $e) {
-            $this->error('Error: ' . $e->getMessage());
+            $this->error('Error: '.$e->getMessage());
+
             return 1;
         }
     }

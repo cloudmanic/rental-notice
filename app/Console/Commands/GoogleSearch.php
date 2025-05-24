@@ -44,9 +44,9 @@ class GoogleSearch extends Command
             $searchEngineId = config('services.google.search_engine_id');
 
             // Generate the API request URL for debugging
-            $requestUrl = 'https://www.googleapis.com/customsearch/v1?key=' . substr($apiKey, 0, 3) . '...' .
-                '&cx=' . substr($searchEngineId, 0, 3) . '...' .
-                '&q=' . urlencode($searchTerm);
+            $requestUrl = 'https://www.googleapis.com/customsearch/v1?key='.substr($apiKey, 0, 3).'...'.
+                '&cx='.substr($searchEngineId, 0, 3).'...'.
+                '&q='.urlencode($searchTerm);
 
             // Make the API request
             $response = Http::get('https://www.googleapis.com/customsearch/v1', [
@@ -69,24 +69,25 @@ class GoogleSearch extends Command
                     return $url;
                 } else {
                     $this->warn('No search results found.');
+
                     return null;
                 }
             } else {
                 $responseBody = $response->body();
-                $this->error('Error from Google Search API: ' . $responseBody);
+                $this->error('Error from Google Search API: '.$responseBody);
 
                 if ($debug) {
                     // More detailed error analysis
                     $responseData = json_decode($responseBody, true);
                     if (isset($responseData['error'])) {
                         $this->line('Error details:');
-                        $this->line('- Code: ' . ($responseData['error']['code'] ?? 'Unknown'));
-                        $this->line('- Message: ' . ($responseData['error']['message'] ?? 'Unknown'));
+                        $this->line('- Code: '.($responseData['error']['code'] ?? 'Unknown'));
+                        $this->line('- Message: '.($responseData['error']['message'] ?? 'Unknown'));
 
                         if (isset($responseData['error']['errors']) && is_array($responseData['error']['errors'])) {
                             foreach ($responseData['error']['errors'] as $index => $error) {
-                                $this->line("- Error $index domain: " . ($error['domain'] ?? 'Unknown'));
-                                $this->line("  Reason: " . ($error['reason'] ?? 'Unknown'));
+                                $this->line("- Error $index domain: ".($error['domain'] ?? 'Unknown'));
+                                $this->line('  Reason: '.($error['reason'] ?? 'Unknown'));
                             }
                         }
                     }
@@ -94,21 +95,22 @@ class GoogleSearch extends Command
                     // Provide suggestions based on common errors
                     if (str_contains($responseBody, 'invalid API key')) {
                         $this->line("\nSuggestion: Your API key appears to be invalid. Please check it in your .env file.");
-                    } else if (str_contains($responseBody, 'API key not valid')) {
+                    } elseif (str_contains($responseBody, 'API key not valid')) {
                         $this->line("\nSuggestion: Your API key may not be valid or may not have the Custom Search API enabled.");
-                        $this->line("Visit https://console.cloud.google.com/ to enable the Custom Search API for your project.");
-                    } else if (str_contains($responseBody, 'invalid argument')) {
+                        $this->line('Visit https://console.cloud.google.com/ to enable the Custom Search API for your project.');
+                    } elseif (str_contains($responseBody, 'invalid argument')) {
                         $this->line("\nSuggestion: Some parameter is invalid. Make sure both your API key and Search Engine ID are correct.");
-                        $this->line("1. Verify GOOGLE_SEARCH_API_KEY in your .env file");
-                        $this->line("2. Verify GOOGLE_SEARCH_ENGINE_ID in your .env file");
-                        $this->line("3. Try running: php artisan config:cache to refresh your configuration");
+                        $this->line('1. Verify GOOGLE_SEARCH_API_KEY in your .env file');
+                        $this->line('2. Verify GOOGLE_SEARCH_ENGINE_ID in your .env file');
+                        $this->line('3. Try running: php artisan config:cache to refresh your configuration');
                     }
                 }
 
                 return 1;
             }
         } catch (\Exception $e) {
-            $this->error('An error occurred: ' . $e->getMessage());
+            $this->error('An error occurred: '.$e->getMessage());
+
             return 1;
         }
     }

@@ -6,16 +6,19 @@ use App\Models\Account;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class AccountsAccessControlTest extends TestCase
 {
     use RefreshDatabase;
 
     protected $account;
+
     protected $superAdminUser;
+
     protected $adminUser;
+
     protected $regularUser;
 
     protected function setUp(): void
@@ -24,7 +27,7 @@ class AccountsAccessControlTest extends TestCase
 
         // Create a test account
         $this->account = Account::factory()->create([
-            'name' => 'Test Company'
+            'name' => 'Test Company',
         ]);
 
         // Create a Super Admin user
@@ -33,7 +36,7 @@ class AccountsAccessControlTest extends TestCase
             'last_name' => 'Admin',
             'email' => 'super.admin@example.com',
             'password' => Hash::make('password123'),
-            'type' => User::TYPE_SUPER_ADMIN
+            'type' => User::TYPE_SUPER_ADMIN,
         ]);
 
         // Create an Admin user
@@ -42,7 +45,7 @@ class AccountsAccessControlTest extends TestCase
             'last_name' => 'User',
             'email' => 'admin@example.com',
             'password' => Hash::make('password123'),
-            'type' => User::TYPE_ADMIN
+            'type' => User::TYPE_ADMIN,
         ]);
 
         // Create a Regular user
@@ -51,7 +54,7 @@ class AccountsAccessControlTest extends TestCase
             'last_name' => 'User',
             'email' => 'regular@example.com',
             'password' => Hash::make('password123'),
-            'type' => User::TYPE_CONTRIBUTOR
+            'type' => User::TYPE_CONTRIBUTOR,
         ]);
 
         // Attach users to the account

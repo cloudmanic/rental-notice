@@ -2,16 +2,16 @@
 
 namespace App\Livewire\Notices;
 
+use App\Jobs\GenerateNoticePdfJob;
 use App\Models\Agent;
 use App\Models\Notice;
-use App\Models\Tenant;
 use App\Models\NoticeType;
-use Livewire\Component;
-use Livewire\Attributes\Layout;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+use App\Models\Tenant;
 use App\Services\ActivityService;
-use App\Jobs\GenerateNoticePdfJob;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 class Create extends Component
 {
@@ -41,7 +41,9 @@ class Create extends Component
     public $visibleCharges = 0;
 
     public $showMessage = false;
+
     public $message = '';
+
     public $messageType = 'success';
 
     // Agent form properties
@@ -72,8 +74,11 @@ class Create extends Component
     public $states;
 
     public $showTenantModal = false;
+
     public $showAgentModal = false;
+
     public $searchTenant = '';
+
     public $selectedTenantId = null;
 
     /*
@@ -90,9 +95,9 @@ class Create extends Component
         // Get the account's notice type plan date
         $accountPlanDate = $user->account->notice_type_plan_date;
 
-        // Filter notice types based on the account's plan date
+        // Filter notice types based on the account's plan date (exact match)
         $noticeTypes = NoticeType::when($accountPlanDate, function ($query) use ($accountPlanDate) {
-            return $query->where('plan_date', '<=', $accountPlanDate);
+            return $query->where('plan_date', '=', $accountPlanDate);
         })->get();
 
         $agents = Agent::where('account_id', $accountId)->get();
@@ -101,9 +106,9 @@ class Create extends Component
         if (strlen($this->searchTenant) >= 2) {
             $tenants = Tenant::where('account_id', $accountId)
                 ->where(function ($query) {
-                    $query->where('first_name', 'like', '%' . $this->searchTenant . '%')
-                        ->orWhere('last_name', 'like', '%' . $this->searchTenant . '%')
-                        ->orWhere('email', 'like', '%' . $this->searchTenant . '%');
+                    $query->where('first_name', 'like', '%'.$this->searchTenant.'%')
+                        ->orWhere('last_name', 'like', '%'.$this->searchTenant.'%')
+                        ->orWhere('email', 'like', '%'.$this->searchTenant.'%');
                 })
                 ->get();
         }
@@ -118,7 +123,6 @@ class Create extends Component
     /**
      * Mount the component with initial data.
      *
-     * @param Request $request
      * @return void
      */
     public function mount(Request $request)
@@ -163,7 +167,7 @@ class Create extends Component
     {
         $this->visibleCharges = 0;
         for ($i = 1; $i <= 5; $i++) {
-            if (!empty($this->notice["other_{$i}_title"]) || $this->notice["other_{$i}_price"] > 0) {
+            if (! empty($this->notice["other_{$i}_title"]) || $this->notice["other_{$i}_price"] > 0) {
                 $this->visibleCharges = $i;
             }
         }
@@ -187,15 +191,15 @@ class Create extends Component
         // Shift all charges above this one down
         for ($i = $index; $i < 5; $i++) {
             if ($i < 5) {
-                $this->notice["other_{$i}_title"] = $this->notice["other_" . ($i + 1) . "_title"];
-                $this->notice["other_{$i}_price"] = $this->notice["other_" . ($i + 1) . "_price"];
+                $this->notice["other_{$i}_title"] = $this->notice['other_'.($i + 1).'_title'];
+                $this->notice["other_{$i}_price"] = $this->notice['other_'.($i + 1).'_price'];
             }
         }
 
         // Clear the last charge if we've shifted everything down
         if ($this->visibleCharges == 5) {
-            $this->notice["other_5_title"] = '';
-            $this->notice["other_5_price"] = 0;
+            $this->notice['other_5_title'] = '';
+            $this->notice['other_5_price'] = 0;
         }
 
         $this->visibleCharges--;
@@ -241,9 +245,9 @@ class Create extends Component
         $accountId = Auth::user()->account->id;
         $accountPlanDate = $user->account->notice_type_plan_date;
 
-        // Get allowed notice type IDs based on plan date
+        // Get allowed notice type IDs based on plan date (exact match)
         $allowedNoticeTypeIds = NoticeType::when($accountPlanDate, function ($query) use ($accountPlanDate) {
-            return $query->where('plan_date', '<=', $accountPlanDate);
+            return $query->where('plan_date', '=', $accountPlanDate);
         })->pluck('id')->toArray();
 
         $validatedData = $this->validate([
@@ -251,7 +255,7 @@ class Create extends Component
                 'required',
                 'exists:notice_types,id',
                 function ($attribute, $value, $fail) use ($allowedNoticeTypeIds) {
-                    if (!in_array($value, $allowedNoticeTypeIds)) {
+                    if (! in_array($value, $allowedNoticeTypeIds)) {
                         $fail('The selected notice type is not available for your current plan.');
                     }
                 },
@@ -281,7 +285,7 @@ class Create extends Component
         $noticeType = NoticeType::find($validatedData['notice']['notice_type_id']);
 
         // Create the notice
-        $notice = new Notice();
+        $notice = new Notice;
         $notice->account_id = $accountId;
         $notice->user_id = $user->id;
         $notice->notice_type_id = $validatedData['notice']['notice_type_id'];
@@ -338,7 +342,7 @@ class Create extends Component
                     if ($exists) {
                         $fail('An agent with this name already exists.');
                     }
-                }
+                },
             ],
             'agent.email' => 'nullable|email|max:255',
             'agent.phone' => 'nullable|string|max:12|regex:/^\d{3}-\d{3}-\d{4}$/',
@@ -366,7 +370,7 @@ class Create extends Component
             'agent.zip.max' => 'The ZIP code cannot exceed 10 characters.',
         ]);
 
-        $agent = new Agent();
+        $agent = new Agent;
         $agent->account_id = $accountId;
         $agent->name = $validatedData['agent']['name'];
         $agent->email = $validatedData['agent']['email'];
@@ -379,7 +383,7 @@ class Create extends Component
         $agent->save();
 
         // Log the agent creation activity during notice creation
-        ActivityService::log("{name} was added as a new agent.", null, null, $agent->id, 'Agent');
+        ActivityService::log('{name} was added as a new agent.', null, null, $agent->id, 'Agent');
 
         // Track all the form data to preserve it after redirect
         $currentFormData = $this->notice;
@@ -408,8 +412,8 @@ class Create extends Component
             'other_4_price' => $currentFormData['other_4_price'] ?? 0,
             'other_5_title' => $currentFormData['other_5_title'] ?? '',
             'other_5_price' => $currentFormData['other_5_price'] ?? 0,
-            'payment_other_means' => isset($currentFormData['payment_other_means']) ? (bool)$currentFormData['payment_other_means'] : false,
-            'include_all_other_occupents' => isset($currentFormData['include_all_other_occupents']) ? (bool)$currentFormData['include_all_other_occupents'] : false,
+            'payment_other_means' => isset($currentFormData['payment_other_means']) ? (bool) $currentFormData['payment_other_means'] : false,
+            'include_all_other_occupents' => isset($currentFormData['include_all_other_occupents']) ? (bool) $currentFormData['include_all_other_occupents'] : false,
         ]);
 
         // If we have a selected tenant, preserve that information too
@@ -465,7 +469,7 @@ class Create extends Component
             'tenant.zip.max' => 'The ZIP code cannot exceed 10 characters.',
         ]);
 
-        $tenant = new Tenant();
+        $tenant = new Tenant;
         $tenant->account_id = $accountId;
         $tenant->first_name = $validatedData['tenant']['first_name'];
         $tenant->last_name = $validatedData['tenant']['last_name'];
@@ -480,7 +484,7 @@ class Create extends Component
 
         // Log the tenant creation activity during notice creation
         ActivityService::log(
-            "{name} was added as a new tenant.",
+            '{name} was added as a new tenant.',
             $tenant->id,
             null,
             null,
@@ -490,7 +494,7 @@ class Create extends Component
         // Add the new tenant to the selected tenants array
         $this->selectedTenants[] = [
             'id' => $tenant->id,
-            'name' => $tenant->full_name
+            'name' => $tenant->full_name,
         ];
 
         // Track all the form data to preserve it after redirect
@@ -516,8 +520,8 @@ class Create extends Component
             'other_4_price' => $currentFormData['other_4_price'] ?? 0,
             'other_5_title' => $currentFormData['other_5_title'] ?? '',
             'other_5_price' => $currentFormData['other_5_price'] ?? 0,
-            'payment_other_means' => isset($currentFormData['payment_other_means']) ? (bool)$currentFormData['payment_other_means'] : false,
-            'include_all_other_occupents' => isset($currentFormData['include_all_other_occupents']) ? (bool)$currentFormData['include_all_other_occupents'] : false,
+            'payment_other_means' => isset($currentFormData['payment_other_means']) ? (bool) $currentFormData['payment_other_means'] : false,
+            'include_all_other_occupents' => isset($currentFormData['include_all_other_occupents']) ? (bool) $currentFormData['include_all_other_occupents'] : false,
         ]);
 
         // Store selected tenants in session
@@ -545,18 +549,18 @@ class Create extends Component
     /**
      * Add a tenant to the selected tenants list.
      *
-     * @param int $id
+     * @param  int  $id
      * @return void
      */
     public function addTenant($id)
     {
         $tenant = Tenant::find($id);
-        if (!$tenant) {
+        if (! $tenant) {
             return;
         }
 
         // Check if this tenant is already selected
-        if (!in_array($id, array_column($this->selectedTenants, 'id'))) {
+        if (! in_array($id, array_column($this->selectedTenants, 'id'))) {
             $this->selectedTenants[] = [
                 'id' => $tenant->id,
                 'name' => $tenant->full_name,
@@ -570,7 +574,7 @@ class Create extends Component
     /**
      * Remove a tenant from the selected tenants list.
      *
-     * @param int $id
+     * @param  int  $id
      * @return void
      */
     public function removeTenant($id)

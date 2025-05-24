@@ -2,21 +2,23 @@
 
 namespace Tests\Unit;
 
-use App\Models\Notice;
-use App\Models\Tenant;
 use App\Models\Account;
 use App\Models\Agent;
-use App\Models\User;
+use App\Models\Notice;
 use App\Models\NoticeType;
-use Tests\TestCase;
+use App\Models\Tenant;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class NoticeModelTest extends TestCase
 {
     use RefreshDatabase;
 
     protected $account;
+
     protected $user;
+
     protected $noticeType;
 
     protected function setUp(): void
@@ -56,7 +58,7 @@ class NoticeModelTest extends TestCase
 
         // Create three tenants
         $tenants = Tenant::factory()->count(3)->create([
-            'account_id' => $this->account->id
+            'account_id' => $this->account->id,
         ]);
 
         // Attach the tenants

@@ -4,10 +4,9 @@ namespace Database\Factories;
 
 use App\Models\Account;
 use App\Models\Agent;
+use App\Models\Notice;
 use App\Models\Tenant;
 use App\Models\User;
-use App\Models\Notice;
-use App\Models\NoticeType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -51,8 +50,7 @@ class NoticeFactory extends Factory
                 Notice::STATUS_SERVED,
                 Notice::STATUS_ERROR,
             ]),
-            'error_message' => fn(array $attributes) =>
-            $attributes['status'] === Notice::STATUS_ERROR
+            'error_message' => fn (array $attributes) => $attributes['status'] === Notice::STATUS_ERROR
                 ? fake()->sentence()
                 : null,
         ];

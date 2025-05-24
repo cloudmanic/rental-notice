@@ -3,11 +3,11 @@
 namespace App\Livewire\Agents;
 
 use App\Models\Agent;
-use Livewire\Component;
-use Livewire\Attributes\Layout;
-use Livewire\WithPagination;
-use Livewire\Attributes\Url;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
@@ -33,7 +33,7 @@ class Index extends Component
     /**
      * Sort the agents by the given field.
      *
-     * @param string $field
+     * @param  string  $field
      */
     public function sortBy($field)
     {
@@ -64,12 +64,12 @@ class Index extends Component
         $agents = Agent::query()
             ->where('account_id', Auth::user()->account->id)
             ->where(function ($query) {
-                $query->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('email', 'like', '%' . $this->search . '%')
-                    ->orWhere('address_1', 'like', '%' . $this->search . '%')
-                    ->orWhere('city', 'like', '%' . $this->search . '%')
-                    ->orWhere('state', 'like', '%' . $this->search . '%')
-                    ->orWhere('zip', 'like', '%' . $this->search . '%');
+                $query->where('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('email', 'like', '%'.$this->search.'%')
+                    ->orWhere('address_1', 'like', '%'.$this->search.'%')
+                    ->orWhere('city', 'like', '%'.$this->search.'%')
+                    ->orWhere('state', 'like', '%'.$this->search.'%')
+                    ->orWhere('zip', 'like', '%'.$this->search.'%');
             })
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate(10);
@@ -77,7 +77,7 @@ class Index extends Component
         return view('livewire.agents.index', [
             'agents' => $agents,
             'message' => session('message'),
-            'messageType' => session('message-type')
+            'messageType' => session('message-type'),
         ]);
     }
 }

@@ -3,11 +3,11 @@
 namespace App\Livewire\Tenants;
 
 use App\Models\Tenant;
-use Livewire\Component;
-use Livewire\Attributes\Layout;
-use Livewire\WithPagination;
-use Livewire\Attributes\Url;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
@@ -33,7 +33,7 @@ class Index extends Component
     /**
      * Sort the tenants by the given field.
      *
-     * @param string $field
+     * @param  string  $field
      */
     public function sortBy($field)
     {
@@ -61,12 +61,12 @@ class Index extends Component
         $tenants = Tenant::query()
             ->where('account_id', Auth::user()->account->id)
             ->where(function ($query) {
-                $query->where('first_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('last_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('address_1', 'like', '%' . $this->search . '%')
-                    ->orWhere('city', 'like', '%' . $this->search . '%')
-                    ->orWhere('state', 'like', '%' . $this->search . '%')
-                    ->orWhere('zip', 'like', '%' . $this->search . '%');
+                $query->where('first_name', 'like', '%'.$this->search.'%')
+                    ->orWhere('last_name', 'like', '%'.$this->search.'%')
+                    ->orWhere('address_1', 'like', '%'.$this->search.'%')
+                    ->orWhere('city', 'like', '%'.$this->search.'%')
+                    ->orWhere('state', 'like', '%'.$this->search.'%')
+                    ->orWhere('zip', 'like', '%'.$this->search.'%');
             })
             ->when($this->sortField === 'name', function ($query) {
                 $query->orderBy('last_name', $this->sortDirection)
@@ -79,7 +79,7 @@ class Index extends Component
         return view('livewire.tenants.index', [
             'tenants' => $tenants,
             'message' => session('message'),
-            'messageType' => session('message-type')
+            'messageType' => session('message-type'),
         ]);
     }
 }

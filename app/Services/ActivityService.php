@@ -11,12 +11,11 @@ class ActivityService
     /**
      * Log an activity
      *
-     * @param string $description The description of the activity
-     * @param int|null $tenantId The tenant ID if related to a tenant
-     * @param int|null $noticeId The notice ID if related to a notice
-     * @param int|null $agentId The agent ID if related to an agent
-     * @param string|null $event The event type (Agent, Tenant, Notice, System, Error)
-     * @return Activity
+     * @param  string  $description  The description of the activity
+     * @param  int|null  $tenantId  The tenant ID if related to a tenant
+     * @param  int|null  $noticeId  The notice ID if related to a notice
+     * @param  int|null  $agentId  The agent ID if related to an agent
+     * @param  string|null  $event  The event type (Agent, Tenant, Notice, System, Error)
      */
     public static function log(
         string $description,
@@ -27,10 +26,10 @@ class ActivityService
     ): Activity {
         $userId = Auth::id();
         $user = Auth::user();
-        
+
         // Get account_id from currentAccount if available, otherwise from relations
         $accountId = null;
-        
+
         if ($user && property_exists($user, 'currentAccount') && $user->currentAccount) {
             // Use currentAccount if it's set
             $accountId = $user->currentAccount->id;
@@ -45,21 +44,21 @@ class ActivityService
             // This would require adding those model imports and relationships
             // Implement as needed
         }
-        
+
         // If still null (unlikely in production), fallback to first account
-        if (!$accountId && $user) {
+        if (! $accountId && $user) {
             $accountId = $user->accounts()->first()->id ?? 1;
         }
 
         // Determine event type if not provided
-        if (!$event) {
+        if (! $event) {
             if ($agentId) {
                 $event = 'Agent';
             } elseif ($tenantId) {
                 $event = 'Tenant';
             } elseif ($noticeId) {
                 $event = 'Notice';
-            } elseif (!$userId) {
+            } elseif (! $userId) {
                 $event = 'System';
             } else {
                 $event = 'Account';

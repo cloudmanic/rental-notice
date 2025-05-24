@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\Notices;
 
-use Tests\TestCase;
-use App\Models\Notice;
-use App\Models\User;
 use App\Models\Account;
 use App\Models\Agent;
+use App\Models\Notice;
 use App\Models\NoticeType;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class UpdateNoticeTest extends TestCase
 {
@@ -32,7 +32,7 @@ class UpdateNoticeTest extends TestCase
             'user_id' => $user->id,
             'agent_id' => $agent->id,
             'notice_type_id' => $noticeType->id,
-            'status' => Notice::STATUS_SERVICE_PENDING
+            'status' => Notice::STATUS_SERVICE_PENDING,
         ]);
 
         // Test logic to mark as served

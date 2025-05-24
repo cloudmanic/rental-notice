@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
-use App\Models\Tenant;
 use App\Models\Account;
+use App\Models\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class TenantTest extends TestCase
 {
@@ -70,7 +70,7 @@ class TenantTest extends TestCase
             'zip',
         ];
 
-        $tenant = new Tenant();
+        $tenant = new Tenant;
         $fillable = $tenant->getFillable();
 
         $this->assertEquals(sort($expectedFillable), sort($fillable));
@@ -81,7 +81,7 @@ class TenantTest extends TestCase
     {
         $tenant = Tenant::factory()->create([
             'first_name' => 'Jane',
-            'last_name' => 'Smith'
+            'last_name' => 'Smith',
         ]);
 
         $this->assertEquals('Jane Smith', $tenant->full_name);
@@ -95,7 +95,7 @@ class TenantTest extends TestCase
             'address_2' => 'Suite 7B',
             'city' => 'Portland',
             'state' => 'OR',
-            'zip' => '97202'
+            'zip' => '97202',
         ]);
 
         $this->assertEquals('456 Oak St, Suite 7B, Portland, OR 97202', $tenant->full_address);
@@ -105,8 +105,8 @@ class TenantTest extends TestCase
             'address_1' => '789 Pine St',
             'address_2' => null,
             'city' => 'Portland',
-            'state' => 'OR', 
-            'zip' => '97203'
+            'state' => 'OR',
+            'zip' => '97203',
         ]);
 
         $this->assertEquals('789 Pine St, Portland, OR 97203', $tenant2->full_address);
@@ -144,13 +144,13 @@ class TenantTest extends TestCase
         $tenant = Tenant::factory()->create([
             'first_name' => 'Original',
             'last_name' => 'Name',
-            'email' => 'original@example.com'
+            'email' => 'original@example.com',
         ]);
 
         $tenant->update([
             'first_name' => 'Updated',
             'last_name' => 'Person',
-            'email' => 'updated@example.com'
+            'email' => 'updated@example.com',
         ]);
 
         $this->assertEquals('Updated', $tenant->first_name);
@@ -162,7 +162,7 @@ class TenantTest extends TestCase
             'id' => $tenant->id,
             'first_name' => 'Updated',
             'last_name' => 'Person',
-            'email' => 'updated@example.com'
+            'email' => 'updated@example.com',
         ]);
     }
 

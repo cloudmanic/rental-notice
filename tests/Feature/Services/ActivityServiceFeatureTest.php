@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\Services;
 
+use App\Livewire\Notices\Create;
+use App\Livewire\Tenants\Create as TenantCreate;
+use App\Livewire\Tenants\Edit as TenantEdit;
 use App\Models\Account;
 use App\Models\Activity;
 use App\Models\Agent;
@@ -10,9 +13,6 @@ use App\Models\NoticeType;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Services\ActivityService;
-use App\Livewire\Notices\Create;
-use App\Livewire\Tenants\Create as TenantCreate;
-use App\Livewire\Tenants\Edit as TenantEdit;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\Test;
@@ -23,7 +23,9 @@ class ActivityServiceFeatureTest extends TestCase
     use RefreshDatabase;
 
     protected $account;
+
     protected $user;
+
     protected $noticeType;
 
     protected function setUp(): void
@@ -53,7 +55,7 @@ class ActivityServiceFeatureTest extends TestCase
         $tenant = Tenant::factory()->create([
             'account_id' => $this->account->id,
             'first_name' => 'John',
-            'last_name' => 'Doe'
+            'last_name' => 'Doe',
         ]);
 
         // Log the tenant creation activity
@@ -65,7 +67,7 @@ class ActivityServiceFeatureTest extends TestCase
             'account_id' => $this->account->id,
             'user_id' => $this->user->id,
             'tenant_id' => $tenant->id,
-            'description' => $description
+            'description' => $description,
         ]);
 
         // Check that the activity appears on the dashboard
@@ -73,7 +75,7 @@ class ActivityServiceFeatureTest extends TestCase
         $response->assertSee($description);
         $response->assertSee('Tenant');
     }
-    
+
     #[Test]
     public function it_logs_tenant_creation_with_placeholder()
     {
@@ -81,11 +83,11 @@ class ActivityServiceFeatureTest extends TestCase
         $tenant = Tenant::factory()->create([
             'account_id' => $this->account->id,
             'first_name' => 'Jane',
-            'last_name' => 'Smith'
+            'last_name' => 'Smith',
         ]);
 
         // Log the tenant creation activity with {name} placeholder
-        $description = "{name} was added as a new tenant.";
+        $description = '{name} was added as a new tenant.';
         ActivityService::log($description, $tenant->id);
 
         // Check that the activity was logged correctly with the placeholder
@@ -93,7 +95,7 @@ class ActivityServiceFeatureTest extends TestCase
             'account_id' => $this->account->id,
             'user_id' => $this->user->id,
             'tenant_id' => $tenant->id,
-            'description' => $description
+            'description' => $description,
         ]);
 
         // Check that the activity appears on the dashboard with the placeholder replaced
@@ -109,7 +111,7 @@ class ActivityServiceFeatureTest extends TestCase
         $notice = Notice::factory()->create([
             'account_id' => $this->account->id,
             'user_id' => $this->user->id,
-            'notice_type_id' => $this->noticeType->id
+            'notice_type_id' => $this->noticeType->id,
         ]);
 
         // Log the notice creation activity
@@ -121,7 +123,7 @@ class ActivityServiceFeatureTest extends TestCase
             'account_id' => $this->account->id,
             'user_id' => $this->user->id,
             'notice_id' => $notice->id,
-            'description' => $description
+            'description' => $description,
         ]);
 
         // Check that the activity appears on the dashboard
@@ -136,7 +138,7 @@ class ActivityServiceFeatureTest extends TestCase
         // Create an agent
         $agent = Agent::factory()->create([
             'account_id' => $this->account->id,
-            'name' => 'Agent Smith'
+            'name' => 'Agent Smith',
         ]);
 
         // Log the agent creation activity
@@ -148,7 +150,7 @@ class ActivityServiceFeatureTest extends TestCase
             'account_id' => $this->account->id,
             'user_id' => $this->user->id,
             'agent_id' => $agent->id,
-            'description' => $description
+            'description' => $description,
         ]);
 
         // Check that the activity appears on the dashboard
@@ -156,18 +158,18 @@ class ActivityServiceFeatureTest extends TestCase
         $response->assertSee($description);
         $response->assertSee('Agent');
     }
-    
+
     #[Test]
     public function it_logs_agent_creation_with_placeholder()
     {
         // Create an agent
         $agent = Agent::factory()->create([
             'account_id' => $this->account->id,
-            'name' => 'Agent Smith'
+            'name' => 'Agent Smith',
         ]);
 
         // Log the agent creation activity with {name} placeholder
-        $description = "{name} was added as a new agent.";
+        $description = '{name} was added as a new agent.';
         ActivityService::log($description, null, null, $agent->id);
 
         // Check that the activity was logged correctly with the placeholder
@@ -175,7 +177,7 @@ class ActivityServiceFeatureTest extends TestCase
             'account_id' => $this->account->id,
             'user_id' => $this->user->id,
             'agent_id' => $agent->id,
-            'description' => $description
+            'description' => $description,
         ]);
 
         // Check that the activity appears on the dashboard with the placeholder replaced
@@ -196,7 +198,7 @@ class ActivityServiceFeatureTest extends TestCase
             'address_2' => 'Apt 4B',
             'city' => 'Portland',
             'state' => 'OR',
-            'zip' => '97205'
+            'zip' => '97205',
         ];
 
         // Test the Livewire component's agent creation method
@@ -214,17 +216,17 @@ class ActivityServiceFeatureTest extends TestCase
         // Check that the agent was created
         $agent = Agent::where('name', $agentData['name'])->first();
         $this->assertNotNull($agent);
-        
+
         // Check that the activity log was created with the expected format
         $this->assertDatabaseHas('activities', [
             'account_id' => $this->account->id,
             'user_id' => $this->user->id,
             'agent_id' => $agent->id,
             'description' => '{name} was added as a new agent.',
-            'event' => 'Agent'
+            'event' => 'Agent',
         ]);
     }
-    
+
     #[Test]
     public function it_logs_tenant_creation_during_notice_creation()
     {
@@ -238,7 +240,7 @@ class ActivityServiceFeatureTest extends TestCase
             'address_2' => 'Unit 7C',
             'city' => 'Portland',
             'state' => 'OR',
-            'zip' => '97205'
+            'zip' => '97205',
         ];
 
         // Test the Livewire component's tenant creation method
@@ -257,17 +259,17 @@ class ActivityServiceFeatureTest extends TestCase
         // Check that the tenant was created
         $tenant = Tenant::where('email', $tenantData['email'])->first();
         $this->assertNotNull($tenant);
-        
+
         // Check that the activity log was created with the expected format
         $this->assertDatabaseHas('activities', [
             'account_id' => $this->account->id,
             'user_id' => $this->user->id,
             'tenant_id' => $tenant->id,
             'description' => '{name} was added as a new tenant.',
-            'event' => 'Tenant'
+            'event' => 'Tenant',
         ]);
     }
-    
+
     #[Test]
     public function it_logs_tenant_creation_from_tenant_screen()
     {
@@ -280,9 +282,9 @@ class ActivityServiceFeatureTest extends TestCase
             'address_2' => '',
             'city' => 'Portland',
             'state' => 'OR',
-            'zip' => '97206'
+            'zip' => '97206',
         ];
-        
+
         // Test the Tenants Create component
         Livewire::test(TenantCreate::class)
             ->set('first_name', $tenantData['first_name'])
@@ -295,21 +297,21 @@ class ActivityServiceFeatureTest extends TestCase
             ->set('state', $tenantData['state'])
             ->set('zip', $tenantData['zip'])
             ->call('save');
-            
+
         // Check that the tenant was created
         $tenant = Tenant::where('email', $tenantData['email'])->first();
         $this->assertNotNull($tenant);
-        
+
         // Check that the activity log was created
         $this->assertDatabaseHas('activities', [
             'account_id' => $this->account->id,
             'user_id' => $this->user->id,
             'tenant_id' => $tenant->id,
             'description' => '{name} was added as a new tenant.',
-            'event' => 'Tenant'
+            'event' => 'Tenant',
         ]);
     }
-    
+
     #[Test]
     public function it_logs_tenant_update_from_edit_screen()
     {
@@ -318,31 +320,31 @@ class ActivityServiceFeatureTest extends TestCase
             'account_id' => $this->account->id,
             'first_name' => 'Original',
             'last_name' => 'Name',
-            'email' => 'original@example.com'
+            'email' => 'original@example.com',
         ]);
-        
+
         // Test updating the tenant
         Livewire::test(TenantEdit::class, ['tenant' => $tenant])
             ->set('first_name', 'Updated')
             ->set('last_name', 'Tenant')
             ->set('email', 'updated@example.com')
             ->call('update');
-            
+
         // Check that the tenant was updated
         $updatedTenant = Tenant::find($tenant->id);
         $this->assertEquals('Updated', $updatedTenant->first_name);
         $this->assertEquals('Tenant', $updatedTenant->last_name);
-        
+
         // Check that the activity log was created
         $this->assertDatabaseHas('activities', [
             'account_id' => $this->account->id,
             'user_id' => $this->user->id,
             'tenant_id' => $tenant->id,
             'description' => '{name}\'s information was updated.',
-            'event' => 'Tenant'
+            'event' => 'Tenant',
         ]);
     }
-    
+
     #[Test]
     public function it_logs_tenant_deletion()
     {
@@ -351,30 +353,30 @@ class ActivityServiceFeatureTest extends TestCase
             'account_id' => $this->account->id,
             'first_name' => 'Delete',
             'last_name' => 'Me',
-            'email' => 'delete@example.com'
+            'email' => 'delete@example.com',
         ]);
-        
+
         $tenantId = $tenant->id;
         $tenantName = $tenant->full_name;
-        
+
         // Test deleting the tenant
         Livewire::test(TenantEdit::class, ['tenant' => $tenant])
             ->call('confirmDelete')
             ->assertSet('showDeleteModal', true)
             ->call('delete');
-            
+
         // Check that the tenant was deleted
         $this->assertDatabaseMissing('tenants', [
-            'id' => $tenantId
+            'id' => $tenantId,
         ]);
-        
+
         // Check that the activity log was created
         $this->assertDatabaseHas('activities', [
             'account_id' => $this->account->id,
             'user_id' => $this->user->id,
             'tenant_id' => null, // Tenant ID should be null since tenant is deleted
             'description' => "Tenant {$tenantName} was deleted.",
-            'event' => 'Tenant'
+            'event' => 'Tenant',
         ]);
     }
 
@@ -386,20 +388,20 @@ class ActivityServiceFeatureTest extends TestCase
         $notice = Notice::factory()->create([
             'account_id' => $this->account->id,
             'user_id' => $this->user->id,
-            'notice_type_id' => $this->noticeType->id
+            'notice_type_id' => $this->noticeType->id,
         ]);
         $agent = Agent::factory()->create(['account_id' => $this->account->id]);
 
         // Log activities in a specific order with slight delays to ensure correct order
-        $description1 = "First activity";
+        $description1 = 'First activity';
         ActivityService::log($description1, $tenant->id);
         sleep(1); // Wait 1 second
 
-        $description2 = "Second activity";
+        $description2 = 'Second activity';
         ActivityService::log($description2, null, $notice->id);
         sleep(1); // Wait 1 second
 
-        $description3 = "Third activity";
+        $description3 = 'Third activity';
         ActivityService::log($description3, null, null, $agent->id);
 
         // Check that activities appear on the dashboard in reverse chronological order (newest first)

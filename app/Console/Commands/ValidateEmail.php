@@ -35,12 +35,13 @@ class ValidateEmail extends Command
         $this->info("Validating email: {$email}");
 
         // Basic format validation
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->error("Invalid email format: {$email}");
+
             return 1;
         }
 
-        list($user, $domain) = explode('@', $email);
+        [$user, $domain] = explode('@', $email);
 
         // Get MX records for the domain
         $this->line("Looking up MX records for {$domain}...");
@@ -48,11 +49,12 @@ class ValidateEmail extends Command
 
         if (empty($mxRecords)) {
             $this->error("No mail servers found for domain: {$domain}");
+
             return 1;
         }
 
         if ($debug) {
-            $this->line("Found " . count($mxRecords) . " mail servers:");
+            $this->line('Found '.count($mxRecords).' mail servers:');
             foreach ($mxRecords as $host => $priority) {
                 $this->line("- {$host} (priority: {$priority})");
             }
@@ -62,10 +64,12 @@ class ValidateEmail extends Command
         $isValid = $this->validateEmailBySmtp($email, $mxRecords, $timeout, $debug);
 
         if ($isValid) {
-            $this->info("✅ Email address appears to be valid");
+            $this->info('✅ Email address appears to be valid');
+
             return 0;
         } else {
-            $this->error("❌ Email address appears to be invalid or undeliverable");
+            $this->error('❌ Email address appears to be invalid or undeliverable');
+
             return 1;
         }
     }
@@ -96,10 +100,10 @@ class ValidateEmail extends Command
      */
     private function validateEmailBySmtp(string $email, array $mxRecords, int $timeout, bool $debug): bool
     {
-        list($user, $domain) = explode('@', $email);
+        [$user, $domain] = explode('@', $email);
 
         // From email - we use a made-up address at the same domain
-        $from = "smtp-validator@cloudmanic.com";
+        $from = 'smtp-validator@cloudmanic.com';
 
         foreach ($mxRecords as $host => $priority) {
             $this->line("Connecting to mail server: {$host}...");
@@ -107,10 +111,11 @@ class ValidateEmail extends Command
             // Create a socket connection
             $socket = @fsockopen($host, 25, $errno, $errstr, $timeout);
 
-            if (!$socket) {
+            if (! $socket) {
                 if ($debug) {
                     $this->warn("Failed to connect to {$host}: {$errstr} (error {$errno})");
                 }
+
                 continue; // Try next server
             }
 
@@ -124,7 +129,7 @@ class ValidateEmail extends Command
             $responses[] = $this->sendCommand($socket, null, '220', $debug);
 
             // Send HELO
-            $responses[] = $this->sendCommand($socket, "HELO cloudmanic.com", '250', $debug);
+            $responses[] = $this->sendCommand($socket, 'HELO cloudmanic.com', '250', $debug);
 
             // Send MAIL FROM
             $responses[] = $this->sendCommand($socket, "MAIL FROM:<{$from}>", '250', $debug);
@@ -134,10 +139,10 @@ class ValidateEmail extends Command
             $responses[] = $rcptResponse;
 
             // RSET the connection
-            $responses[] = $this->sendCommand($socket, "RSET", '250', $debug);
+            $responses[] = $this->sendCommand($socket, 'RSET', '250', $debug);
 
             // QUIT
-            $responses[] = $this->sendCommand($socket, "QUIT", '221', $debug);
+            $responses[] = $this->sendCommand($socket, 'QUIT', '221', $debug);
 
             // Close socket
             fclose($socket);
@@ -151,7 +156,7 @@ class ValidateEmail extends Command
                 if (preg_match('/^550/', $rcptResponse)) {
                     $this->warn("Server reported that the mailbox doesn't exist");
                 } elseif (preg_match('/^4/', $rcptResponse)) {
-                    $this->warn("Server reported a temporary error");
+                    $this->warn('Server reported a temporary error');
                 }
             }
 
@@ -173,7 +178,7 @@ class ValidateEmail extends Command
             if ($debug) {
                 $this->line(">> {$command}");
             }
-            fwrite($socket, $command . "\r\n");
+            fwrite($socket, $command."\r\n");
         }
 
         $response = '';
@@ -181,7 +186,7 @@ class ValidateEmail extends Command
             $response .= $line;
 
             if ($debug) {
-                $this->line("<< " . trim($line));
+                $this->line('<< '.trim($line));
             }
 
             // If this is a multi-line response, continue reading
@@ -193,9 +198,9 @@ class ValidateEmail extends Command
         }
 
         // Check if the response code matches what we expected
-        if ($expectedCode !== null && !preg_match('/^' . $expectedCode . '/', $response)) {
+        if ($expectedCode !== null && ! preg_match('/^'.$expectedCode.'/', $response)) {
             if ($debug) {
-                $this->warn("Expected code {$expectedCode}, but got: " . substr($response, 0, 3));
+                $this->warn("Expected code {$expectedCode}, but got: ".substr($response, 0, 3));
             }
         }
 

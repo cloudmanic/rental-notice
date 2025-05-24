@@ -5,8 +5,8 @@ namespace App\Providers;
 use App\Models\Account;
 use App\Models\NoticeType;
 use App\Services\PricingService;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Register the PricingService in the service container
         $this->app->bind('pricing', function ($app) {
-            return new PricingService();
+            return new PricingService;
         });
     }
 
@@ -38,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Set the most recent notice type plan date for new accounts
         Account::creating(function ($account) {
-            if (!$account->notice_type_plan_date) {
+            if (! $account->notice_type_plan_date) {
                 $account->notice_type_plan_date = NoticeType::getMostRecentPlanDate();
             }
         });

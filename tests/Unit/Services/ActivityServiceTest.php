@@ -20,7 +20,9 @@ class ActivityServiceTest extends TestCase
     use RefreshDatabase;
 
     protected $account;
+
     protected $user;
+
     protected $noticeType;
 
     protected function setUp(): void
@@ -80,7 +82,7 @@ class ActivityServiceTest extends TestCase
         $notice = Notice::factory()->create([
             'account_id' => $this->account->id,
             'user_id' => $this->user->id,
-            'notice_type_id' => $this->noticeType->id
+            'notice_type_id' => $this->noticeType->id,
         ]);
 
         $description = 'Created notice';
@@ -104,13 +106,13 @@ class ActivityServiceTest extends TestCase
         $this->assertEquals($agent->id, $activity->agent_id);
         $this->assertEquals('Agent', $activity->event);
     }
-    
+
     #[Test]
     public function it_logs_activity_with_custom_event()
     {
         $description = 'System notification';
         $activity = ActivityService::log($description, null, null, null, 'System');
-        
+
         $this->assertEquals($description, $activity->description);
         $this->assertEquals('System', $activity->event);
     }

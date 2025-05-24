@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static float|null getBulkPrice(int $quantity)
  * @method static array getBulkPrices()
  * @method static bool isEligibleForBulkPricing(int $quantity)
+ *
  * @see \App\Services\PricingService
  */
 class Pricing extends Facade

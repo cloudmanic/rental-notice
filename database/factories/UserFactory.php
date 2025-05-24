@@ -39,7 +39,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
     }
@@ -49,7 +49,7 @@ class UserFactory extends Factory
      */
     public function superAdmin(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'type' => \App\Models\User::TYPE_SUPER_ADMIN,
         ]);
     }
@@ -59,7 +59,7 @@ class UserFactory extends Factory
      */
     public function admin(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'type' => \App\Models\User::TYPE_ADMIN,
         ]);
     }
@@ -69,7 +69,7 @@ class UserFactory extends Factory
      */
     public function contributor(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'type' => \App\Models\User::TYPE_CONTRIBUTOR,
         ]);
     }
