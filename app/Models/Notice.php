@@ -39,7 +39,6 @@ class Notice extends Model
         'other_5_title',
         'other_5_price',
         'payment_other_means',
-        'include_all_other_occupents',
         'status',
         'error_message',
         'draft_pdf',
@@ -57,7 +56,6 @@ class Notice extends Model
         'other_4_price' => 'decimal:2',
         'other_5_price' => 'decimal:2',
         'payment_other_means' => 'boolean',
-        'include_all_other_occupents' => 'boolean',
         'status' => 'string',
     ];
 
@@ -136,7 +134,6 @@ class Notice extends Model
 
             // Flags validation
             'payment_other_means' => ['boolean'],
-            'include_all_other_occupents' => ['boolean'],
 
             // PDF files validation
             'draft_pdf' => ['nullable', 'string'],

@@ -41,7 +41,6 @@ class NoticeFactory extends Factory
 
             // Flags
             'payment_other_means' => fake()->boolean(),
-            'include_all_other_occupents' => fake()->boolean(),
 
             // Status and error fields
             'status' => fake()->randomElement([

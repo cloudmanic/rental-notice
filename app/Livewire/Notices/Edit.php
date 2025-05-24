@@ -61,7 +61,6 @@ class Edit extends Component
             'other_5_title' => $notice->other_5_title ?? '',
             'other_5_price' => $notice->other_5_price ?? 0,
             'payment_other_means' => $notice->payment_other_means ?? false,
-            'include_all_other_occupents' => $notice->include_all_other_occupents ?? false,
         ];
 
         // Initialize tenants as an empty collection
@@ -237,7 +236,6 @@ class Edit extends Component
             'notice.other_5_title' => 'nullable|string|max:255',
             'notice.other_5_price' => 'nullable|numeric|min:0|max:99999.99',
             'notice.payment_other_means' => 'boolean',
-            'notice.include_all_other_occupents' => 'boolean',
         ], [
             'selectedTenants.required' => 'Please select at least one tenant.',
             'selectedTenants.min' => 'Please select at least one tenant.',
@@ -266,7 +264,6 @@ class Edit extends Component
             'other_5_title' => $this->notice['other_5_title'],
             'other_5_price' => $this->notice['other_5_price'],
             'payment_other_means' => $this->notice['payment_other_means'],
-            'include_all_other_occupents' => $this->notice['include_all_other_occupents'],
             'price' => $noticeType->price,
         ]);
 

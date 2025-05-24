@@ -31,7 +31,6 @@ class Create extends Component
         'other_5_title' => '',
         'other_5_price' => 0,
         'payment_other_means' => false,
-        'include_all_other_occupents' => false,
     ];
 
     // Array to store the selected tenants
@@ -275,7 +274,6 @@ class Create extends Component
             'notice.other_5_title' => 'nullable|string|max:255',
             'notice.other_5_price' => 'nullable|numeric|min:0|max:99999.99',
             'notice.payment_other_means' => 'boolean',
-            'notice.include_all_other_occupents' => 'boolean',
         ], [
             'selectedTenants.required' => 'Please select at least one tenant.',
             'selectedTenants.min' => 'Please select at least one tenant.',
@@ -304,7 +302,6 @@ class Create extends Component
         $notice->other_5_title = $validatedData['notice']['other_5_title'];
         $notice->other_5_price = $validatedData['notice']['other_5_price'];
         $notice->payment_other_means = $validatedData['notice']['payment_other_means'];
-        $notice->include_all_other_occupents = $validatedData['notice']['include_all_other_occupents'];
         $notice->status = Notice::STATUS_PENDING_PAYMENT;
         $notice->save();
 
@@ -413,7 +410,6 @@ class Create extends Component
             'other_5_title' => $currentFormData['other_5_title'] ?? '',
             'other_5_price' => $currentFormData['other_5_price'] ?? 0,
             'payment_other_means' => isset($currentFormData['payment_other_means']) ? (bool) $currentFormData['payment_other_means'] : false,
-            'include_all_other_occupents' => isset($currentFormData['include_all_other_occupents']) ? (bool) $currentFormData['include_all_other_occupents'] : false,
         ]);
 
         // If we have a selected tenant, preserve that information too
@@ -521,7 +517,6 @@ class Create extends Component
             'other_5_title' => $currentFormData['other_5_title'] ?? '',
             'other_5_price' => $currentFormData['other_5_price'] ?? 0,
             'payment_other_means' => isset($currentFormData['payment_other_means']) ? (bool) $currentFormData['payment_other_means'] : false,
-            'include_all_other_occupents' => isset($currentFormData['include_all_other_occupents']) ? (bool) $currentFormData['include_all_other_occupents'] : false,
         ]);
 
         // Store selected tenants in session

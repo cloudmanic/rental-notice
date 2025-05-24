@@ -27,7 +27,6 @@ return new class extends Migration
 
             // Flags
             $table->boolean('payment_other_means')->default(false);
-            $table->boolean('include_all_other_occupents')->default(false);
 
             $table->timestamps();
         });

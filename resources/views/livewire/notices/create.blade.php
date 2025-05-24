@@ -320,29 +320,6 @@
                 </label>
             </div>
         </div>
-
-        <div class="flex items-start">
-            <div class="flex items-center h-5">
-                <input id="include_all_other_occupents" wire:model="notice.include_all_other_occupents" type="checkbox"
-                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-            </div>
-            <div class="ml-3 text-sm">
-                <label for="include_all_other_occupents" class="font-medium text-gray-700">
-                    Include All Other Occupants
-                    <span class="ml-1 relative group">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 inline" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <div
-                            class="absolute z-10 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 bottom-full left-0">
-                            Check this to include all other occupants in the property on the notice.
-                        </div>
-                    </span>
-                </label>
-            </div>
-        </div>
     </div>
 
     <div class="mt-8 flex items-center justify-end gap-x-6">
