@@ -75,6 +75,14 @@ class GenerateNoticePdfJob implements ShouldQueue
                 'path' => $certificatePath,
                 's3_path' => $s3Path,
             ]);
+
+            // If status is SERVICE_PENDING, dispatch print job
+            if ($this->notice->status === Notice::STATUS_SERVICE_PENDING) {
+                PrintNoticePackageJob::dispatch($this->notice);
+                Log::info('Print job dispatched for service pending notice', [
+                    'notice_id' => $this->notice->id,
+                ]);
+            }
         } catch (\Exception $e) {
             Log::error('PDF generation failed', [
                 'notice_id' => $this->notice->id,

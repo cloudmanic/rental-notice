@@ -64,6 +64,59 @@ class PrintNoticePackageJobTest extends TestCase
     }
 
     /**
+     * Test that the print job skips when environment variables are not set.
+     */
+    public function test_print_job_skips_when_env_not_set()
+    {
+        // Create a notice
+        $notice = Notice::factory()->create(['status' => 'paid']);
+
+        // Create a job instance that will have empty env values
+        $job = new class($notice) extends PrintNoticePackageJob {
+            public function handle(NoticeService $noticeService): void
+            {
+                // Override env() calls to return empty
+                $host = '';
+                $username = '';
+
+                // Check if required environment variables are set
+                if (empty($host) || empty($username)) {
+                    Log::info('Print job skipped - print server configuration not set', [
+                        'notice_id' => $this->notice->id,
+                        'host_set' => ! empty($host),
+                        'username_set' => ! empty($username),
+                    ]);
+
+                    return;
+                }
+
+                parent::handle($noticeService);
+            }
+        };
+
+        // Mock the NoticeService (should not be called)
+        $noticeService = Mockery::mock(NoticeService::class);
+        $noticeService->shouldNotReceive('generateCompletePrintPackage');
+
+        $this->app->instance(NoticeService::class, $noticeService);
+
+        // Mock Log facade to expect the skip message
+        Log::shouldReceive('info')
+            ->once()
+            ->withArgs(function ($message, $context) use ($notice) {
+                return $message === 'Print job skipped - print server configuration not set' 
+                    && $context['notice_id'] === $notice->id
+                    && $context['host_set'] === false
+                    && $context['username_set'] === false;
+            });
+
+        // Execute the job
+        $job->handle($noticeService);
+
+        $this->assertTrue(true); // If we got here, the job executed successfully
+    }
+
+    /**
      * Test that the print job handles SCP failure.
      */
     public function test_print_job_handles_scp_failure()

@@ -37,6 +37,21 @@ class PrintNoticePackageJob implements ShouldQueue
      */
     public function handle(NoticeService $noticeService): void
     {
+        // Get SSH connection details
+        $host = env('PRINT_SERVER_HOST');
+        $username = env('PRINT_SERVER_USERNAME');
+
+        // Check if required environment variables are set
+        if (empty($host) || empty($username)) {
+            Log::info('Print job skipped - print server configuration not set', [
+                'notice_id' => $this->notice->id,
+                'host_set' => ! empty($host),
+                'username_set' => ! empty($username),
+            ]);
+
+            return;
+        }
+
         try {
             Log::info('Starting print job for notice', ['notice_id' => $this->notice->id]);
 
@@ -49,10 +64,8 @@ class PrintNoticePackageJob implements ShouldQueue
             $remoteFilename = 'notice_'.$this->notice->id.'_'.time().'.pdf';
             $remotePath = '/tmp/'.$remoteFilename;
 
-            // Get SSH connection details
-            $host = env('PRINT_SERVER_HOST');
+            // Get remaining SSH connection details
             $port = env('PRINT_SERVER_PORT', 22);
-            $username = env('PRINT_SERVER_USERNAME');
             $printer = env('PRINT_SERVER_PRINTER', 'Brother_HL_L2405W');
 
             // SCP the file to the print server
