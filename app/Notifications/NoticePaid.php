@@ -42,7 +42,7 @@ class NoticePaid extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): Mailable
     {
-        return (new InvoicePaidMailable)->to($notifiable->email);
+        return (new InvoicePaidMailable($this->notice, $notifiable))->to($notifiable->email);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\ResetPassword as ResetPasswordNotification;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -130,6 +131,17 @@ class User extends Authenticatable
     public function hasAdminAccess(): bool
     {
         return in_array($this->type, [self::TYPE_SUPER_ADMIN, self::TYPE_ADMIN]);
+    }
+
+    /**
+     * Send the password reset notification with BCC.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 
     public static function validationRules(bool $isUpdate = false): array

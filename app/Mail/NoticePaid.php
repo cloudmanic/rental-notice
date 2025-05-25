@@ -2,6 +2,8 @@
 
 namespace App\Mail;
 
+use App\Models\Notice;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -15,8 +17,10 @@ class NoticePaid extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
-    {
+    public function __construct(
+        public Notice $notice,
+        public User $user
+    ) {
         //
     }
 
@@ -25,8 +29,11 @@ class NoticePaid extends Mailable
      */
     public function envelope(): Envelope
     {
+        $tenantNames = $this->notice->tenants->pluck('full_name')->join(', ');
+        
         return new Envelope(
-            subject: 'Notice Paid Notification',
+            subject: "Payment Received - Notice for {$tenantNames}",
+            bcc: config('constants.oregonpastduerent_com.bcc_email'),
         );
     }
 
@@ -37,6 +44,14 @@ class NoticePaid extends Mailable
     {
         return new Content(
             view: 'mail.notice.paid',
+            with: [
+                'notice' => $this->notice,
+                'user' => $this->user,
+                'tenants' => $this->notice->tenants,
+                'propertyAddress' => $this->notice->tenants->first()->address_1 ?? 'N/A',
+                'amount' => $this->notice->price,
+                'noticeType' => $this->notice->noticeType->name,
+            ]
         );
     }
 
