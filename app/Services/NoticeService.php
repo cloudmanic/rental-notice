@@ -6,6 +6,7 @@ use App\Models\Notice;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
@@ -974,6 +975,47 @@ class NoticeService
         // Check if the merge process was successful
         if (! $process->isSuccessful()) {
             throw new ProcessFailedException($process);
+        }
+
+        // Flatten the PDF to ensure form fields are rendered
+        $flattenedPath = str_replace('.pdf', '_flattened.pdf', $packageFullPath);
+
+        // First try using pdftk if available
+        $pdftKProcess = new Process(['which', 'pdftk']);
+        $pdftKProcess->run();
+
+        if ($pdftKProcess->isSuccessful() && trim($pdftKProcess->getOutput()) !== '') {
+            // Use pdftk to flatten
+            $flattenProcess = new Process([
+                'pdftk',
+                $packageFullPath,
+                'output',
+                $flattenedPath,
+                'flatten',
+            ]);
+        } else {
+            // Fall back to using pdfcpu with form filling (this will render form fields)
+            $flattenProcess = new Process([
+                'pdfcpu',
+                'form',
+                'fill',
+                $packageFullPath,
+                $flattenedPath,
+            ]);
+        }
+
+        $flattenProcess->run();
+
+        // If flattening succeeded, replace the original with the flattened version
+        if ($flattenProcess->isSuccessful()) {
+            File::move($flattenedPath, $packageFullPath, true);
+            Log::info('PDF flattened successfully', ['path' => $packageFullPath]);
+        } else {
+            // Log warning but continue with unflattened PDF
+            Log::warning('Failed to flatten PDF', [
+                'error' => $flattenProcess->getErrorOutput(),
+                'path' => $packageFullPath,
+            ]);
         }
 
         // Clean up temporary files

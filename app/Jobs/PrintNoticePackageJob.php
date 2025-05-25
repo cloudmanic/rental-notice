@@ -72,7 +72,7 @@ class PrintNoticePackageJob implements ShouldQueue
             $this->scpFileToServer($localPath, $remotePath, $host, $port, $username);
 
             // Print the file
-            $this->printFile($remotePath, $printer, $host, $port, $username);
+            // $this->printFile($remotePath, $printer, $host, $port, $username);
 
             // Clean up local file
             if (file_exists($localPath)) {
@@ -119,6 +119,8 @@ class PrintNoticePackageJob implements ShouldQueue
 
     /**
      * Send print command to the print server.
+     *
+     * For testing sometimes I add a print range to the lpr command, e.g. `-o page-ranges=2-2`
      */
     private function printFile(string $remotePath, string $printer, string $host, string $port, string $username): void
     {
@@ -128,7 +130,7 @@ class PrintNoticePackageJob implements ShouldQueue
             '-p',
             $port,
             "{$username}@{$host}",
-            "lpr -P {$printer} {$remotePath} && rm {$remotePath}",  // Print and remove the file
+            "lpr -P {$printer} -o page-ranges=2-2 {$remotePath} && rm {$remotePath}",  // Print and remove the file
         ];
 
         $process = new Process($command);
