@@ -32,7 +32,7 @@ COPY .fly/php/ondrej_ubuntu_php.gpg /etc/apt/trusted.gpg.d/ondrej_ubuntu_php.gpg
 ADD .fly/php/packages/${PHP_VERSION}.txt /tmp/php-packages.txt
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends gnupg2 ca-certificates git-core curl zip unzip golang \
+    && apt-get install -y --no-install-recommends gnupg2 ca-certificates git-core curl zip unzip golang pdftk \
     rsync vim-tiny htop sqlite3 nginx supervisor cron openssh-client \
     && ln -sf /usr/bin/vim.tiny /etc/alternatives/vim \
     && ln -sf /etc/alternatives/vim /usr/bin/vim \
@@ -44,7 +44,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
-RUN go install github.com/pdfcpu/pdfcpu/cmd/pdfcpu@latest && cp /root/go/bin/pdfcpu /usr/local/bin/pdfcpu
+RUN go install github.com/pdfcpu/pdfcpu/cmd/pdfcpu@v0.9.1 && cp /root/go/bin/pdfcpu /usr/local/bin/pdfcpu
 
 # 2. Copy config files to proper locations
 COPY .fly/nginx/ /etc/nginx/
@@ -53,6 +53,10 @@ COPY .fly/supervisor/ /etc/supervisor/
 COPY .fly/entrypoint.sh /entrypoint
 COPY .fly/start-nginx.sh /usr/local/bin/start-nginx
 COPY .fly/ssh/ /root/.ssh
+RUN cp -r ~/.ssh/ /var/www
+RUN chown -R www-data:www-data /var/www/.ssh
+RUN chmod 700 /var/www/.ssh 
+RUN chmod 600 /var/www/.ssh/*
 RUN mkdir /data && chmod 754 /usr/local/bin/start-nginx && chmod 700 -R /root/.ssh
 
 # 3. Copy application code, skipping files based on .dockerignore

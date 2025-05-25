@@ -985,6 +985,8 @@ class NoticeService
         $pdftKProcess->run();
 
         if ($pdftKProcess->isSuccessful() && trim($pdftKProcess->getOutput()) !== '') {
+            Log::info('Using pdftk to flatten PDF', ['path' => $packageFullPath]);
+
             // Use pdftk to flatten
             $flattenProcess = new Process([
                 'pdftk',
@@ -994,14 +996,7 @@ class NoticeService
                 'flatten',
             ]);
         } else {
-            // Fall back to using pdfcpu with form filling (this will render form fields)
-            $flattenProcess = new Process([
-                'pdfcpu',
-                'form',
-                'fill',
-                $packageFullPath,
-                $flattenedPath,
-            ]);
+            Log::info('pdftk not found, please install pdftk', ['path' => $packageFullPath]);
         }
 
         $flattenProcess->run();

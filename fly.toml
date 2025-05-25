@@ -18,8 +18,9 @@ primary_region = 'sea'
 
 [env]
   APP_ENV = 'production'
-  LOG_CHANNEL = 'stderr'
-  LOG_LEVEL = 'info'
+  LOG_CHANNEL = 'stack'
+  LOG_LEVEL = 'debug'
+  LOG_STACK = 'stderr,papertrail'
   MAIL_MAILER = 'ses'
   MAIL_FROM_ADDRESS = 'help@oregonpastduerent.com'
   MAIL_FROM_NAME = 'Oregon Past Due Rent'
@@ -30,7 +31,8 @@ primary_region = 'sea'
   DB_CONNECTION = 'sqlite'
   DB_DATABASE = '/data/rental-notice.sqlite'
   AWS_DEFAULT_REGION = 'us-east-1'
-  AWS_BUCKET = 'rental-notice'  
+  AWS_BUCKET = 'rental-notice'
+  PRINT_SERVER_PRINTER = 'Brother_HL_L2405W'
 
 [http_service]
   internal_port = 8080
