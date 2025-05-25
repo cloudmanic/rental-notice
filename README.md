@@ -57,6 +57,65 @@ This ensures consistent pricing and simplifies the management of different prici
 -   Update the data in `templates/ps3817-form.json`
 -   `pdfcpu form fill templates/ps3817-form.pdf templates/ps3817-form.json out.pdf`
 
+# Database Backup & Restore with Litestream
+
+This application uses [Litestream](https://litestream.io/) for real-time SQLite database backup and restore functionality. Litestream continuously streams changes to AWS S3, providing robust database protection with point-in-time recovery.
+
+## Litestream Configuration
+
+### Environment Variables
+
+The following environment variables must be set for Litestream to function:
+
+```bash
+LITESTREAM_ACCESS_KEY_ID=your-aws-access-key
+LITESTREAM_SECRET_ACCESS_KEY=your-aws-secret-key
+```
+
+### Backup Configuration
+
+Litestream is configured via `litestream.yml` with the following settings:
+
+-   **Database Path**: `/data/rental-notice.sqlite`
+-   **S3 Bucket**: `rental-notice/db-backups/`
+-   **Sync Interval**: 1 second (near real-time backup)
+
+### Automatic Features
+
+1. **Process Management**: Litestream runs as a supervised service that automatically starts with the container
+2. **Database Restoration**: On container startup, the system automatically checks for and restores from the latest backup if no database exists
+3. **Continuous Backup**: All database changes are streamed to S3 in real-time
+4. **Error Handling**: Proper logging and automatic restart policies are in place
+
+### Manual Operations
+
+#### Restore Database Manually
+
+```bash
+# Restore from the latest backup
+/usr/local/bin/litestream restore -if-replica-exists /data/rental-notice.sqlite
+
+# Restore from a specific timestamp
+/usr/local/bin/litestream restore -timestamp 2024-01-01T12:00:00Z /data/rental-notice.sqlite
+```
+
+#### Check Backup Status
+
+```bash
+# List available replicas
+/usr/local/bin/litestream replicas
+
+# Show backup generations
+/usr/local/bin/litestream generations
+```
+
+### Logs
+
+Litestream logs are available at:
+
+-   **Standard Output**: `/var/log/supervisor/litestream.log`
+-   **Error Output**: `/var/log/supervisor/litestream_error.log`
+
 # Sysadmin Notes
 
 -   Fly.io restricts where the PHP app can access via `open_basedir`. So in our `Dockerfile` we added this line `sed -i 's|php_admin_value\[open_basedir\] = /var/www/html:/dev/stdout:/tmp|php_admin_value[open_basedir] = /var/www/html:/dev/stdout:/tmp:/data/rental-notice.sqlite|' /etc/php/8.2/fpm/pool.d/www.conf`. This way we can access the sqlite database file.
@@ -74,3 +133,21 @@ We use SSH to connect to support servers. As a result we install ssh keys into o
 ## Fly.io Commands
 
 -   `fly logs -a rental-notice` <--- realtime logs
+-   `fly ssh console -a rental-notice` <--- SSH into the running container
+-   `fly status -a rental-notice` <--- Check application status
+
+### Database Operations on Fly.io
+
+```bash
+# SSH into the container and check Litestream status
+fly ssh console -a rental-notice
+supervisorctl status litestream
+
+# Manually trigger database restore (if needed)
+fly ssh console -a rental-notice
+/opt/litestream-restore.sh
+
+# Check database backup status
+fly ssh console -a rental-notice
+/usr/local/bin/litestream replicas
+```

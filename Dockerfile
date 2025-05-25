@@ -2,6 +2,11 @@
 
 ARG PHP_VERSION=8.2
 ARG NODE_VERSION=18
+
+# Get Litestream binary
+FROM litestream/litestream:0.3.9 AS litestream_binary
+
+# Base image for the application
 FROM ubuntu:22.04 as base
 LABEL fly_launch_runtime="laravel"
 
@@ -82,6 +87,13 @@ RUN composer install --optimize-autoloader --no-dev \
 RUN mkdir -p /root/.config/pdfcpu
 COPY .fly/pdfcpu/config.yml /root/.config/pdfcpu/config.yml
 RUN chown -R www-data:www-data /root/.config
+
+# Copy over litestream config
+COPY litestream.yml /etc/litestream.yml
+COPY --from=litestream_binary /usr/local/bin/litestream /usr/local/bin/litestream
+
+# Make scripts executable
+RUN chmod +x /var/www/html/.fly/scripts/*.sh
 
 # Multi-stage build: Build static assets
 # This allows us to not include Node within the final container
