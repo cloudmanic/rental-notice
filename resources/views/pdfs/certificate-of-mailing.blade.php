@@ -5,11 +5,20 @@
     <meta charset="UTF-8" />
     <title>Certificate of Mailing</title>
     <style>
+    @page {
+        size: 8.5in 11in;
+        margin: 0.5in;
+    }
+    
     body {
         font-family: Arial, sans-serif;
-        margin: 30px;
-        max-width: 800px;
+        margin: 0;
+        padding: 0;
         font-size: 14px;
+    }
+    
+    .content-wrapper {
+        padding-top: 0.1in;
     }
 
     h1 {
@@ -75,14 +84,14 @@
 </head>
 
 <body>
+    <div class="content-wrapper">
+        <div class="header">
+            <h2>{{ $companyName }}</h2>
+            <p>{{ $companyAddress1 }}@if($companyAddress2), {{ $companyAddress2 }}@endif, {{ $companyCity }}, {{ $companyState }} {{ $companyZip }}</p>
+            <p>Phone: {{ $companyPhone }} | Email: {{ $companyEmail }}</p>
+        </div>
 
-    <div class="header">
-        <h2>{{ $companyName }}</h2>
-        <p>{{ $companyAddress1 }}@if($companyAddress2), {{ $companyAddress2 }}@endif, {{ $companyCity }}, {{ $companyState }} {{ $companyZip }}</p>
-        <p>Phone: {{ $companyPhone }} | Email: {{ $companyEmail }}</p>
-    </div>
-
-    <h1>Certificate of Mailing</h1>
+        <h1>Certificate of Mailing</h1>
 
     <div class="section">
         <p>
@@ -120,6 +129,7 @@
         <div class="signature-line"></div>
         <p style="margin: 5px 0;">Spicer Matthews, Owner</p>
         <p style="margin: 5px 0;">{{ $companyName }}</p>
+    </div>
     </div>
 
 </body>

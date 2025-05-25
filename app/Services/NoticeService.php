@@ -648,7 +648,8 @@ class NoticeService
             'companyEmail' => config('constants.oregonpastduerent_com.support_email'),
             'postOfficeName' => config('constants.oregonpastduerent_com.post_office_name'),
             'postOfficeAddress' => config('constants.oregonpastduerent_com.post_office_address'),
-        ]);
+        ])
+        ->setPaper('letter', 'portrait');
 
         // Generate unique filename
         $fileName = 'certificate_of_mailing_'.time().'.pdf';
