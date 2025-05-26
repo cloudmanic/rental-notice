@@ -29,7 +29,7 @@ class NoticeService
     public function generateJsonNotice(Notice $notice): string
     {
         // Load the template
-        $templatePath = base_path('templates/10-day-notice-template.json');
+        $templatePath = base_path('templates/'.$notice->noticeType->template.'.json');
         if (! File::exists($templatePath)) {
             throw new \Exception("Notice template file not found at {$templatePath}");
         }
@@ -223,7 +223,7 @@ class NoticeService
         $jsonFullPath = Storage::disk('local')->path($jsonStoragePath);
 
         // Get the PDF template path
-        $pdfTemplatePath = base_path('templates/10-day-notice-template.pdf');
+        $pdfTemplatePath = base_path('templates/'.$notice->noticeType->template.'.pdf');
 
         if (! File::exists($pdfTemplatePath)) {
             throw new \Exception("PDF template file not found at {$pdfTemplatePath}");
@@ -649,7 +649,7 @@ class NoticeService
             'postOfficeName' => config('constants.oregonpastduerent_com.post_office_name'),
             'postOfficeAddress' => config('constants.oregonpastduerent_com.post_office_address'),
         ])
-        ->setPaper('letter', 'portrait');
+            ->setPaper('letter', 'portrait');
 
         // Generate unique filename
         $fileName = 'certificate_of_mailing_'.time().'.pdf';
@@ -981,24 +981,22 @@ class NoticeService
         // Flatten the PDF to ensure form fields are rendered
         $flattenedPath = str_replace('.pdf', '_flattened.pdf', $packageFullPath);
 
-        // First try using pdftk if available
-        $pdftKProcess = new Process(['which', 'pdftk']);
-        $pdftKProcess->run();
+        $pdftKPath = env('PDFTK_PATH', '/usr/bin/pdftk');
 
-        if ($pdftKProcess->isSuccessful() && trim($pdftKProcess->getOutput()) !== '') {
-            Log::info('Using pdftk to flatten PDF', ['path' => $packageFullPath]);
-
-            // Use pdftk to flatten
-            $flattenProcess = new Process([
-                'pdftk',
-                $packageFullPath,
-                'output',
-                $flattenedPath,
-                'flatten',
-            ]);
-        } else {
-            Log::info('pdftk not found, please install pdftk', ['path' => $packageFullPath]);
+        if (! File::exists($pdftKPath)) {
+            throw new \Exception("pdftk not found at {$pdftKPath}. Please install pdftk or set PDFTK_PATH in your .env file.");
         }
+
+        Log::info('Using pdftk to flatten PDF', ['path' => $packageFullPath]);
+
+        // Use pdftk to flatten
+        $flattenProcess = new Process([
+            $pdftKPath,
+            $packageFullPath,
+            'output',
+            $flattenedPath,
+            'flatten',
+        ]);
 
         $flattenProcess->run();
 

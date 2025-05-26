@@ -1,0 +1,419 @@
+{
+	"header": {
+		"source": "13-day-notice.pdf",
+		"version": "pdfcpu v0.9.1 dev",
+		"creation": "2025-05-25 15:49:42 PDT",
+		"title": "13-day-notice-template",
+		"author": "Spicer Matthews",
+		"creator": "Preview",
+		"producer": "macOS Version 15.3.2 (Build 24D2082) Quartz PDFContext"
+	},
+	"forms": [
+		{
+			"textfield": [
+				{
+					"pages": [
+						1
+					],
+					"id": "93",
+					"name": "propertyName",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "101",
+					"name": "streetAddress",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "106",
+					"name": "other5",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "110",
+					"name": "date",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "119",
+					"name": "signature",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "111",
+					"name": "pastDueRent",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "114",
+					"name": "otherCharge2",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "115",
+					"name": "otherCharge3",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "120",
+					"name": "agentAddress1",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "128",
+					"name": "lateChargesText",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "130",
+					"name": "firstClassServiceDate",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "103",
+					"name": "state",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "105",
+					"name": "rentAmountDue",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "116",
+					"name": "otherCharge4",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "118",
+					"name": "totalOutstandingAmount",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "122",
+					"name": "agentPhone",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "129",
+					"name": "pastDueRentText",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "123",
+					"name": "agentEmail",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "126",
+					"name": "other2",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "102",
+					"name": "city",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "112",
+					"name": "lateCharges",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "131",
+					"name": "noticeId",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "94",
+					"name": "tenant1",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "104",
+					"name": "zip",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "125",
+					"name": "other3",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "127",
+					"name": "other1",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "95",
+					"name": "tenant4",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "96",
+					"name": "tenant2",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "98",
+					"name": "tenant6",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "100",
+					"name": "unitNumber",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "121",
+					"name": "agentAddress2",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "124",
+					"name": "other4",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "32",
+					"name": "tenant3",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "99",
+					"name": "tenant5",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "113",
+					"name": "otherCharge1",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "117",
+					"name": "otherCharge5",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				}
+			],
+			"checkbox": [
+				{
+					"pages": [
+						1
+					],
+					"id": "132",
+					"name": "checkBoxOtherFormPayment",
+					"default": false,
+					"value": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "108",
+					"name": "RESIDENT",
+					"default": false,
+					"value": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "107",
+					"name": "ON SITE",
+					"default": false,
+					"value": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						1
+					],
+					"id": "109",
+					"name": "MAIN OFFICE IF REQUIRED",
+					"default": false,
+					"value": false,
+					"locked": false
+				}
+			]
+		}
+	]
+}

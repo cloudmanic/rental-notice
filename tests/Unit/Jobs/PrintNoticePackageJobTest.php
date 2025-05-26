@@ -72,7 +72,8 @@ class PrintNoticePackageJobTest extends TestCase
         $notice = Notice::factory()->create(['status' => 'paid']);
 
         // Create a job instance that will have empty env values
-        $job = new class($notice) extends PrintNoticePackageJob {
+        $job = new class($notice) extends PrintNoticePackageJob
+        {
             public function handle(NoticeService $noticeService): void
             {
                 // Override env() calls to return empty
@@ -104,7 +105,7 @@ class PrintNoticePackageJobTest extends TestCase
         Log::shouldReceive('info')
             ->once()
             ->withArgs(function ($message, $context) use ($notice) {
-                return $message === 'Print job skipped - print server configuration not set' 
+                return $message === 'Print job skipped - print server configuration not set'
                     && $context['notice_id'] === $notice->id
                     && $context['host_set'] === false
                     && $context['username_set'] === false;

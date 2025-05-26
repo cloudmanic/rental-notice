@@ -33,6 +33,7 @@ primary_region = 'sea'
   AWS_DEFAULT_REGION = 'us-east-1'
   AWS_BUCKET = 'rental-notice'
   PRINT_SERVER_PRINTER = 'Brother_HL_L2405W'
+  PDFTK_PATH = '/usr/bin/pdftk'
 
 [http_service]
   internal_port = 8080

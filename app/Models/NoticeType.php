@@ -13,6 +13,7 @@ class NoticeType extends Model
         'name',
         'price',
         'plan_date',
+        'template',
     ];
 
     protected $casts = [

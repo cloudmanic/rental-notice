@@ -1024,11 +1024,11 @@ class NoticeServiceTest extends TestCase
             // The error could be about missing files or failed processes
             $message = strtolower($e->getMessage());
             $this->assertTrue(
-                str_contains($message, 'process') || 
+                str_contains($message, 'process') ||
                 str_contains($message, 'failed') ||
                 str_contains($message, 'command') ||
                 str_contains($message, 'pdfcpu'),
-                "Expected error to contain 'process', 'failed', 'command', or 'pdfcpu', but got: " . $e->getMessage()
+                "Expected error to contain 'process', 'failed', 'command', or 'pdfcpu', but got: ".$e->getMessage()
             );
         }
     }

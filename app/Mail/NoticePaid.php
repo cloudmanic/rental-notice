@@ -30,7 +30,7 @@ class NoticePaid extends Mailable
     public function envelope(): Envelope
     {
         $tenantNames = $this->notice->tenants->pluck('full_name')->join(', ');
-        
+
         return new Envelope(
             subject: "Payment Received - Notice for {$tenantNames}",
             bcc: config('constants.oregonpastduerent_com.bcc_email'),
