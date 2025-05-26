@@ -7,8 +7,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Profile Settings - Oregon Past Due Rent')]
 class Edit extends Component
 {
     #[Rule('required|string|max:255')]

@@ -1,6 +1,6 @@
 @extends('layouts.marketing')
 
-@section('title', 'Oregon Past Due Rent - Landlord Notice Service')
+@section('title', 'Oregon Past Due Rent Notices | Legal Landlord Service')
 @section('description', 'Oregon Past Due Rent helps landlords issue legally compliant past-due rent notices with
 professional delivery for just $' . $standardPrice . ' per notice.')
 

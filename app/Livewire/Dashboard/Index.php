@@ -5,9 +5,11 @@ namespace App\Livewire\Dashboard;
 use App\Models\Activity;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[Title('Dashboard - Oregon Past Due Rent')]
 class Index extends Component
 {
     use WithPagination;

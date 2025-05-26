@@ -1,6 +1,6 @@
 @extends('layouts.marketing')
 
-@section('title', 'Frequently Asked Questions - Oregon Past Due Rent')
+@section('title', 'Oregon Landlord Notice FAQs | Past Due Rent Questions')
 @section('description', 'Find answers to common questions about Oregon Past Due Rent notice service, pricing, legal compliance, and the eviction process for Oregon landlords.')
 
 @section('content')

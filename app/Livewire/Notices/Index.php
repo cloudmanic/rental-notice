@@ -6,9 +6,11 @@ use App\Models\Notice;
 use App\Models\NoticeType;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[Title('Notices - Oregon Past Due Rent')]
 class Index extends Component
 {
     use WithPagination;

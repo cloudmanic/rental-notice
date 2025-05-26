@@ -4,8 +4,10 @@ namespace App\Livewire\Notices;
 
 use App\Models\Notice;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Preview Notice - Oregon Past Due Rent')]
 class Preview extends Component
 {
     public Notice $notice;

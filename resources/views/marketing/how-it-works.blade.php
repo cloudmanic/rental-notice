@@ -1,6 +1,6 @@
 @extends('layouts.marketing')
 
-@section('title', 'How It Works - Oregon Past Due Rent')
+@section('title', 'How Oregon Past Due Rent Notices Work | 4 Simple Steps')
 @section('description', 'Learn how Oregon Past Due Rent helps landlords issue legally compliant past-due rent notices in 4 simple steps. From creation to delivery, we handle everything.')
 
 @section('content')

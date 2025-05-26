@@ -5,9 +5,11 @@ namespace App\Livewire\Notices;
 use App\Models\Notice;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+#[Title('Notice Details - Oregon Past Due Rent')]
 class Show extends Component
 {
     use WithFileUploads;

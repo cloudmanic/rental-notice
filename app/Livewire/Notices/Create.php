@@ -11,8 +11,10 @@ use App\Services\ActivityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Create Notice - Oregon Past Due Rent')]
 class Create extends Component
 {
     public $notice = [

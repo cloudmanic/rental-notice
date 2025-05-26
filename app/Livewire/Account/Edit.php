@@ -7,8 +7,10 @@ use App\Services\ActivityService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Account Settings - Oregon Past Due Rent')]
 class Edit extends Component
 {
     public Account $account;

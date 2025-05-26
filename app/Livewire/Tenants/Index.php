@@ -5,10 +5,12 @@ namespace App\Livewire\Tenants;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[Title('Tenants - Oregon Past Due Rent')]
 class Index extends Component
 {
     use WithPagination;

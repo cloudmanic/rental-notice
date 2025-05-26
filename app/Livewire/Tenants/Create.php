@@ -7,8 +7,10 @@ use App\Services\ActivityService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Add Tenant - Oregon Past Due Rent')]
 class Create extends Component
 {
     public $states;

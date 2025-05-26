@@ -1,6 +1,6 @@
 @extends('layouts.marketing')
 
-@section('title', 'Contact Us - Oregon Past Due Rent')
+@section('title', 'Contact Oregon Past Due Rent Notice Service | Get Help')
 @section('description', 'Have questions about Oregon Past Due Rent\'s notice service? Contact our team for assistance
 with past-due rent notices, pricing, or legal requirements.')
 

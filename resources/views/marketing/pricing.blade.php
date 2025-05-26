@@ -1,6 +1,6 @@
 @extends('layouts.marketing')
 
-@section('title', 'Pricing - Oregon Past Due Rent')
+@section('title', 'Oregon Landlord Notice Pricing | $' . $standardPrice . ' Past Due Rent Notices')
 @section('description', 'Simple, transparent pricing for Oregon Past Due Rent notices. Just $' . $standardPrice . ' per
 notice with no subscriptions or hidden fees.')
 

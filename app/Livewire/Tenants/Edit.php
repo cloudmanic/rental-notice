@@ -6,8 +6,10 @@ use App\Models\Tenant;
 use App\Services\ActivityService;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Edit Tenant - Oregon Past Due Rent')]
 class Edit extends Component
 {
     public Tenant $tenant;

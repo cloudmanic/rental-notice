@@ -8,8 +8,10 @@ use App\Models\NoticeType;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Edit Notice - Oregon Past Due Rent')]
 class Edit extends Component
 {
     public $notice;

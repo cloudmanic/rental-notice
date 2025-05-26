@@ -3,9 +3,11 @@
 namespace App\Livewire\Accounts;
 
 use App\Models\Account;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[Title('Manage Accounts - Oregon Past Due Rent')]
 class Index extends Component
 {
     use WithPagination;

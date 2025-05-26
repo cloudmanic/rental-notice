@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Rental Notice') }}</title>
+    <title>@yield('title', 'Oregon Past Due Rent')</title>
 
     <script defer data-domain="oregonpastduerent.com"
         src="https://plausible.io/js/script.pageview-props.revenue.tagged-events.js"></script>
