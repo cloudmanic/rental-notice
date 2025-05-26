@@ -80,7 +80,7 @@ RUN composer install --optimize-autoloader --no-dev \
     \$middleware->trustProxies(at: "*");\
     ' bootstrap/app.php; \ 
     if [ -d .fly ]; then cp .fly/entrypoint.sh /entrypoint; chmod +x /entrypoint; fi; \
-    sed -i 's|php_admin_value\[open_basedir\] = /var/www/html:/dev/stdout:/tmp|php_admin_value[open_basedir] = /var/www/html:/dev/stdout:/tmp:/data/rental-notice.sqlite|' /etc/php/8.2/fpm/pool.d/www.conf
+    sed -i 's|php_admin_value\[open_basedir\] = /var/www/html:/dev/stdout:/tmp|php_admin_value[open_basedir] = /var/www/html:/dev/stdout:/tmp:/data/rental-notice.sqlite:/usr/bin/pdftk|' /etc/php/8.2/fpm/pool.d/www.conf
 
 
 # 5. Setup PDFCPU config (we really do not need to copy it over, as it really wants to write the directory)
