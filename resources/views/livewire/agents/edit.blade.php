@@ -10,13 +10,33 @@
         <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <!-- Name Section -->
             <div class="sm:col-span-4">
-                <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Full name <span
+                <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Company name <span
                         class="text-red-600">*</span></label>
                 <div class="mt-2">
                     <input wire:model.live="name" type="text" id="name"
                         class="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('name') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
                 </div>
                 @error('name') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
+            </div>
+
+            <!-- First Name -->
+            <div class="sm:col-span-3">
+                <label for="first_name" class="block text-sm font-medium leading-6 text-gray-900">First name</label>
+                <div class="mt-2">
+                    <input wire:model.live="first_name" type="text" id="first_name"
+                        class="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('first_name') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
+                </div>
+                @error('first_name') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
+            </div>
+
+            <!-- Last Name -->
+            <div class="sm:col-span-3">
+                <label for="last_name" class="block text-sm font-medium leading-6 text-gray-900">Last name</label>
+                <div class="mt-2">
+                    <input wire:model.live="last_name" type="text" id="last_name"
+                        class="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('last_name') ring-red-300 text-red-900 focus:ring-red-500 @enderror">
+                </div>
+                @error('last_name') <div class="mt-1 text-sm text-red-600">{{ $message }}</div> @enderror
             </div>
 
             <!-- Contact Information -->

@@ -17,6 +17,8 @@ class Agent extends Model
     protected $fillable = [
         'account_id',
         'name',
+        'first_name',
+        'last_name',
         'address_1',
         'address_2',
         'city',

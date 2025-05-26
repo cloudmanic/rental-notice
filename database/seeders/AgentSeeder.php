@@ -20,7 +20,9 @@ class AgentSeeder extends Seeder
             // First account should have one agent
             Agent::factory()->create([
                 'account_id' => $accounts[0]->id,
-                'name' => 'John Smith',
+                'name' => 'Smith & Associates',
+                'first_name' => 'John',
+                'last_name' => 'Smith',
                 'address_1' => '123 Main Street',
                 'address_2' => 'Suite 101',
                 'city' => 'Portland',
@@ -35,7 +37,9 @@ class AgentSeeder extends Seeder
             // Second account should have two agents
             Agent::factory()->create([
                 'account_id' => $accounts[1]->id,
-                'name' => 'Jane Doe',
+                'name' => 'Doe Real Estate LLC',
+                'first_name' => 'Jane',
+                'last_name' => 'Doe',
                 'address_1' => '456 Broadway',
                 'address_2' => null,
                 'city' => 'Seattle',
@@ -47,7 +51,9 @@ class AgentSeeder extends Seeder
 
             Agent::factory()->create([
                 'account_id' => $accounts[1]->id,
-                'name' => 'Robert Johnson',
+                'name' => 'Johnson Property Management',
+                'first_name' => 'Robert',
+                'last_name' => 'Johnson',
                 'address_1' => '789 Park Avenue',
                 'address_2' => 'Apt 303',
                 'city' => 'Bellevue',

@@ -16,6 +16,10 @@ class Edit extends Component
 
     public $name;
 
+    public $first_name;
+
+    public $last_name;
+
     public $email;
 
     public $phone;
@@ -39,6 +43,8 @@ class Edit extends Component
     {
         $this->agent = $agent;
         $this->name = $agent->name;
+        $this->first_name = $agent->first_name;
+        $this->last_name = $agent->last_name;
         $this->email = $agent->email;
         $this->phone = $agent->phone;
         $this->address_1 = $agent->address_1;
@@ -55,6 +61,8 @@ class Edit extends Component
     {
         return [
             'name' => 'required|string|max:255',
+            'first_name' => 'nullable|string|max:255',
+            'last_name' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:12|regex:/^\d{3}-\d{3}-\d{4}$/',
             'address_1' => 'required|string|max:255',

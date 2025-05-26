@@ -102,7 +102,7 @@
                                 <th scope="col"
                                     class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
                                     <button type="button" wire:click="sortBy('name')" class="group inline-flex">
-                                        Name
+                                        Company / Contact
                                         <span class="ml-2 flex-none rounded">
                                             @if($sortField === 'name')
                                             @if($sortDirection === 'asc')
@@ -224,8 +224,13 @@
                         <tbody class="divide-y divide-gray-200 bg-white">
                             @forelse ($agents as $agent)
                             <tr>
-                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                    {{ $agent->name }}
+                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                                    <div class="font-medium text-gray-900">{{ $agent->name }}</div>
+                                    @if($agent->first_name || $agent->last_name)
+                                    <div class="text-gray-500">
+                                        {{ $agent->first_name }} {{ $agent->last_name }}
+                                    </div>
+                                    @endif
                                 </td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                     {{ $agent->email }}

@@ -856,6 +856,16 @@ class NoticeService
         // Get current date
         $currentDate = Carbon::now()->format('F j, Y');
 
+        // Determine how to address the agent
+        $agentSalutation = 'Agent';
+        if ($agent->first_name && $agent->last_name) {
+            $agentSalutation = $agent->first_name.' '.$agent->last_name;
+        } elseif ($agent->first_name) {
+            $agentSalutation = $agent->first_name;
+        } elseif ($agent->last_name) {
+            $agentSalutation = $agent->last_name;
+        }
+
         // Generate PDF from Blade template
         $pdf = Pdf::loadView('pdfs.agent-cover-letter', [
             // Company information
@@ -870,7 +880,7 @@ class NoticeService
             'portalUrl' => $companyConfig['portal_url'],
 
             // Agent information
-            'agentName' => $agent->name,
+            'agentName' => $agentSalutation,
             'agentAddress1' => $agent->address_1,
             'agentAddress2' => $agent->address_2,
             'agentCity' => $agent->city,

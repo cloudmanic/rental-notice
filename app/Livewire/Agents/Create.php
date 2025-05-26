@@ -18,6 +18,12 @@ class Create extends Component
     #[Rule('required|string|max:255')]
     public $name = '';
 
+    #[Rule('nullable|string|max:255')]
+    public $first_name = '';
+
+    #[Rule('nullable|string|max:255')]
+    public $last_name = '';
+
     #[Rule('nullable|email|max:255')]
     public $email = '';
 
