@@ -379,6 +379,16 @@ class NoticeService
     public function markAsServed($notice)
     {
         $notice->update(['status' => Notice::STATUS_SERVED]);
+
+        // Log the notice served activity
+        $tenantNames = $notice->tenants->pluck('full_name')->join(', ');
+        ActivityService::log(
+            "{$notice->noticeType->name} notice to {$tenantNames} has been served.",
+            null,
+            $notice->id,
+            null,
+            'Notice'
+        );
         // Additional logic...
     }
 

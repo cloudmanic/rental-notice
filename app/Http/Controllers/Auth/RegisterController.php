@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Account;
 use App\Models\User;
+use App\Services\ActivityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -49,6 +50,15 @@ class RegisterController extends Controller
 
                 // Log the user in
                 Auth::login($user);
+
+                // Log the registration activity
+                ActivityService::log(
+                    "{$user->first_name} {$user->last_name} created a new account.",
+                    null,
+                    null,
+                    null,
+                    'User'
+                );
 
                 return redirect()->route('dashboard')->with('success', 'Account created successfully!');
             });

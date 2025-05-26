@@ -3,6 +3,7 @@
 namespace App\Livewire\Notices;
 
 use App\Models\Notice;
+use App\Services\ActivityService;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -61,6 +62,16 @@ class Show extends Component
             'certificate_pdf' => $path,
             'status' => Notice::STATUS_SERVED, // We know once we update the certificate, the status is served
         ]);
+
+        // Log the notice served activity
+        $tenantNames = $this->notice->tenants->pluck('full_name')->join(', ');
+        ActivityService::log(
+            "{$this->notice->noticeType->name} notice to {$tenantNames} has been served.",
+            null,
+            $this->notice->id,
+            null,
+            'Notice'
+        );
 
         Log::info('Certificate PDF uploaded for notice ID: '.$this->notice->id);
 

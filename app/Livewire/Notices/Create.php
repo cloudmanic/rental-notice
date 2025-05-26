@@ -379,6 +379,16 @@ class Create extends Component
             $notice->tenants()->attach($tenant['id']);
         }
 
+        // Log the notice creation activity
+        $tenantNames = $notice->tenants->pluck('full_name')->join(', ');
+        ActivityService::log(
+            "A {$noticeType->name} notice was created for {$tenantNames}.",
+            null,
+            $notice->id,
+            null,
+            'Notice'
+        );
+
         // Dispatch job to generate the PDF with watermark (draft) before payment
         GenerateNoticePdfJob::dispatch($notice);
 

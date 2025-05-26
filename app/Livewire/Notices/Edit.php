@@ -6,6 +6,7 @@ use App\Models\Agent;
 use App\Models\Notice;
 use App\Models\NoticeType;
 use App\Models\Tenant;
+use App\Services\ActivityService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -275,6 +276,16 @@ class Edit extends Component
         // Sync tenants
         $tenantIds = array_column($this->selectedTenants, 'id');
         $noticeModel->tenants()->sync($tenantIds);
+
+        // Log the notice update activity
+        $tenantNames = $noticeModel->tenants->pluck('full_name')->join(', ');
+        ActivityService::log(
+            "{$noticeModel->noticeType->name} notice for {$tenantNames} was updated.",
+            null,
+            $noticeModel->id,
+            null,
+            'Notice'
+        );
 
         // Redirect to the notice details page
         return redirect()->route('notices.preview', $this->notice['id'])

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\GenerateNoticePdfJob;
 use App\Models\Notice;
 use App\Notifications\NoticePaid;
+use App\Services\ActivityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -101,6 +102,16 @@ class StripeCheckoutController extends Controller
         }
         $notice->status = Notice::STATUS_SERVICE_PENDING;
         $notice->save();
+
+        // Log the payment activity
+        $tenantNames = $notice->tenants->pluck('full_name')->join(', ');
+        ActivityService::log(
+            "Payment received for {$notice->noticeType->name} notice to {$tenantNames}.",
+            null,
+            $notice->id,
+            null,
+            'Notice'
+        );
 
         // Send notices that payment was successful. Email to user, slack to us.
         $user = $request->user();
