@@ -84,14 +84,19 @@ class DateService
     }
 
     /**
-     * Calculate the service date (15 days from mailing date)
+     * Calculate the service date based on notice type and mailing date
      *
      * @param  Carbon  $mailingDate  The mailing date
+     * @param  int  $noticeDays  The number of days for the notice (10 or 13)
      * @return Carbon The service date
      */
-    public function calculateServiceDate(Carbon $mailingDate): Carbon
+    public function calculateServiceDate(Carbon $mailingDate, int $noticeDays = 10): Carbon
     {
-        // Add 15 days for service (1 day processing + 4 days mailing + 10 days notice period)
-        return $mailingDate->copy()->addDays(15);
+        // Skip the day of mailing (start counting from next day)
+        // Add the notice period (10 or 13 days)
+        // Add 4 days for mailing
+        $totalDays = 1 + $noticeDays + 4;
+
+        return $mailingDate->copy()->addDays($totalDays);
     }
 }

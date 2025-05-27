@@ -153,8 +153,15 @@ class NoticeService
         $updateCheckbox('checkBoxFirstClass', true);
         $updateCheckbox('checkBoxOtherFormPayment', $notice->payment_other_means);
 
+        // Extract the notice period from the notice type name (10-Day or 13-Day)
+        // This matches patterns like "10-Day Notice..." or "13-Day Notice..."
+        $noticeDays = 10; // Default to 10 days
+        if (preg_match('/(\d+)-Day/i', $notice->noticeType->name, $matches)) {
+            $noticeDays = (int) $matches[1];
+        }
+
         // Calculate the serve by date using DateService
-        $serveByDate = $this->dateService->calculateServiceDate($postedDate);
+        $serveByDate = $this->dateService->calculateServiceDate($postedDate, $noticeDays);
 
         // Service date information - just using current date for now, these should be updated when services actually happen
         // $updateTextField('personalServiceDate', $currentDate);

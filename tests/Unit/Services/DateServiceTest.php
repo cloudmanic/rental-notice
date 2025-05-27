@@ -99,13 +99,40 @@ class DateServiceTest extends TestCase
     }
 
     /**
-     * Test calculateServiceDate adds 15 days
+     * Test calculateServiceDate for 10-day notice
      */
-    public function test_calculate_service_date()
+    public function test_calculate_service_date_for_10_day_notice()
+    {
+        $mailingDate = Carbon::parse('2025-01-24');
+        $serviceDate = $this->dateService->calculateServiceDate($mailingDate, 10);
+
+        // 1 day (skip mailing day) + 10 days (notice period) + 4 days (mailing) = 15 days
+        $this->assertEquals('2025-02-08', $serviceDate->format('Y-m-d'));
+        $this->assertEquals(15, $mailingDate->diffInDays($serviceDate));
+    }
+
+    /**
+     * Test calculateServiceDate for 13-day notice
+     */
+    public function test_calculate_service_date_for_13_day_notice()
+    {
+        $mailingDate = Carbon::parse('2025-01-24');
+        $serviceDate = $this->dateService->calculateServiceDate($mailingDate, 13);
+
+        // 1 day (skip mailing day) + 13 days (notice period) + 4 days (mailing) = 18 days
+        $this->assertEquals('2025-02-11', $serviceDate->format('Y-m-d'));
+        $this->assertEquals(18, $mailingDate->diffInDays($serviceDate));
+    }
+
+    /**
+     * Test calculateServiceDate defaults to 10-day notice
+     */
+    public function test_calculate_service_date_defaults_to_10_day()
     {
         $mailingDate = Carbon::parse('2025-01-24');
         $serviceDate = $this->dateService->calculateServiceDate($mailingDate);
 
+        // Should default to 10-day notice calculation
         $this->assertEquals('2025-02-08', $serviceDate->format('Y-m-d'));
         $this->assertEquals(15, $mailingDate->diffInDays($serviceDate));
     }
