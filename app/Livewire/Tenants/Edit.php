@@ -82,7 +82,7 @@ class Edit extends Component
 
         // Log the tenant update activity
         ActivityService::log(
-            "{name}'s information was updated.",
+            "Tenant {$this->tenant->full_name}'s information was updated.",
             $this->tenant->id,
             null,
             null,
@@ -107,8 +107,18 @@ class Edit extends Component
 
     public function delete(): void
     {
+        // Check if tenant has associated notices
+        if ($this->tenant->notices()->exists()) {
+            session()->flash('message', 'Cannot delete this tenant because they have associated notices.');
+            session()->flash('message-type', 'error');
+            $this->showDeleteModal = false;
+
+            $this->redirect(route('tenants.index'), navigate: true);
+
+            return;
+        }
+
         // Save tenant information before deletion
-        $tenantId = $this->tenant->id;
         $tenantName = $this->tenant->full_name;
 
         $this->tenant->delete();

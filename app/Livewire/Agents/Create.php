@@ -60,7 +60,7 @@ class Create extends Component
         $agent->save();
 
         // Log the agent creation activity
-        ActivityService::log('{name} was added as a new agent.', null, null, $agent->id, 'Agent');
+        ActivityService::log("Agent {$agent->name} was added.", null, null, $agent->id, 'Agent');
 
         session()->flash('message', 'Agent added successfully.');
         session()->flash('message-type', 'success');

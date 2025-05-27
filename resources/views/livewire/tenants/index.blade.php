@@ -1,22 +1,29 @@
 <div>
     @if ($message)
-    <div class="rounded-md bg-green-50 p-4 mb-4">
+    <div class="rounded-md {{ $messageType === 'error' ? 'bg-red-50' : 'bg-green-50' }} p-4 mb-4">
         <div class="flex">
             <div class="flex-shrink-0">
+                @if($messageType === 'error')
+                <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                @else
                 <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
+                @endif
             </div>
             <div class="ml-3">
-                <p class="text-sm font-medium text-green-800">
+                <p class="text-sm font-medium {{ $messageType === 'error' ? 'text-red-800' : 'text-green-800' }}">
                     {{ $message }}
                 </p>
             </div>
             <div class="ml-auto pl-3">
                 <div class="-mx-1.5 -my-1.5">
                     <button type="button" wire:click="clearMessage"
-                        class="inline-flex rounded-md p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600">
+                        class="inline-flex rounded-md p-1.5 {{ $messageType === 'error' ? 'text-red-500 hover:bg-red-100 focus:ring-offset-red-50 focus:ring-red-600' : 'text-green-500 hover:bg-green-100 focus:ring-offset-green-50 focus:ring-green-600' }} focus:outline-none focus:ring-2 focus:ring-offset-2">
                         <span class="sr-only">Dismiss</span>
                         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor" aria-hidden="true">

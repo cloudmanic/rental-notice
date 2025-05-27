@@ -110,7 +110,7 @@ class Create extends Component
 
         // Log the tenant creation activity
         ActivityService::log(
-            '{name} was added as a new tenant.',
+            "Tenant {$tenant->full_name} was added.",
             $tenant->id,
             null,
             null,

@@ -389,6 +389,50 @@ class TenantFeatureTest extends TestCase
     }
 
     #[Test]
+    public function users_cannot_delete_tenant_with_associated_notices()
+    {
+        $this->actingAs($this->user);
+
+        $tenant = Tenant::factory()->create([
+            'account_id' => $this->account->id,
+        ]);
+
+        // Create a notice type if it doesn't exist
+        $noticeType = \App\Models\NoticeType::firstOrCreate(
+            ['id' => 1],
+            [
+                'name' => '10 Day Notice',
+                'price' => 50.00,
+                'plan_date' => '2025-04-10',
+            ]
+        );
+
+        // Create a notice and associate it with this tenant
+        $notice = \App\Models\Notice::factory()->create([
+            'account_id' => $this->account->id,
+            'user_id' => $this->user->id,
+            'agent_id' => \App\Models\Agent::factory()->create(['account_id' => $this->account->id])->id,
+            'notice_type_id' => $noticeType->id,
+        ]);
+
+        // Attach tenant to notice through pivot table
+        $notice->tenants()->attach($tenant->id);
+
+        Livewire::test(Edit::class, ['tenant' => $tenant])
+            ->call('confirmDelete')
+            ->assertSet('showDeleteModal', true)
+            ->call('delete')
+            ->assertRedirect(route('tenants.index'))
+            ->assertSessionHas('message', 'Cannot delete this tenant because they have associated notices.')
+            ->assertSessionHas('message-type', 'error');
+
+        // Assert the tenant still exists in the database
+        $this->assertDatabaseHas('tenants', [
+            'id' => $tenant->id,
+        ]);
+    }
+
+    #[Test]
     public function users_cannot_access_other_accounts_tenants()
     {
         $this->actingAs($this->user);

@@ -35,4 +35,12 @@ class Agent extends Model
     {
         return $this->belongsTo(Account::class);
     }
+
+    /**
+     * Get the notices associated with this agent.
+     */
+    public function notices()
+    {
+        return $this->hasMany(Notice::class);
+    }
 }

@@ -95,7 +95,7 @@ class Edit extends Component
         $this->agent->update($validated);
 
         // Log the agent update activity
-        ActivityService::log('{name} agent information was updated.', null, null, $this->agent->id, 'Agent');
+        ActivityService::log("Agent {$this->agent->name} information was updated.", null, null, $this->agent->id, 'Agent');
 
         session()->flash('message', 'Agent successfully updated.');
         session()->flash('message-type', 'success');
@@ -115,6 +115,17 @@ class Edit extends Component
 
     public function delete(): void
     {
+        // Check if agent has associated notices
+        if ($this->agent->notices()->exists()) {
+            session()->flash('message', 'Cannot delete this agent because it has associated notices.');
+            session()->flash('message-type', 'error');
+            $this->showDeleteModal = false;
+
+            $this->redirect(route('agents.index'), navigate: true);
+
+            return;
+        }
+
         // Capture the agent's name before deletion
         $agentName = $this->agent->name;
 

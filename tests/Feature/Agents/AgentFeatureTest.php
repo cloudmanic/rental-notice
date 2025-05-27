@@ -316,6 +316,47 @@ class AgentFeatureTest extends TestCase
     }
 
     #[Test]
+    public function users_cannot_delete_agent_with_associated_notices()
+    {
+        $this->actingAs($this->user);
+
+        $agent = Agent::factory()->create([
+            'account_id' => $this->account->id,
+        ]);
+
+        // Create a notice type if it doesn't exist
+        $noticeType = \App\Models\NoticeType::firstOrCreate(
+            ['id' => 1],
+            [
+                'name' => '10 Day Notice',
+                'price' => 50.00,
+                'plan_date' => '2025-04-10',
+            ]
+        );
+
+        // Create a notice associated with this agent
+        $notice = \App\Models\Notice::factory()->create([
+            'account_id' => $this->account->id,
+            'agent_id' => $agent->id,
+            'user_id' => $this->user->id,
+            'notice_type_id' => $noticeType->id,
+        ]);
+
+        Livewire::test(Edit::class, ['agent' => $agent])
+            ->call('confirmDelete')
+            ->assertSet('showDeleteModal', true)
+            ->call('delete')
+            ->assertRedirect(route('agents.index'))
+            ->assertSessionHas('message', 'Cannot delete this agent because it has associated notices.')
+            ->assertSessionHas('message-type', 'error');
+
+        // Assert the agent still exists in the database
+        $this->assertDatabaseHas('agents', [
+            'id' => $agent->id,
+        ]);
+    }
+
+    #[Test]
     public function users_cannot_access_other_accounts_agents()
     {
         $this->actingAs($this->user);
