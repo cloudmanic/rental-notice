@@ -3,6 +3,7 @@
 namespace App\Livewire\Notices;
 
 use App\Models\Notice;
+use App\Notifications\NoticeServed;
 use App\Services\ActivityService;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Layout;
@@ -67,6 +68,18 @@ class Show extends Component
         $tenantNames = $this->notice->tenants->pluck('full_name')->join(', ');
         ActivityService::log(
             "{$this->notice->noticeType->name} notice to {$tenantNames} has been served.",
+            null,
+            $this->notice->id,
+            null,
+            'Notice'
+        );
+
+        // Send email notification to the user
+        $this->notice->user->notify(new NoticeServed($this->notice));
+
+        // Log the email notification activity
+        ActivityService::log(
+            "Notice served confirmation email sent to {$this->notice->user->email}.",
             null,
             $this->notice->id,
             null,
