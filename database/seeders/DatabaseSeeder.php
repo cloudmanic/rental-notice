@@ -21,9 +21,7 @@ class DatabaseSeeder extends Seeder
         DB::beginTransaction();
 
         try {
-            $this->call([
-                NoticeTypeSeeder::class,
-            ]);
+            $this->call([NoticeTypeSeeder::class]);
 
             // Create first account or find if it exists
             $firstAccount = Account::firstOrCreate(
@@ -44,14 +42,53 @@ class DatabaseSeeder extends Seeder
                 ]
             );
 
-            // Update the type if user already exists
-            if ($firstOwner->type !== User::TYPE_SUPER_ADMIN) {
-                $firstOwner->update(['type' => User::TYPE_SUPER_ADMIN]);
-            }
-
             // Attach user to account if not already attached
             if (! $firstAccount->users()->where('user_id', $firstOwner->id)->exists()) {
                 $firstAccount->users()->attach($firstOwner, ['is_owner' => true]);
+            }
+
+            // Create admin@cloudmanic.com user
+            $adminUser = User::firstOrCreate(
+                ['email' => 'admin@cloudmanic.com'],
+                [
+                    'first_name' => 'Admin',
+                    'last_name' => 'User',
+                    'password' => Hash::make('foobar'),
+                    'email_verified_at' => now(),
+                    'type' => User::TYPE_ADMIN,
+                ]
+            );
+
+            // Update type if the user already exists
+            if ($adminUser->type !== User::TYPE_ADMIN) {
+                $adminUser->update(['type' => User::TYPE_ADMIN]);
+            }
+
+            // Attach admin user to account if not already attached
+            if (! $firstAccount->users()->where('user_id', $adminUser->id)->exists()) {
+                $firstAccount->users()->attach($adminUser, ['is_owner' => false]);
+            }
+
+            // Create contributor@cloudmanic.com user
+            $contributorUser = User::firstOrCreate(
+                ['email' => 'contributor@cloudmanic.com'],
+                [
+                    'first_name' => 'Contributor',
+                    'last_name' => 'User',
+                    'password' => Hash::make('foobar'),
+                    'email_verified_at' => now(),
+                    'type' => User::TYPE_CONTRIBUTOR,
+                ]
+            );
+
+            // Update type if the user already exists
+            if ($contributorUser->type !== User::TYPE_CONTRIBUTOR) {
+                $contributorUser->update(['type' => User::TYPE_CONTRIBUTOR]);
+            }
+
+            // Attach contributor user to account if not already attached
+            if (! $firstAccount->users()->where('user_id', $contributorUser->id)->exists()) {
+                $firstAccount->users()->attach($contributorUser, ['is_owner' => false]);
             }
 
             // Create or update 5 additional users for first account with known password
@@ -212,9 +249,7 @@ class DatabaseSeeder extends Seeder
             $thirdAccountTenants = $this->createTenantsForAccount($thirdAccount, 7);
 
             // Create agents for each account using the AgentSeeder
-            $this->call([
-                AgentSeeder::class,
-            ]);
+            $this->call([AgentSeeder::class]);
 
             // Get all agents
             $agents = [
@@ -287,6 +322,27 @@ class DatabaseSeeder extends Seeder
                             'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
                         ]);
 
+                        // Add PDF fields based on status
+                        $pdfFields = [];
+
+                        // Always add draft PDF
+                        $pdfFields['draft_pdf'] = '1/notice_draft_162.pdf';
+
+                        // Add final PDF if status is service_pending or served
+                        if (in_array($notice->status, [Notice::STATUS_SERVICE_PENDING, Notice::STATUS_SERVED])) {
+                            $pdfFields['final_pdf'] = '1/notice_final_162.pdf';
+                        }
+
+                        // Add certificate PDF if status is served
+                        if ($notice->status === Notice::STATUS_SERVED) {
+                            $pdfFields['certificate_pdf'] = '1/certificate_162.pdf';
+                        }
+
+                        // Update the notice with PDF fields
+                        if (! empty($pdfFields)) {
+                            $notice->update($pdfFields);
+                        }
+
                         // Attach the tenant to the notice without is_primary flag
                         $notice->tenants()->attach($tenant->id);
 
@@ -300,9 +356,7 @@ class DatabaseSeeder extends Seeder
             }
 
             // Call ActivitySeeder after creating notices
-            $this->call([
-                ActivitySeeder::class,
-            ]);
+            $this->call([ActivitySeeder::class]);
 
             // Commit the transaction
             DB::commit();
