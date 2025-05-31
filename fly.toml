@@ -31,7 +31,7 @@ primary_region = 'sea'
   DB_CONNECTION = 'sqlite'
   DB_DATABASE = '/data/rental-notice.sqlite'
   AWS_DEFAULT_REGION = 'us-east-1'
-  AWS_BUCKET = 'rental-notice'
+  AWS_BUCKET = 'rental-notice-dev'
   PRINT_SERVER_PRINTER = 'Brother_HL_L2405W'
   PDFTK_PATH = '/usr/bin/pdftk'
 
