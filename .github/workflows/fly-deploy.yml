@@ -19,6 +19,14 @@ jobs:
           extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, json, mbstring, pdo
           coverage: none
       
+      - name: Install pdfcpu
+        run: |
+          wget https://github.com/pdfcpu/pdfcpu/releases/download/v0.9.1/pdfcpu_0.9.1_Linux_x86_64.tar.gz
+          tar -xzf pdfcpu_0.9.1_Linux_x86_64.tar.gz
+          sudo mv pdfcpu /usr/local/bin/
+          sudo chmod +x /usr/local/bin/pdfcpu
+          pdfcpu version
+      
       - name: Get composer cache directory
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
