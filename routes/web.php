@@ -40,6 +40,7 @@ Route::get('/faq', [MarketingController::class, 'faq'])->name('marketing.faq');
 Route::get('/contact', [MarketingController::class, 'contact'])->name('marketing.contact');
 Route::post('/contact', [MarketingController::class, 'sendContactForm'])->name('marketing.contact.send');
 Route::get('/about', [MarketingController::class, 'about'])->name('marketing.about');
+Route::get('/sitemap', [MarketingController::class, 'sitemap'])->name('marketing.sitemap');
 Route::get('/testimonials', [MarketingController::class, 'testimonials'])->name('marketing.testimonials');
 Route::get('/privacy-policy', [MarketingController::class, 'privacyPolicy'])->name('marketing.privacy-policy');
 Route::get('/terms', [MarketingController::class, 'terms'])->name('marketing.terms');

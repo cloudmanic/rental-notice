@@ -177,4 +177,18 @@ class MarketingController extends Controller
         // For now, we'll just redirect with a success message
         return redirect()->back()->with('success', 'Thank you for subscribing to our newsletter!');
     }
+
+    /**
+     * Display the sitemap page
+     */
+    public function sitemap()
+    {
+        $standardPrice = $this->pricingService->getStandardPrice();
+        $bulkPrices = $this->pricingService->getBulkPrices();
+
+        return view('marketing.sitemap', [
+            'standardPrice' => $standardPrice,
+            'bulkPrices' => $bulkPrices,
+        ]);
+    }
 }

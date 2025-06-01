@@ -235,6 +235,12 @@
                                         About Us
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{{ route('marketing.sitemap') }}"
+                                        class="text-base text-gray-300 hover:text-white">
+                                        Sitemap
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
