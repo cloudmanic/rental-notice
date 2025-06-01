@@ -3,7 +3,7 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
-use Illuminate\Auth\Notifications\ResetPassword;
+use App\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
@@ -28,9 +28,15 @@ class PasswordResetTest extends TestCase
     {
         Notification::fake();
 
+        // Create an account first
+        $account = \App\Models\Account::factory()->create();
+
         $user = User::factory()->create([
             'email' => 'test@example.com',
         ]);
+
+        // Attach the user to the account
+        $user->accounts()->attach($account->id);
 
         $response = $this->post(route('password.email'), [
             'email' => 'test@example.com',

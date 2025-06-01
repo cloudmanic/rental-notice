@@ -58,8 +58,10 @@ class PrintPackageTest extends TestCase
         $this->notice->tenants()->attach([$tenant1->id, $tenant2->id]);
     }
 
-    /** @test */
-    public function regular_user_cannot_access_agent_cover_letter()
+    /**
+     * Test that regular user cannot access agent cover letter.
+     */
+    public function test_regular_user_cannot_access_agent_cover_letter()
     {
         $response = $this->actingAs($this->user)
             ->get(route('notices.agent-cover-letter', $this->notice));
@@ -67,22 +69,26 @@ class PrintPackageTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
-    public function super_admin_can_access_agent_cover_letter()
+    /**
+     * Test that super admin can access agent cover letter.
+     */
+    public function test_super_admin_can_access_agent_cover_letter()
     {
         $response = $this->actingAs($this->superAdmin)
             ->get(route('notices.agent-cover-letter', $this->notice));
 
         // Should be successful (200) or server error if PDF generation fails
-        $this->assertContains($response->status(), [200, 500]);
+        $this->assertContains($response->getStatusCode(), [200, 500]);
 
-        if ($response->status() === 200) {
+        if ($response->getStatusCode() === 200) {
             $response->assertHeader('content-type', 'application/pdf');
         }
     }
 
-    /** @test */
-    public function regular_user_cannot_access_tenant_address_sheets()
+    /**
+     * Test that regular user cannot access tenant address sheets.
+     */
+    public function test_regular_user_cannot_access_tenant_address_sheets()
     {
         $response = $this->actingAs($this->user)
             ->get(route('notices.tenant-address-sheets', $this->notice));
@@ -90,22 +96,26 @@ class PrintPackageTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
-    public function super_admin_can_access_tenant_address_sheets()
+    /**
+     * Test that super admin can access tenant address sheets.
+     */
+    public function test_super_admin_can_access_tenant_address_sheets()
     {
         $response = $this->actingAs($this->superAdmin)
             ->get(route('notices.tenant-address-sheets', $this->notice));
 
         // Should be successful or server error if PDF generation fails
-        $this->assertContains($response->status(), [200, 500]);
+        $this->assertContains($response->getStatusCode(), [200, 500]);
 
-        if ($response->status() === 200) {
+        if ($response->getStatusCode() === 200) {
             $response->assertHeader('content-type', 'application/pdf');
         }
     }
 
-    /** @test */
-    public function regular_user_cannot_access_agent_address_sheet()
+    /**
+     * Test that regular user cannot access agent address sheet.
+     */
+    public function test_regular_user_cannot_access_agent_address_sheet()
     {
         $response = $this->actingAs($this->user)
             ->get(route('notices.agent-address-sheet', $this->notice));
@@ -113,22 +123,26 @@ class PrintPackageTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
-    public function super_admin_can_access_agent_address_sheet()
+    /**
+     * Test that super admin can access agent address sheet.
+     */
+    public function test_super_admin_can_access_agent_address_sheet()
     {
         $response = $this->actingAs($this->superAdmin)
             ->get(route('notices.agent-address-sheet', $this->notice));
 
         // Should be successful or server error if PDF generation fails
-        $this->assertContains($response->status(), [200, 500]);
+        $this->assertContains($response->getStatusCode(), [200, 500]);
 
-        if ($response->status() === 200) {
+        if ($response->getStatusCode() === 200) {
             $response->assertHeader('content-type', 'application/pdf');
         }
     }
 
-    /** @test */
-    public function regular_user_cannot_access_complete_print_package()
+    /**
+     * Test that regular user cannot access complete print package.
+     */
+    public function test_regular_user_cannot_access_complete_print_package()
     {
         $response = $this->actingAs($this->user)
             ->get(route('notices.complete-print-package', $this->notice));
@@ -136,16 +150,18 @@ class PrintPackageTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
-    public function super_admin_can_access_complete_print_package()
+    /**
+     * Test that super admin can access complete print package.
+     */
+    public function test_super_admin_can_access_complete_print_package()
     {
         $response = $this->actingAs($this->superAdmin)
             ->get(route('notices.complete-print-package', $this->notice));
 
         // Should be successful or server error if PDF generation fails
-        $this->assertContains($response->status(), [200, 500]);
+        $this->assertContains($response->getStatusCode(), [200, 500]);
 
-        if ($response->status() === 200) {
+        if ($response->getStatusCode() === 200) {
             $response->assertHeader('content-type', 'application/pdf');
             // Complete print package should always download
             $response->assertHeader('content-disposition');
@@ -153,20 +169,24 @@ class PrintPackageTest extends TestCase
         }
     }
 
-    /** @test */
-    public function download_parameter_forces_download_for_cover_letter()
+    /**
+     * Test that download parameter forces download for cover letter.
+     */
+    public function test_download_parameter_forces_download_for_cover_letter()
     {
         $response = $this->actingAs($this->superAdmin)
             ->get(route('notices.agent-cover-letter', $this->notice).'?download=true');
 
-        if ($response->status() === 200) {
+        if ($response->getStatusCode() === 200) {
             $response->assertHeader('content-disposition');
             $this->assertStringContainsString('attachment', $response->headers->get('content-disposition'));
         }
     }
 
-    /** @test */
-    public function impersonating_user_can_access_print_documents()
+    /**
+     * Test that impersonating user can access print documents.
+     */
+    public function test_impersonating_user_can_access_print_documents()
     {
         // Set impersonation session
         session(['impersonating' => true]);
@@ -175,6 +195,6 @@ class PrintPackageTest extends TestCase
             ->get(route('notices.agent-cover-letter', $this->notice));
 
         // Should be able to access when impersonating
-        $this->assertContains($response->status(), [200, 500]);
+        $this->assertContains($response->getStatusCode(), [200, 500]);
     }
 }

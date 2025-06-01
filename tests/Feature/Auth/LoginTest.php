@@ -23,10 +23,16 @@ class LoginTest extends TestCase
     #[Test]
     public function user_can_login_with_correct_credentials()
     {
+        // Create an account first
+        $account = \App\Models\Account::factory()->create();
+
         $user = User::factory()->create([
             'email' => 'test@example.com',
             'password' => bcrypt('password123'),
         ]);
+
+        // Attach the user to the account
+        $user->accounts()->attach($account->id);
 
         $response = $this->post(route('login'), [
             'email' => 'test@example.com',
@@ -40,10 +46,16 @@ class LoginTest extends TestCase
     #[Test]
     public function user_cannot_login_with_incorrect_password()
     {
+        // Create an account first
+        $account = \App\Models\Account::factory()->create();
+
         $user = User::factory()->create([
             'email' => 'test@example.com',
             'password' => bcrypt('password123'),
         ]);
+
+        // Attach the user to the account
+        $user->accounts()->attach($account->id);
 
         $response = $this->post(route('login'), [
             'email' => 'test@example.com',
@@ -69,7 +81,13 @@ class LoginTest extends TestCase
     #[Test]
     public function user_can_logout()
     {
+        // Create an account first
+        $account = \App\Models\Account::factory()->create();
+
         $user = User::factory()->create();
+
+        // Attach the user to the account
+        $user->accounts()->attach($account->id);
 
         $this->actingAs($user);
         $this->assertAuthenticatedAs($user);
@@ -83,10 +101,16 @@ class LoginTest extends TestCase
     #[Test]
     public function remember_me_functionality_works()
     {
+        // Create an account first
+        $account = \App\Models\Account::factory()->create();
+
         $user = User::factory()->create([
             'email' => 'test@example.com',
             'password' => bcrypt('password123'),
         ]);
+
+        // Attach the user to the account
+        $user->accounts()->attach($account->id);
 
         $response = $this->post(route('login'), [
             'email' => 'test@example.com',

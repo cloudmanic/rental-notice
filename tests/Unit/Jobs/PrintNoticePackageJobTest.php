@@ -8,7 +8,7 @@ use App\Services\NoticeService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
 use Mockery;
-use Symfony\Component\Process\Process;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class PrintNoticePackageJobTest extends TestCase
@@ -24,7 +24,8 @@ class PrintNoticePackageJobTest extends TestCase
     /**
      * Test that the print job handles successfully.
      */
-    public function test_print_job_handles_successfully()
+    #[Test]
+    public function print_job_handles_successfully()
     {
         // Create a notice
         $notice = Notice::factory()->create(['status' => 'paid']);
@@ -38,12 +39,25 @@ class PrintNoticePackageJobTest extends TestCase
 
         $this->app->instance(NoticeService::class, $noticeService);
 
-        // Mock Process for SCP and SSH commands
-        $processMock = Mockery::mock('overload:'.Process::class);
-        $processMock->shouldReceive('setTimeout')->andReturnSelf();
-        $processMock->shouldReceive('run')->andReturnSelf();
-        $processMock->shouldReceive('isSuccessful')->andReturn(true);
-        $processMock->shouldReceive('getErrorOutput')->andReturn('');
+        // Create test job that skips actual Process execution
+        $job = new class($notice) extends PrintNoticePackageJob
+        {
+            protected function executeProcess(array $command): bool
+            {
+                // Skip actual process execution in tests
+                return true;
+            }
+
+            protected function getHost(): string
+            {
+                return 'test-host';
+            }
+
+            protected function getUsername(): string
+            {
+                return 'test-user';
+            }
+        };
 
         // Mock Log facade
         Log::shouldReceive('info')->zeroOrMoreTimes();
@@ -52,7 +66,6 @@ class PrintNoticePackageJobTest extends TestCase
         file_put_contents('/tmp/test.pdf', 'test content');
 
         // Execute the job
-        $job = new PrintNoticePackageJob($notice);
         $job->handle($noticeService);
 
         // Clean up
@@ -66,7 +79,8 @@ class PrintNoticePackageJobTest extends TestCase
     /**
      * Test that the print job skips when environment variables are not set.
      */
-    public function test_print_job_skips_when_env_not_set()
+    #[Test]
+    public function print_job_skips_when_env_not_set()
     {
         // Create a notice
         $notice = Notice::factory()->create(['status' => 'paid']);
@@ -74,13 +88,22 @@ class PrintNoticePackageJobTest extends TestCase
         // Create a job instance that will have empty env values
         $job = new class($notice) extends PrintNoticePackageJob
         {
+            protected function getHost(): string
+            {
+                return '';
+            }
+
+            protected function getUsername(): string
+            {
+                return '';
+            }
+
             public function handle(NoticeService $noticeService): void
             {
-                // Override env() calls to return empty
-                $host = '';
-                $username = '';
-
                 // Check if required environment variables are set
+                $host = $this->getHost();
+                $username = $this->getUsername();
+
                 if (empty($host) || empty($username)) {
                     Log::info('Print job skipped - print server configuration not set', [
                         'notice_id' => $this->notice->id,
@@ -120,7 +143,8 @@ class PrintNoticePackageJobTest extends TestCase
     /**
      * Test that the print job handles SCP failure.
      */
-    public function test_print_job_handles_scp_failure()
+    #[Test]
+    public function print_job_handles_scp_failure()
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Failed to copy file to print server');
@@ -136,12 +160,38 @@ class PrintNoticePackageJobTest extends TestCase
 
         $this->app->instance(NoticeService::class, $noticeService);
 
-        // Mock Process to fail on SCP
-        $processMock = Mockery::mock('overload:'.Process::class);
-        $processMock->shouldReceive('setTimeout')->andReturnSelf();
-        $processMock->shouldReceive('run')->andReturnSelf();
-        $processMock->shouldReceive('isSuccessful')->andReturn(false);
-        $processMock->shouldReceive('getErrorOutput')->andReturn('Connection refused');
+        // Create test job that simulates SCP failure
+        $job = new class($notice) extends PrintNoticePackageJob
+        {
+            protected function executeProcess(array $command): bool
+            {
+                // Simulate SCP failure
+                if (str_contains($command[0], 'scp')) {
+                    $this->lastError = 'Connection refused';
+
+                    return false;
+                }
+
+                return true;
+            }
+
+            protected function getHost(): string
+            {
+                return 'test-host';
+            }
+
+            protected function getUsername(): string
+            {
+                return 'test-user';
+            }
+
+            protected string $lastError = '';
+
+            protected function getLastError(): string
+            {
+                return $this->lastError;
+            }
+        };
 
         // Mock Log facade
         Log::shouldReceive('info')->zeroOrMoreTimes();
@@ -151,7 +201,6 @@ class PrintNoticePackageJobTest extends TestCase
         file_put_contents('/tmp/test.pdf', 'test content');
 
         // Execute the job
-        $job = new PrintNoticePackageJob($notice);
         $job->handle($noticeService);
     }
 }

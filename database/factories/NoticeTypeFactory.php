@@ -16,6 +16,7 @@ class NoticeTypeFactory extends Factory
             'name' => fake()->unique()->sentence(3),
             'price' => fake()->randomFloat(2, 10, 100),
             'plan_date' => Carbon::now(),
+            'template' => '10-day-notice', // Add default template
         ];
     }
 }

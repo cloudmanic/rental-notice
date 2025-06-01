@@ -38,8 +38,8 @@ class PrintNoticePackageJob implements ShouldQueue
     public function handle(NoticeService $noticeService): void
     {
         // Get SSH connection details
-        $host = env('PRINT_SERVER_HOST');
-        $username = env('PRINT_SERVER_USERNAME');
+        $host = $this->getHost();
+        $username = $this->getUsername();
 
         // Check if required environment variables are set
         if (empty($host) || empty($username)) {
@@ -65,8 +65,8 @@ class PrintNoticePackageJob implements ShouldQueue
             $remotePath = '/tmp/'.$remoteFilename;
 
             // Get remaining SSH connection details
-            $port = env('PRINT_SERVER_PORT', 22);
-            $printer = env('PRINT_SERVER_PRINTER', 'Brother_HL_L2405W');
+            $port = $this->getPort();
+            $printer = $this->getPrinter();
 
             // SCP the file to the print server
             $this->scpFileToServer($localPath, $remotePath, $host, $port, $username);
@@ -93,7 +93,7 @@ class PrintNoticePackageJob implements ShouldQueue
     /**
      * SCP file to the print server.
      */
-    private function scpFileToServer(string $localPath, string $remotePath, string $host, string $port, string $username): void
+    protected function scpFileToServer(string $localPath, string $remotePath, string $host, string $port, string $username): void
     {
         $command = [
             'scp',
@@ -103,15 +103,10 @@ class PrintNoticePackageJob implements ShouldQueue
             "{$username}@{$host}:{$remotePath}",
         ];
 
-        $process = new Process($command);
-        $process->setTimeout(120); // 2 minute timeout for file transfer
-
         Log::info('Copying file to print server', ['command' => implode(' ', $command)]);
 
-        $process->run();
-
-        if (! $process->isSuccessful()) {
-            throw new \RuntimeException('Failed to copy file to print server: '.$process->getErrorOutput());
+        if (! $this->executeProcess($command)) {
+            throw new \RuntimeException('Failed to copy file to print server: '.$this->getLastError());
         }
 
         Log::info('File copied to print server successfully');
@@ -122,7 +117,7 @@ class PrintNoticePackageJob implements ShouldQueue
      *
      * For testing sometimes I add a print range to the lpr command, e.g. `-o page-ranges=2-2`
      */
-    private function printFile(string $remotePath, string $printer, string $host, string $port, string $username): void
+    protected function printFile(string $remotePath, string $printer, string $host, string $port, string $username): void
     {
         // Now send the print command
         $command = [
@@ -133,17 +128,76 @@ class PrintNoticePackageJob implements ShouldQueue
             "lpr -P {$printer} {$remotePath} && rm {$remotePath}",  // Print and remove the file
         ];
 
-        $process = new Process($command);
-        $process->setTimeout(60);
-
         Log::info('Sending print command', ['command' => implode(' ', $command)]);
 
-        $process->run();
-
-        if (! $process->isSuccessful()) {
-            throw new \RuntimeException('Failed to print file: '.$process->getErrorOutput());
+        if (! $this->executeProcess($command)) {
+            throw new \RuntimeException('Failed to print file: '.$this->getLastError());
         }
 
         Log::info('Print command sent successfully');
     }
+
+    /**
+     * Execute a process command.
+     * This method is extracted to make the class more testable.
+     */
+    protected function executeProcess(array $command): bool
+    {
+        $process = new Process($command);
+        $process->setTimeout(120); // 2 minute timeout
+        $process->run();
+
+        if (! $process->isSuccessful()) {
+            $this->lastProcessError = $process->getErrorOutput();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the last process error.
+     */
+    protected function getLastError(): string
+    {
+        return $this->lastProcessError ?? '';
+    }
+
+    /**
+     * Get the print server host.
+     */
+    protected function getHost(): string
+    {
+        return env('PRINT_SERVER_HOST', '');
+    }
+
+    /**
+     * Get the print server username.
+     */
+    protected function getUsername(): string
+    {
+        return env('PRINT_SERVER_USERNAME', '');
+    }
+
+    /**
+     * Get the print server port.
+     */
+    protected function getPort(): string
+    {
+        return env('PRINT_SERVER_PORT', '22');
+    }
+
+    /**
+     * Get the printer name.
+     */
+    protected function getPrinter(): string
+    {
+        return env('PRINT_SERVER_PRINTER', 'Brother_HL_L2405W');
+    }
+
+    /**
+     * Store the last process error.
+     */
+    protected string $lastProcessError = '';
 }

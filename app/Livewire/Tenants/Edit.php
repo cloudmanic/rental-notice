@@ -82,7 +82,7 @@ class Edit extends Component
 
         // Log the tenant update activity
         ActivityService::log(
-            "Tenant {$this->tenant->full_name}'s information was updated.",
+            "{name}'s information was updated.",
             $this->tenant->id,
             null,
             null,
