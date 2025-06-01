@@ -76,6 +76,7 @@ jobs:
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
+          PDF_PASSWORD: test_password_123
 
   deploy:
     name: Deploy app
