@@ -2,9 +2,11 @@
 
 namespace App\Notifications;
 
+use App\Mail\WelcomeEmail;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Slack\SlackMessage;
 
@@ -38,7 +40,15 @@ class UserRegistered extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['slack'];
+        return ['mail', 'slack'];
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     */
+    public function toMail(object $notifiable): Mailable
+    {
+        return (new WelcomeEmail($this->user))->to($notifiable->email);
     }
 
     /**
