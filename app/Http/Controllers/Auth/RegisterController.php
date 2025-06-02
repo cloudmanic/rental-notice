@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Account;
 use App\Models\User;
+use App\Notifications\UserRegistered;
 use App\Services\ActivityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +60,9 @@ class RegisterController extends Controller
                     null,
                     'User'
                 );
+
+                // Send Slack notification
+                $user->notify(new UserRegistered($user, $account->name));
 
                 return redirect()->route('dashboard')->with('success', 'Account created successfully!');
             });

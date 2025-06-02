@@ -144,6 +144,14 @@ class User extends Authenticatable
         $this->notify(new ResetPasswordNotification($token));
     }
 
+    /**
+     * Route notifications for the Slack channel.
+     */
+    public function routeNotificationForSlack(): string
+    {
+        return config('services.slack.notifications.channel');
+    }
+
     public static function validationRules(bool $isUpdate = false): array
     {
         return [
