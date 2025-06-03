@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Jobs\SubscribeUserToSendyJob;
 use App\Models\Account;
 use App\Models\User;
 use App\Notifications\UserRegistered;
@@ -200,5 +201,30 @@ class RegistrationTest extends TestCase
 
         // Since Queue is faked, the notification job should be pushed but not processed
         Queue::assertPushed(\Illuminate\Notifications\SendQueuedNotifications::class);
+    }
+
+    #[Test]
+    public function it_dispatches_sendy_subscription_job_on_registration()
+    {
+        Queue::fake();
+        Notification::fake();
+
+        $response = $this->post(route('register'), [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'email' => 'john.doe@example.com',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+            'company_name' => 'Test Company',
+        ]);
+
+        $response->assertRedirect(route('dashboard'));
+
+        $user = User::where('email', 'john.doe@example.com')->first();
+
+        // Assert Sendy subscription job was dispatched
+        Queue::assertPushed(SubscribeUserToSendyJob::class, function ($job) use ($user) {
+            return $job->user->id === $user->id;
+        });
     }
 }

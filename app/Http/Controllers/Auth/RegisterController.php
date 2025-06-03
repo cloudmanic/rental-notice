@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SubscribeUserToSendyJob;
 use App\Models\Account;
 use App\Models\User;
 use App\Notifications\UserRegistered;
@@ -31,7 +32,10 @@ class RegisterController extends Controller
 
         // Start database transaction
         try {
-            return \DB::transaction(function () use ($validated) {
+            $user = null;
+            $account = null;
+
+            \DB::transaction(function () use ($validated, &$user, &$account) {
                 // Create account
                 $account = Account::create([
                     'name' => $validated['company_name'] ?? "{$validated['first_name']} {$validated['last_name']}'s Company",
@@ -60,12 +64,18 @@ class RegisterController extends Controller
                     null,
                     'User'
                 );
+            });
 
-                // Send Slack notification
+            // Send notifications and dispatch jobs after transaction commits
+            if ($user && $account) {
+                // Send welcome email notification
                 $user->notify(new UserRegistered($user, $account->name));
 
-                return redirect()->route('dashboard')->with('success', 'Account created successfully!');
-            });
+                // Subscribe user to email list
+                SubscribeUserToSendyJob::dispatch($user, 'registration', $request->ip());
+            }
+
+            return redirect()->route('dashboard')->with('success', 'Account created successfully!');
         } catch (\Exception $e) {
             return back()->withInput()
                 ->withErrors(['error' => 'There was a problem creating your account. Please try again.']);

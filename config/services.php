@@ -35,6 +35,12 @@ return [
         ],
     ],
 
+    'sendy' => [
+        'url' => env('SENDY_URL'),
+        'api_key' => env('SENDY_API_KEY'),
+        'list_id' => env('SENDY_LIST_ID'),
+    ],
+
     'stripe' => [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
