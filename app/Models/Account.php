@@ -50,6 +50,11 @@ class Account extends Model
         return $this->hasMany(Agent::class);
     }
 
+    public function activities(): HasMany
+    {
+        return $this->hasMany(Activity::class);
+    }
+
     public static function validationRules(): array
     {
         return [
