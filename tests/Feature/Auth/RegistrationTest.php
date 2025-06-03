@@ -4,8 +4,11 @@ namespace Tests\Feature\Auth;
 
 use App\Models\Account;
 use App\Models\User;
+use App\Notifications\UserRegistered;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Queue;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -144,5 +147,58 @@ class RegistrationTest extends TestCase
         // Assert that the user is an admin
         $user = User::where('email', 'john.doe@example.com')->first();
         $this->assertTrue($user->isAdmin());
+    }
+
+    #[Test]
+    public function it_sends_notification_on_successful_registration()
+    {
+        // Queue is already faked in TestCase setUp, which prevents actual sending
+        Notification::fake();
+
+        $response = $this->post(route('register'), [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'email' => 'john.doe@example.com',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+            'company_name' => 'Test Company',
+        ]);
+
+        $response->assertRedirect(route('dashboard'));
+
+        $user = User::where('email', 'john.doe@example.com')->first();
+
+        // Assert that the notification was sent
+        // With Notification::fake(), this verifies the notification would be sent
+        // but doesn't actually send it
+        Notification::assertSentTo(
+            $user,
+            UserRegistered::class,
+            function ($notification) use ($user) {
+                return $notification->user->id === $user->id &&
+                       $notification->accountName === 'Test Company';
+            }
+        );
+    }
+
+    #[Test]
+    public function no_notifications_sent_when_queue_is_faked()
+    {
+        // This test verifies that with Queue::fake() in TestCase,
+        // no actual notifications are sent even with a running queue worker
+
+        $response = $this->post(route('register'), [
+            'first_name' => 'Test',
+            'last_name' => 'User',
+            'email' => 'test@example.com',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+            'company_name' => 'Test Company',
+        ]);
+
+        $response->assertRedirect(route('dashboard'));
+
+        // Since Queue is faked, the notification job should be pushed but not processed
+        Queue::assertPushed(\Illuminate\Notifications\SendQueuedNotifications::class);
     }
 }
