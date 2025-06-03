@@ -67,6 +67,8 @@ class Index extends Component
             ->when($this->search, function ($query) {
                 return $query->where('name', 'like', '%'.$this->search.'%');
             })
+            ->withCount(['users', 'notices'])
+            ->with('users', 'owners')
             ->orderBy('name')
             ->paginate(50);
 
