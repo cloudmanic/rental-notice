@@ -40,6 +40,9 @@ class Index extends Component
     {
         $account = Account::findOrFail($accountId);
 
+        // Get all users associated with this account before detaching
+        $accountUsers = $account->users()->get();
+
         // Delete all related activities
         $account->activities()->delete();
 
@@ -57,6 +60,22 @@ class Index extends Component
 
         // Delete the account
         $account->delete();
+
+        // Check each user to see if they are associated with any other accounts
+        foreach ($accountUsers as $user) {
+            // Skip super admin users - they should never be deleted
+            if ($user->type === \App\Models\User::TYPE_SUPER_ADMIN) {
+                continue;
+            }
+
+            // Check if user is associated with any other accounts
+            $remainingAccountsCount = $user->accounts()->count();
+
+            // If user has no remaining account associations, delete the user
+            if ($remainingAccountsCount === 0) {
+                $user->delete();
+            }
+        }
 
         session()->flash('message', 'Account deleted successfully.');
     }

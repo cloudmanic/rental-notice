@@ -85,9 +85,90 @@ class AccountDeletionTest extends TestCase
         $this->assertDatabaseMissing('notice_tenant', ['notice_id' => $notice2->id]);
         $this->assertDatabaseMissing('activities', ['account_id' => $account->id]);
 
-        // Verify users still exist (they should not be deleted)
-        $this->assertDatabaseHas('users', ['id' => $owner->id]);
-        $this->assertDatabaseHas('users', ['id' => $member->id]);
+        // Verify users are deleted since they are no longer associated with any accounts
+        $this->assertDatabaseMissing('users', ['id' => $owner->id]);
+        $this->assertDatabaseMissing('users', ['id' => $member->id]);
+
+        // Verify super admin user still exists (should never be deleted)
+        $this->assertDatabaseHas('users', ['id' => $superAdmin->id]);
+    }
+
+    /**
+     * Test that users associated with multiple accounts are not deleted
+     */
+    public function test_users_with_multiple_accounts_are_not_deleted()
+    {
+        // Create a super admin user
+        $superAdmin = User::factory()->create(['type' => 'Super Admin']);
+
+        // Create two accounts
+        $account1 = Account::factory()->create();
+        $account2 = Account::factory()->create();
+
+        // Create a user associated with both accounts
+        $sharedUser = User::factory()->create();
+        $account1->users()->attach($sharedUser, ['is_owner' => true]);
+        $account2->users()->attach($sharedUser, ['is_owner' => false]);
+
+        // Create a user only associated with account1
+        $singleAccountUser = User::factory()->create();
+        $account1->users()->attach($singleAccountUser, ['is_owner' => false]);
+
+        // Verify users exist and their associations
+        $this->assertDatabaseHas('users', ['id' => $sharedUser->id]);
+        $this->assertDatabaseHas('users', ['id' => $singleAccountUser->id]);
+        $this->assertDatabaseHas('account_to_user', ['account_id' => $account1->id, 'user_id' => $sharedUser->id]);
+        $this->assertDatabaseHas('account_to_user', ['account_id' => $account2->id, 'user_id' => $sharedUser->id]);
+        $this->assertDatabaseHas('account_to_user', ['account_id' => $account1->id, 'user_id' => $singleAccountUser->id]);
+
+        // Delete account1
+        Livewire::actingAs($superAdmin)
+            ->test(\App\Livewire\Accounts\Index::class)
+            ->call('deleteAccount', $account1->id);
+
+        // Verify account1 is deleted
+        $this->assertDatabaseMissing('accounts', ['id' => $account1->id]);
+        $this->assertDatabaseMissing('account_to_user', ['account_id' => $account1->id]);
+
+        // Verify shared user still exists (has association with account2)
+        $this->assertDatabaseHas('users', ['id' => $sharedUser->id]);
+        $this->assertDatabaseHas('account_to_user', ['account_id' => $account2->id, 'user_id' => $sharedUser->id]);
+
+        // Verify single account user is deleted (no longer associated with any accounts)
+        $this->assertDatabaseMissing('users', ['id' => $singleAccountUser->id]);
+
+        // Verify account2 still exists
+        $this->assertDatabaseHas('accounts', ['id' => $account2->id]);
+    }
+
+    /**
+     * Test that super admin users are never deleted
+     */
+    public function test_super_admin_users_are_never_deleted()
+    {
+        // Create two super admin users
+        $superAdmin1 = User::factory()->create(['type' => 'Super Admin']);
+        $superAdmin2 = User::factory()->create(['type' => 'Super Admin']);
+
+        // Create an account and associate superAdmin2 with it
+        $account = Account::factory()->create();
+        $account->users()->attach($superAdmin2, ['is_owner' => true]);
+
+        // Verify users exist
+        $this->assertDatabaseHas('users', ['id' => $superAdmin1->id]);
+        $this->assertDatabaseHas('users', ['id' => $superAdmin2->id]);
+
+        // Delete the account
+        Livewire::actingAs($superAdmin1)
+            ->test(\App\Livewire\Accounts\Index::class)
+            ->call('deleteAccount', $account->id);
+
+        // Verify account is deleted
+        $this->assertDatabaseMissing('accounts', ['id' => $account->id]);
+
+        // Verify both super admin users still exist (super admins should never be deleted)
+        $this->assertDatabaseHas('users', ['id' => $superAdmin1->id]);
+        $this->assertDatabaseHas('users', ['id' => $superAdmin2->id]);
     }
 
     /**
