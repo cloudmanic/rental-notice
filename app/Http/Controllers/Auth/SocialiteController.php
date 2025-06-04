@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SubscribeUserToSendyJob;
 use App\Models\Account;
 use App\Models\User;
 use App\Services\ActivityService;
@@ -67,6 +68,9 @@ class SocialiteController extends Controller
 
         // Trigger the registered event
         event(new Registered($user));
+
+        // Subscribe user to mailing list
+        SubscribeUserToSendyJob::dispatch($user, 'social_login_'.strtolower($provider), request()->ip());
 
         // Log activity
         ActivityService::log(
