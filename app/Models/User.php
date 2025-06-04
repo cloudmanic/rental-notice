@@ -34,10 +34,13 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'email',
+        'email_verified_at',
         'password',
-        'account_id',
-        'is_owner',
         'type',
+        'google_id',
+        'google_avatar',
+        'apple_id',
+        'apple_avatar',
     ];
 
     /**
@@ -99,6 +102,22 @@ class User extends Authenticatable
     public function getFullNameAttribute(): string
     {
         return "{$this->first_name} {$this->last_name}";
+    }
+
+    /**
+     * Check if user has a social login provider connected
+     */
+    public function hasSocialLogin(string $provider): bool
+    {
+        return ! empty($this->{$provider.'_id'});
+    }
+
+    /**
+     * Get the user's avatar (social or default)
+     */
+    public function getAvatarAttribute(): ?string
+    {
+        return $this->google_avatar ?? $this->apple_avatar ?? null;
     }
 
     /**

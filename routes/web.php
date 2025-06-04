@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\StripeCheckoutController;
@@ -64,6 +65,10 @@ Route::middleware('guest')->group(function () {
     Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
     Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
+
+    // Social Auth Routes
+    Route::get('auth/{provider}', [SocialiteController::class, 'redirect'])->name('auth.social.redirect');
+    Route::get('auth/{provider}/callback', [SocialiteController::class, 'callback'])->name('auth.social.callback');
 });
 
 // Authenticated routes
