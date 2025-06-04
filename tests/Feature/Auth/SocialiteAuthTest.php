@@ -4,8 +4,10 @@ namespace Tests\Feature\Auth;
 
 use App\Models\Account;
 use App\Models\User;
+use App\Notifications\UserRegistered;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery;
@@ -213,5 +215,73 @@ class SocialiteAuthTest extends TestCase
         $this->assertDatabaseHas('accounts', [
             'name' => 'John\'s Account',
         ]);
+    }
+
+    public function test_new_user_registration_via_social_login_sends_notification(): void
+    {
+        Notification::fake();
+
+        $socialiteUser = Mockery::mock(SocialiteUser::class);
+        $socialiteUser->shouldReceive('getId')->andReturn('google123');
+        $socialiteUser->shouldReceive('getEmail')->andReturn('test@example.com');
+        $socialiteUser->shouldReceive('getName')->andReturn('John Doe');
+        $socialiteUser->shouldReceive('getAvatar')->andReturn('https://avatar.url');
+
+        Socialite::shouldReceive('driver')
+            ->with('google')
+            ->andReturn(Mockery::mock([
+                'user' => $socialiteUser,
+            ]));
+
+        $response = $this->get(route('auth.social.callback', 'google'));
+
+        $response->assertRedirect('/dashboard');
+
+        // Get the created user
+        $user = User::where('email', 'test@example.com')->first();
+        $this->assertNotNull($user);
+
+        // Assert that the UserRegistered notification was sent
+        Notification::assertSentTo(
+            $user,
+            UserRegistered::class,
+            function ($notification, $channels) use ($user) {
+                return $notification->user->id === $user->id &&
+                       $notification->accountName === "John's Account";
+            }
+        );
+    }
+
+    public function test_existing_user_login_via_social_does_not_send_notification(): void
+    {
+        Notification::fake();
+
+        $account = Account::factory()->create();
+        $user = User::factory()->create([
+            'email' => 'existing@example.com',
+            'google_id' => null,
+        ]);
+
+        // Attach user to account
+        $user->accounts()->attach($account->id, ['is_owner' => true]);
+
+        $socialiteUser = Mockery::mock(SocialiteUser::class);
+        $socialiteUser->shouldReceive('getId')->andReturn('google456');
+        $socialiteUser->shouldReceive('getEmail')->andReturn('existing@example.com');
+        $socialiteUser->shouldReceive('getName')->andReturn('Existing User');
+        $socialiteUser->shouldReceive('getAvatar')->andReturn('https://new-avatar.url');
+
+        Socialite::shouldReceive('driver')
+            ->with('google')
+            ->andReturn(Mockery::mock([
+                'user' => $socialiteUser,
+            ]));
+
+        $response = $this->get(route('auth.social.callback', 'google'));
+
+        $response->assertRedirect('/dashboard');
+
+        // Assert that NO UserRegistered notification was sent for existing users
+        Notification::assertNotSentTo($user, UserRegistered::class);
     }
 }

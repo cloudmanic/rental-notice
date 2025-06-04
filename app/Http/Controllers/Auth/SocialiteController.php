@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\SubscribeUserToSendyJob;
 use App\Models\Account;
 use App\Models\User;
+use App\Notifications\UserRegistered;
 use App\Services\ActivityService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
@@ -68,6 +69,9 @@ class SocialiteController extends Controller
 
         // Trigger the registered event
         event(new Registered($user));
+
+        // Send welcome email notification (same as regular registration)
+        $user->notify(new UserRegistered($user, $user->accounts->first()->name));
 
         // Subscribe user to mailing list
         SubscribeUserToSendyJob::dispatch($user, 'social_login_'.strtolower($provider), request()->ip());
