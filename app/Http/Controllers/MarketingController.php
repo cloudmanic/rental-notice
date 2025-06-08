@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContactFormSubmission;
 use App\Services\PricingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -97,11 +98,10 @@ class MarketingController extends Controller
             'message' => 'required|string|max:5000',
         ]);
 
-        // Here you would typically send an email with the contact form data
-        // For example:
-        // Mail::to('support@oregonpastduerent.com')->send(new \App\Mail\ContactFormSubmission($validated));
+        // Send email to support
+        Mail::to(config('constants.oregonpastduerent_com.support_email'))
+            ->send(new ContactFormSubmission($validated));
 
-        // For now, we'll just redirect with a success message
         return redirect()->route('marketing.contact')->with('success', 'Thank you for your message! We will get back to you as soon as possible.');
     }
 

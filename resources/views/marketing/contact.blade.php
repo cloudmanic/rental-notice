@@ -136,7 +136,7 @@ with past-due rent notices, pricing, or legal requirements.')
                 Choose the method that works best for you.
             </p>
         </div>
-        <div class="mt-12 max-w-lg mx-auto grid gap-8 lg:grid-cols-3 lg:max-w-none">
+        <div class="mt-12 max-w-lg mx-auto grid gap-8 lg:grid-cols-2 xl:grid-cols-4 lg:max-w-none">
             <!-- Email -->
             <div class="flex flex-col rounded-lg shadow-lg overflow-hidden">
                 <div class="flex-1 bg-white p-6 flex flex-col justify-between">
@@ -158,7 +158,9 @@ with past-due rent notices, pricing, or legal requirements.')
                                 For general inquiries and support:
                             </p>
                             <p class="mt-2 text-base text-indigo-600 font-medium">
-                                {{ config('constants.oregonpastduerent_com.support_email') }}
+                                <a href="mailto:{{ config('constants.oregonpastduerent_com.support_email') }}" class="hover:text-indigo-800">
+                                    {{ config('constants.oregonpastduerent_com.support_email') }}
+                                </a>
                             </p>
                         </div>
                     </div>
@@ -186,8 +188,42 @@ with past-due rent notices, pricing, or legal requirements.')
                                 Monday-Friday, 9am-5pm PT:
                             </p>
                             <p class="mt-2 text-base text-indigo-600 font-medium">
-                                {{ config('constants.oregonpastduerent_com.company_phone') }}
+                                <a href="tel:{{ config('constants.oregonpastduerent_com.company_phone') }}" class="hover:text-indigo-800">
+                                    {{ config('constants.oregonpastduerent_com.company_phone') }}
+                                </a>
                             </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="flex flex-col rounded-lg shadow-lg overflow-hidden">
+                <div class="flex-1 bg-white p-6 flex flex-col justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <svg class="h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-lg font-medium text-gray-900">Address</h3>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <p class="text-base text-gray-500">
+                                Mailing address:
+                            </p>
+                            <div class="mt-2 text-base text-gray-900">
+                                <p>{{ config('constants.oregonpastduerent_com.company_address_1') }}</p>
+                                <p>{{ config('constants.oregonpastduerent_com.company_address_2') }}</p>
+                                <p>{{ config('constants.oregonpastduerent_com.company_city') }}, {{ config('constants.oregonpastduerent_com.company_state') }} {{ config('constants.oregonpastduerent_com.company_zip') }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
