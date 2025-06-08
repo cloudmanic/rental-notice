@@ -158,7 +158,8 @@ with past-due rent notices, pricing, or legal requirements.')
                                 For general inquiries and support:
                             </p>
                             <p class="mt-2 text-base text-indigo-600 font-medium">
-                                <a href="mailto:{{ config('constants.oregonpastduerent_com.support_email') }}" class="hover:text-indigo-800">
+                                <a href="mailto:{{ config('constants.oregonpastduerent_com.support_email') }}"
+                                    class="hover:text-indigo-800">
                                     {{ config('constants.oregonpastduerent_com.support_email') }}
                                 </a>
                             </p>
@@ -188,7 +189,8 @@ with past-due rent notices, pricing, or legal requirements.')
                                 Monday-Friday, 9am-5pm PT:
                             </p>
                             <p class="mt-2 text-base text-indigo-600 font-medium">
-                                <a href="tel:{{ config('constants.oregonpastduerent_com.company_phone') }}" class="hover:text-indigo-800">
+                                <a href="tel:{{ config('constants.oregonpastduerent_com.company_phone') }}"
+                                    class="hover:text-indigo-800">
                                     {{ config('constants.oregonpastduerent_com.company_phone') }}
                                 </a>
                             </p>
@@ -222,7 +224,9 @@ with past-due rent notices, pricing, or legal requirements.')
                             <div class="mt-2 text-base text-gray-900">
                                 <p>{{ config('constants.oregonpastduerent_com.company_address_1') }}</p>
                                 <p>{{ config('constants.oregonpastduerent_com.company_address_2') }}</p>
-                                <p>{{ config('constants.oregonpastduerent_com.company_city') }}, {{ config('constants.oregonpastduerent_com.company_state') }} {{ config('constants.oregonpastduerent_com.company_zip') }}</p>
+                                <p>{{ config('constants.oregonpastduerent_com.company_city') }},
+                                    {{ config('constants.oregonpastduerent_com.company_state') }}
+                                    {{ config('constants.oregonpastduerent_com.company_zip') }}</p>
                             </div>
                         </div>
                     </div>
@@ -274,7 +278,8 @@ with past-due rent notices, pricing, or legal requirements.')
                         How much does each notice cost?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        Each notice costs ${{ $standardPrice }}. This flat fee covers the entire process from notice creation to delivery
+                        Each notice costs ${{ $standardPrice }}. This flat fee covers the entire process from notice
+                        creation to delivery
                         and proof of service.
                     </dd>
                 </div>
@@ -284,8 +289,9 @@ with past-due rent notices, pricing, or legal requirements.')
                         How quickly are notices delivered?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        We process notices within one business day of submission. The actual delivery timeframe depends
-                        on the tenant's location, but is typically completed within 1-3 business days.
+                        Notices received before 1pm PST Monday through Friday will be served the same day. Otherwise,
+                        notices will be served on the next business day. We do not deliver on weekends or Oregon
+                        holidays.
                     </dd>
                 </div>
 
