@@ -1,7 +1,8 @@
 @extends('layouts.marketing')
 
 @section('title', 'Oregon Landlord Notice FAQs | Past Due Rent Questions')
-@section('description', 'Find answers to common questions about Oregon Past Due Rent notice service, pricing, legal compliance, and the eviction process for Oregon landlords.')
+@section('description', 'Find answers to common questions about Oregon Past Due Rent notice service, pricing, legal
+compliance, and the eviction process for Oregon landlords.')
 
 @section('content')
 <!-- Hero Section -->
@@ -42,7 +43,8 @@
                                 </p>
                                 <div class="mt-4 space-y-3">
                                     <a href="#about-service" class="block">
-                                        <p class="text-base text-gray-900">What exactly does Oregon Past Due Rent do?</p>
+                                        <p class="text-base text-gray-900">What exactly does Oregon Past Due Rent do?
+                                        </p>
                                     </a>
                                     <a href="#about-service" class="block">
                                         <p class="text-base text-gray-900">Is the service only available in Oregon?</p>
@@ -53,7 +55,8 @@
                                 </div>
                             </div>
                             <div class="mt-6">
-                                <a href="#about-service" class="text-base font-semibold text-indigo-600 hover:text-indigo-500">
+                                <a href="#about-service"
+                                    class="text-base font-semibold text-indigo-600 hover:text-indigo-500">
                                     See all questions →
                                 </a>
                             </div>
@@ -82,7 +85,8 @@
                                 </div>
                             </div>
                             <div class="mt-6">
-                                <a href="#pricing-payment" class="text-base font-semibold text-indigo-600 hover:text-indigo-500">
+                                <a href="#pricing-payment"
+                                    class="text-base font-semibold text-indigo-600 hover:text-indigo-500">
                                     See all questions →
                                 </a>
                             </div>
@@ -103,15 +107,18 @@
                                         <p class="text-base text-gray-900">Are your notices legally compliant?</p>
                                     </a>
                                     <a href="#legal-compliance" class="block">
-                                        <p class="text-base text-gray-900">What's the difference between 10-day and 13-day notices?</p>
+                                        <p class="text-base text-gray-900">What's the difference between 10-day and
+                                            13-day notices?</p>
                                     </a>
                                     <a href="#legal-compliance" class="block">
-                                        <p class="text-base text-gray-900">Can I use this service to start an eviction?</p>
+                                        <p class="text-base text-gray-900">Can I use this service to start an eviction?
+                                        </p>
                                     </a>
                                 </div>
                             </div>
                             <div class="mt-6">
-                                <a href="#legal-compliance" class="text-base font-semibold text-indigo-600 hover:text-indigo-500">
+                                <a href="#legal-compliance"
+                                    class="text-base font-semibold text-indigo-600 hover:text-indigo-500">
                                     See all questions →
                                 </a>
                             </div>
@@ -137,7 +144,10 @@
                         What exactly does Oregon Past Due Rent do?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        Oregon Past Due Rent helps landlords and property managers issue legally compliant "Notice of Termination for Nonpayment of Rent" documents to tenants who are late on rent. We handle the entire process - from creating the proper notice to delivering it according to Oregon law, and providing proof of service.
+                        Oregon Past Due Rent helps landlords and property managers issue legally compliant "Notice of
+                        Termination for Nonpayment of Rent" documents to tenants who are late on rent. We handle the
+                        entire process - from creating the proper notice to delivering it according to Oregon law, and
+                        providing proof of service.
                     </dd>
                 </div>
 
@@ -146,7 +156,9 @@
                         Is the service only available in Oregon?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        Yes, currently our service is specifically designed for Oregon landlords and property managers, as rental laws vary significantly by state. Our notices comply with Oregon's specific requirements, including the 2023 law updates.
+                        Yes, currently our service is specifically designed for Oregon landlords and property managers,
+                        as rental laws vary significantly by state. Our notices comply with Oregon's specific
+                        requirements, including the 2023 law updates.
                     </dd>
                 </div>
 
@@ -155,7 +167,9 @@
                         How quickly are notices delivered?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        We process notices within one business day of submission. The actual delivery timeframe depends on the tenant's location, but is typically completed within 1-3 business days. This is significantly faster than attempting to handle the process yourself.
+                        Notices received before 1pm PST Monday through Friday will be served the same day. Otherwise,
+                        notices will be served on the next business day. We do not deliver on weekends or Oregon
+                        holidays.
                     </dd>
                 </div>
 
@@ -164,7 +178,9 @@
                         Who uses Oregon Past Due Rent?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        Our service is used by both individual landlords with a single rental property and large property management companies with multiple units. Anyone who needs to issue past-due rent notices in Oregon can benefit from our service.
+                        Our service is used by both individual landlords with a single rental property and large
+                        property management companies with multiple units. Anyone who needs to issue past-due rent
+                        notices in Oregon can benefit from our service.
                     </dd>
                 </div>
 
@@ -173,7 +189,9 @@
                         What information do I need to provide?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        You'll need to provide basic information about the tenant (name, rental address), details about the past-due rent (amount, due date), and your contact information. Our simple form guides you through all the required fields.
+                        You'll need to provide basic information about the tenant (name, rental address), details about
+                        the past-due rent (amount, due date), and your contact information. Our simple form guides you
+                        through all the required fields.
                     </dd>
                 </div>
 
@@ -182,7 +200,9 @@
                         How do you serve the notices?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        We use multiple methods in accordance with Oregon law, which may include personal service, posting at the property, and mailing. This comprehensive approach ensures that your notice meets all legal requirements for service.
+                        We use multiple methods in accordance with Oregon law, which may include personal service,
+                        posting at the property, and mailing. This comprehensive approach ensures that your notice meets
+                        all legal requirements for service.
                     </dd>
                 </div>
             </dl>
@@ -199,7 +219,8 @@
                         How much does each notice cost?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        Each notice costs ${{ $standardPrice }}. This flat fee covers the entire process from notice creation to delivery and proof of service.
+                        Each notice costs ${{ $standardPrice }}. This flat fee covers the entire process from notice
+                        creation to delivery and proof of service.
                     </dd>
                 </div>
 
@@ -208,7 +229,8 @@
                         Are there any subscription fees?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        No, there are absolutely no subscription fees or recurring charges. You only pay when you need to send a notice.
+                        No, there are absolutely no subscription fees or recurring charges. You only pay when you need
+                        to send a notice.
                     </dd>
                 </div>
 
@@ -217,7 +239,10 @@
                         Do you offer bulk pricing?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        Yes, we offer special bulk pricing for property managers who send 10 or more notices per month. Please <a href="{{ route('marketing.contact') }}?subject=Bulk%20Pricing" class="text-indigo-600 hover:text-indigo-500">contact us</a> for a custom quote based on your volume needs.
+                        Yes, we offer special bulk pricing for property managers who send 10 or more notices per month.
+                        Please <a href="{{ route('marketing.contact') }}?subject=Bulk%20Pricing"
+                            class="text-indigo-600 hover:text-indigo-500">contact us</a> for a custom quote based on
+                        your volume needs.
                     </dd>
                 </div>
 
@@ -226,7 +251,8 @@
                         What payment methods do you accept?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        We accept all major credit cards and debit cards. For property management companies with bulk needs, we can also arrange for invoicing.
+                        We accept all major credit cards and debit cards. For property management companies with bulk
+                        needs, we can also arrange for invoicing.
                     </dd>
                 </div>
 
@@ -235,7 +261,9 @@
                         Are there any hidden fees?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        No, the ${{ $standardPrice }} per notice fee is all-inclusive. The only potential additional cost would be for optional notarized affidavits, which can be requested for a small additional fee if needed for court proceedings.
+                        No, the ${{ $standardPrice }} per notice fee is all-inclusive. The only potential additional
+                        cost would be for optional notarized affidavits, which can be requested for a small additional
+                        fee if needed for court proceedings.
                     </dd>
                 </div>
 
@@ -244,7 +272,9 @@
                         How do I pay for notices?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        Payment is collected at the time you submit a notice request through our secure online payment system. Your payment information is securely stored to make future notices even easier to process.
+                        Payment is collected at the time you submit a notice request through our secure online payment
+                        system. Your payment information is securely stored to make future notices even easier to
+                        process.
                     </dd>
                 </div>
             </dl>
@@ -261,7 +291,9 @@
                         Are your notices legally compliant?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        Yes, our notices are fully compliant with Oregon law, including the recent 2023 updates. Our templates have been reviewed by legal professionals and have withstood scrutiny in eviction courts throughout Oregon.
+                        Yes, our notices are fully compliant with Oregon law, including the recent 2023 updates. Our
+                        templates have been reviewed by legal professionals and have withstood scrutiny in eviction
+                        courts throughout Oregon.
                     </dd>
                 </div>
 
@@ -270,7 +302,10 @@
                         What's the difference between 10-day and 13-day notices?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        A 10-day notice is used for standard rental situations, giving tenants 10 days to pay past-due rent before eviction proceedings can begin. A 13-day notice is required for certain subsidized housing situations. Our system helps determine which notice is appropriate for your specific situation.
+                        A 10-day notice is used for standard rental situations, giving tenants 10 days to pay past-due
+                        rent before eviction proceedings can begin. A 13-day notice is required for certain subsidized
+                        housing situations. Our system helps determine which notice is appropriate for your specific
+                        situation.
                     </dd>
                 </div>
 
@@ -279,7 +314,10 @@
                         Can I use this service to start an eviction?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        This service provides the legally required first step in the eviction process. A properly served "Notice of Termination for Nonpayment of Rent" is required before you can file for eviction in Oregon. After the notice period expires, if the tenant hasn't paid, you can proceed with filing an eviction case in court.
+                        This service provides the legally required first step in the eviction process. A properly served
+                        "Notice of Termination for Nonpayment of Rent" is required before you can file for eviction in
+                        Oregon. After the notice period expires, if the tenant hasn't paid, you can proceed with filing
+                        an eviction case in court.
                     </dd>
                 </div>
 
@@ -288,7 +326,10 @@
                         Will the notice guarantee I can evict my tenant?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        While our service ensures that the notice and service comply with Oregon law, eviction proceedings involve additional legal requirements and court proceedings. However, a properly served notice significantly increases your chances of a successful eviction case if it becomes necessary.
+                        While our service ensures that the notice and service comply with Oregon law, eviction
+                        proceedings involve additional legal requirements and court proceedings. However, a properly
+                        served notice significantly increases your chances of a successful eviction case if it becomes
+                        necessary.
                     </dd>
                 </div>
 
@@ -297,7 +338,9 @@
                         What proof of service do you provide?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        We provide detailed documentation of when and how the notice was delivered, including dates, times, and methods. Upon request, we can provide a notarized affidavit of service that can be used in court proceedings.
+                        We provide detailed documentation of when and how the notice was delivered, including dates,
+                        times, and methods. Upon request, we can provide a notarized affidavit of service that can be
+                        used in court proceedings.
                     </dd>
                 </div>
 
@@ -306,7 +349,9 @@
                         How long must I wait after serving a notice before I can file for eviction?
                     </dt>
                     <dd class="mt-2 text-base text-gray-500">
-                        You must wait for the notice period to expire (10 or 13 days, depending on the notice type). If the tenant hasn't paid the past-due rent or moved out by that time, you can proceed with filing an eviction case in court.
+                        You must wait for the notice period to expire (10 or 13 days, depending on the notice type). If
+                        the tenant hasn't paid the past-due rent or moved out by that time, you can proceed with filing
+                        an eviction case in court.
                     </dd>
                 </div>
             </dl>
@@ -327,10 +372,12 @@
                         We're here to help. Reach out to our team for answers to any questions not covered here.
                     </p>
                     <div class="mt-8 flex justify-center gap-x-4">
-                        <a href="{{ route('marketing.contact') }}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 shadow-sm">
+                        <a href="{{ route('marketing.contact') }}"
+                            class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 shadow-sm">
                             Contact Us
                         </a>
-                        <a href="{{ route('register') }}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-800 hover:bg-indigo-700 shadow-sm">
+                        <a href="{{ route('register') }}"
+                            class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-800 hover:bg-indigo-700 shadow-sm">
                             Get Started
                         </a>
                     </div>

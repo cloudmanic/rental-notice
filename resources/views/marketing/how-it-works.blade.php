@@ -339,7 +339,8 @@
                 <div class="mt-10 lg:mt-0">
                     <div class="aspect-w-5 aspect-h-3 overflow-hidden rounded-lg shadow-lg">
                         <img src="https://images.unsplash.com/photo-1606857521015-7f9fcf423740?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-                            alt="Person filling out a form on a laptop" class="object-cover hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105">
+                            alt="Person filling out a form on a laptop"
+                            class="object-cover hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105">
                     </div>
                 </div>
             </div>
@@ -486,8 +487,8 @@
                     How quickly can you deliver a notice?
                 </h3>
                 <p class="mt-3 text-base text-gray-500">
-                    Most notices are processed within 24 hours of submission. Delivery typically occurs within 1-2
-                    business days after processing, depending on location and tenant availability.
+                    Notices received before 1pm PST Monday through Friday will be served the same day. Otherwise,
+                    notices will be served on the next business day. We do not deliver on weekends or Oregon holidays.
                 </p>
             </div>
             <div class="py-6">
@@ -497,7 +498,8 @@
                 <p class="mt-3 text-base text-gray-500">
                     Oregon law allows for several methods of service, including posting at the main entrance of the
                     dwelling unit. Our agents follow all legally compliant methods of service and document the exact
-                    method used.
+                    method used. In fact, most notices are sent first-class mail, which is the least contested form of
+                    service in the court of law.
                 </p>
             </div>
             <div class="py-6">
@@ -507,7 +509,7 @@
                 <p class="mt-3 text-base text-gray-500">
                     You'll receive a complete proof of service document that includes the date, time, method, and
                     location of service, along with a copy of the notice that was served. This documentation is designed
-                    to meet Oregon court requirements.
+                    to meet Oregon court requirements. A hard copy is also mailed to the agent address on file.
                 </p>
             </div>
         </div>
