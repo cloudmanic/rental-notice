@@ -494,6 +494,16 @@
         const modal = document.getElementById('videoModal');
         const iframe = document.getElementById('youtubeVideo');
         
+        // Track video open event in Plausible
+        if (typeof plausible !== 'undefined') {
+            plausible('how-to-video-opened', {
+                props: {
+                    location: 'How It Works Page',
+                    video: 'Tutorial Video'
+                }
+            });
+        }
+        
         // Set the video source
         iframe.src = 'https://www.youtube.com/embed/Jq11xBUVoqg?si=DoIbI0jqCIfZcKAq&autoplay=1';
         
