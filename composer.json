@@ -16,6 +16,7 @@
         "league/flysystem-aws-s3-v3": "^3.0",
         "livewire/livewire": "^3.5",
         "socialiteproviders/apple": "^5.6",
+        "spatie/laravel-honeypot": "^4.6",
         "stripe/stripe-php": "^17.1"
     },
     "require-dev": {

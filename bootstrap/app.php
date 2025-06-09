@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'superadmin' => \App\Http\Middleware\SuperAdminAccessMiddleware::class,
+            'honeypot' => \Spatie\Honeypot\ProtectAgainstSpam::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -57,7 +57,7 @@ Route::middleware('guest')->group(function () {
 
     Route::controller(RegisterController::class)->group(function () {
         Route::get('register', 'show')->name('register');
-        Route::post('register', 'register');
+        Route::post('register', 'register')->middleware('honeypot');
     });
 
     // Password Reset Routes
