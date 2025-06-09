@@ -88,7 +88,7 @@ class Index extends Component
             })
             ->withCount(['users', 'notices'])
             ->with('users', 'owners')
-            ->orderBy('name')
+            ->orderBy('id', 'desc')
             ->paginate(50);
 
         return view('livewire.accounts.index', [
