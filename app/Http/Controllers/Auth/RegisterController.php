@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Jobs\SubscribeUserToSendyJob;
 use App\Models\Account;
+use App\Models\Referral;
+use App\Models\Referrer;
 use App\Models\User;
 use App\Notifications\UserRegistered;
 use App\Services\ActivityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
@@ -34,12 +37,28 @@ class RegisterController extends Controller
         try {
             $user = null;
             $account = null;
+            $referrer = null;
 
-            \DB::transaction(function () use ($validated, &$user, &$account) {
-                // Create account
-                $account = Account::create([
+            \DB::transaction(function () use ($validated, $request, &$user, &$account, &$referrer) {
+                // Check for referral cookie
+                $referrerId = $request->cookie('referrer_id');
+
+                if ($referrerId) {
+                    $referrer = Referrer::where('id', $referrerId)
+                        ->where('is_active', true)
+                        ->first();
+                }
+
+                // Create account with referrer's plan_date if applicable
+                $accountData = [
                     'name' => $validated['company_name'] ?? "{$validated['first_name']} {$validated['last_name']}'s Company",
-                ]);
+                ];
+
+                if ($referrer) {
+                    $accountData['notice_type_plan_date'] = $referrer->plan_date;
+                }
+
+                $account = Account::create($accountData);
 
                 // Create user
                 $user = User::create([
@@ -53,12 +72,22 @@ class RegisterController extends Controller
                 // Attach user to account as owner
                 $account->users()->attach($user, ['is_owner' => true]);
 
+                // Create referral record if applicable
+                if ($referrer) {
+                    Referral::createFromReferrer($referrer, $account);
+                }
+
                 // Log the user in
                 Auth::login($user);
 
                 // Log the registration activity
+                $activityMessage = "{$user->first_name} {$user->last_name} created a new account.";
+                if ($referrer) {
+                    $activityMessage .= " (Referred by {$referrer->full_name})";
+                }
+
                 ActivityService::log(
-                    "{$user->first_name} {$user->last_name} created a new account.",
+                    $activityMessage,
                     null,
                     null,
                     null,
@@ -68,14 +97,17 @@ class RegisterController extends Controller
 
             // Send notifications and dispatch jobs after transaction commits
             if ($user && $account) {
-                // Send welcome email notification
-                $user->notify(new UserRegistered($user, $account->name));
+                // Send welcome email notification with referrer info if applicable
+                $user->notify(new UserRegistered($user, $account->name, $referrer));
 
                 // Subscribe user to email list
                 SubscribeUserToSendyJob::dispatch($user, 'registration', $request->ip());
             }
 
-            return redirect()->route('dashboard')->with('success', 'Account created successfully!');
+            // Clear the referral cookie after successful registration
+            return redirect()->route('dashboard')
+                ->with('success', 'Account created successfully!')
+                ->withoutCookie('referrer_id');
         } catch (\Exception $e) {
             return back()->withInput()
                 ->withErrors(['error' => 'There was a problem creating your account. Please try again.']);

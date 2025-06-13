@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\NoticeController;
+use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\StripeCheckoutController;
 use App\Livewire\Account\Edit as AccountEdit;
 use App\Livewire\Accounts\Index as AccountsIndex;
@@ -47,6 +48,9 @@ Route::get('/privacy-policy', [MarketingController::class, 'privacyPolicy'])->na
 Route::get('/terms', [MarketingController::class, 'terms'])->name('marketing.terms');
 Route::get('/refund-policy', [MarketingController::class, 'refundPolicy'])->name('marketing.refund-policy');
 Route::post('/newsletter/subscribe', [MarketingController::class, 'subscribeToNewsletter'])->name('marketing.newsletter.subscribe');
+
+// Referral Routes
+Route::get('/r/{slug}', [ReferralController::class, 'show'])->name('referral.show');
 
 // Guest routes (not logged in)
 Route::middleware('guest')->group(function () {

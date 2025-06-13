@@ -107,4 +107,41 @@ class PricingService
     {
         return $quantity >= 10;
     }
+
+    /**
+     * Get the price for an account considering referral discount.
+     */
+    public function getPriceForAccount(Account $account, int $quantity = 1): float
+    {
+        $standardPrice = $this->getStandardPrice();
+        $bulkPrice = $this->getBulkPrice($quantity);
+
+        // Use bulk price if available
+        if ($bulkPrice !== null) {
+            $basePrice = $bulkPrice;
+        } else {
+            $basePrice = $standardPrice;
+        }
+
+        // Check if account has a referral discount
+        if ($account->referral) {
+            $discount = $account->referral->applied_discount;
+
+            return max(0, $basePrice - $discount);
+        }
+
+        return $basePrice;
+    }
+
+    /**
+     * Get referral discount amount for an account.
+     */
+    public function getReferralDiscountForAccount(Account $account): float
+    {
+        if ($account->referral) {
+            return $account->referral->applied_discount;
+        }
+
+        return 0.00;
+    }
 }
