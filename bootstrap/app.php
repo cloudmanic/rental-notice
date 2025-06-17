@@ -11,6 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Needed for fly.io
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'superadmin' => \App\Http\Middleware\SuperAdminAccessMiddleware::class,
             'honeypot' => \Spatie\Honeypot\ProtectAgainstSpam::class,
