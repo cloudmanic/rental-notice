@@ -83,14 +83,14 @@ class UserRegisteredTest extends TestCase
         // With referrer
         $notificationWithReferrer = new UserRegistered($user, 'Test Company', $referrer);
         $slackMessageWithReferrer = $notificationWithReferrer->toSlack($user);
-        
+
         // The template should contain "New Referral Registration"
         $this->assertInstanceOf(SlackMessage::class, $slackMessageWithReferrer);
 
         // Without referrer
         $notificationWithoutReferrer = new UserRegistered($user, 'Test Company');
         $slackMessageWithoutReferrer = $notificationWithoutReferrer->toSlack($user);
-        
+
         // The template should contain "New User Registration"
         $this->assertInstanceOf(SlackMessage::class, $slackMessageWithoutReferrer);
     }

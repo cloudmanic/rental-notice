@@ -19,7 +19,7 @@ class ReferralRegistrationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Create notice types for testing
         NoticeType::factory()->create([
             'name' => '10-Day Notice',
@@ -28,14 +28,14 @@ class ReferralRegistrationTest extends TestCase
         ]);
 
         NoticeType::factory()->create([
-            'name' => '13-Day Notice', 
+            'name' => '13-Day Notice',
             'plan_date' => '2025-01-01',
             'price' => 10.00,
         ]);
 
         NoticeType::factory()->create([
             'name' => '10-Day Notice Premium',
-            'plan_date' => '2025-06-01', 
+            'plan_date' => '2025-06-01',
             'price' => 12.00,
         ]);
     }
@@ -81,7 +81,7 @@ class ReferralRegistrationTest extends TestCase
         $referral = Referral::where('referrer_id', $referrer->id)
             ->where('account_id', $account->id)
             ->first();
-        
+
         $this->assertNotNull($referral);
         $this->assertEquals(5.00, $referral->discount_amount); // 15.00 - 10.00
         $this->assertEquals(33.33, $referral->discount_percentage); // (5/15) * 100 rounded
@@ -211,9 +211,9 @@ class ReferralRegistrationTest extends TestCase
             'name' => 'First Company',
             'notice_type_plan_date' => $referrer->plan_date,
         ]);
-        
+
         $account2 = Account::factory()->create([
-            'name' => 'Second Company', 
+            'name' => 'Second Company',
             'notice_type_plan_date' => $referrer->plan_date,
         ]);
 
@@ -242,7 +242,7 @@ class ReferralRegistrationTest extends TestCase
         ]);
 
         // Visit referral page to set cookie
-        $this->get("/r/{referrer->slug}");
+        $this->get('/r/{referrer->slug}');
 
         // Visit other pages (simulate user browsing)
         $this->get('/');

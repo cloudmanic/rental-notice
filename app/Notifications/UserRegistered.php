@@ -65,59 +65,59 @@ class UserRegistered extends Notification implements ShouldQueue
     {
         $fields = [
             [
-                "type" => "mrkdwn",
-                "text" => "*Name:*\\n{$this->user->first_name} {$this->user->last_name}"
+                'type' => 'mrkdwn',
+                'text' => "*Name:*\\n{$this->user->first_name} {$this->user->last_name}",
             ],
             [
-                "type" => "mrkdwn",
-                "text" => "*Email:*\\n{$this->user->email}"
+                'type' => 'mrkdwn',
+                'text' => "*Email:*\\n{$this->user->email}",
             ],
             [
-                "type" => "mrkdwn",
-                "text" => "*Account:*\\n{$this->accountName}"
+                'type' => 'mrkdwn',
+                'text' => "*Account:*\\n{$this->accountName}",
             ],
             [
-                "type" => "mrkdwn",
-                "text" => "*Registered At:*\\n{$this->user->created_at->format('Y-m-d H:i:s')}"
-            ]
+                'type' => 'mrkdwn',
+                'text' => "*Registered At:*\\n{$this->user->created_at->format('Y-m-d H:i:s')}",
+            ],
         ];
 
         // Add referrer information if available
         if ($this->referrer) {
             $fields[] = [
-                "type" => "mrkdwn",
-                "text" => "*Referred By:*\\n{$this->referrer->full_name} ({$this->referrer->email})"
+                'type' => 'mrkdwn',
+                'text' => "*Referred By:*\\n{$this->referrer->full_name} ({$this->referrer->email})",
             ];
             $discountAmount = number_format($this->referrer->discount_amount, 2);
             $discountPercentage = round(($this->referrer->discount_amount / 15.00) * 100);
             $fields[] = [
-                "type" => "mrkdwn",
-                "text" => "*Referral Discount:*\\n\${$discountAmount} off ({$discountPercentage}%)"
+                'type' => 'mrkdwn',
+                'text' => "*Referral Discount:*\\n\${$discountAmount} off ({$discountPercentage}%)",
             ];
         }
 
         $blocks = [
             [
-                "type" => "divider"
+                'type' => 'divider',
             ],
             [
-                "type" => "header",
-                "text" => [
-                    "type" => "plain_text",
-                    "text" => $this->referrer ? "🎉 New Referral Registration" : "🎉 New User Registration",
-                    "emoji" => true
-                ]
+                'type' => 'header',
+                'text' => [
+                    'type' => 'plain_text',
+                    'text' => $this->referrer ? '🎉 New Referral Registration' : '🎉 New User Registration',
+                    'emoji' => true,
+                ],
             ],
             [
-                "type" => "section",
-                "fields" => $fields
+                'type' => 'section',
+                'fields' => $fields,
             ],
             [
-                "type" => "divider"
-            ]
+                'type' => 'divider',
+            ],
         ];
 
-        $template = json_encode(["blocks" => $blocks]);
+        $template = json_encode(['blocks' => $blocks]);
 
         return (new SlackMessage)->usingBlockKitTemplate($template);
     }

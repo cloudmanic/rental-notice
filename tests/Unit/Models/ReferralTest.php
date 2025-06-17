@@ -120,14 +120,14 @@ class ReferralTest extends TestCase
 
         // Test various discount amounts by creating different notice types
         $testCases = [
-            ['price' => 13.50, 'expected_discount' => 1.50, 'expected_percentage' => 10.00], 
-            ['price' => 12.00, 'expected_discount' => 3.00, 'expected_percentage' => 20.00], 
-            ['price' => 7.50, 'expected_discount' => 7.50, 'expected_percentage' => 50.00], 
+            ['price' => 13.50, 'expected_discount' => 1.50, 'expected_percentage' => 10.00],
+            ['price' => 12.00, 'expected_discount' => 3.00, 'expected_percentage' => 20.00],
+            ['price' => 7.50, 'expected_discount' => 7.50, 'expected_percentage' => 50.00],
         ];
 
         foreach ($testCases as $index => $case) {
-            $planDate = '2025-0' . ($index + 1) . '-01';
-            
+            $planDate = '2025-0'.($index + 1).'-01';
+
             $referrer = Referrer::factory()->create([
                 'plan_date' => $planDate,
             ]);
@@ -137,12 +137,12 @@ class ReferralTest extends TestCase
                 'plan_date' => $planDate,
                 'price' => $case['price'],
             ]);
-            
+
             $referral = Referral::createFromReferrer($referrer, $account);
-            
+
             $this->assertEquals($case['expected_discount'], $referral->discount_amount);
             $this->assertEquals($case['expected_percentage'], $referral->discount_percentage);
-            
+
             // Clean up for next iteration
             $referral->delete();
         }

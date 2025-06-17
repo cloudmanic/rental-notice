@@ -62,9 +62,9 @@ class ReferrerTest extends TestCase
     {
         // Create existing referrer
         Referrer::factory()->create(['slug' => 'john-doe']);
-        
+
         $slug = Referrer::generateUniqueSlug('John', 'Doe');
-        
+
         $this->assertEquals('john-doe-1', $slug);
     }
 
@@ -74,9 +74,9 @@ class ReferrerTest extends TestCase
         // Create existing referrers
         Referrer::factory()->create(['slug' => 'john-doe']);
         Referrer::factory()->create(['slug' => 'john-doe-1']);
-        
+
         $slug = Referrer::generateUniqueSlug('John', 'Doe');
-        
+
         $this->assertEquals('john-doe-2', $slug);
     }
 
