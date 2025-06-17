@@ -23,19 +23,6 @@ class Show extends Component
     public $uploadSuccess = false;
 
     /**
-     * Livewire hook that runs before any update
-     */
-    public function updating($property, $value)
-    {
-        // Check authorization when certificatePdf is being uploaded
-        if ($property === 'certificatePdf') {
-            if (! auth()->user()->isSuperAdmin() && ! session('impersonating')) {
-                throw new \Exception('Unauthorized action.');
-            }
-        }
-    }
-
-    /**
      * Mount the component with the given notice.
      *
      * @return void
