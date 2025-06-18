@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\NoticeController;
+use App\Http\Controllers\RealtorController;
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\StripeCheckoutController;
 use App\Livewire\Account\Edit as AccountEdit;
@@ -18,6 +19,7 @@ use App\Livewire\Notices\Create as NoticesCreate;
 use App\Livewire\Notices\Index as NoticesIndex;
 use App\Livewire\Notices\Preview as NoticesPreview;
 use App\Livewire\Profile\Edit as ProfileEdit;
+use App\Livewire\Realtors\Index as RealtorsIndex;
 use App\Livewire\Tenants\Create as TenantsCreate;
 use App\Livewire\Tenants\Edit as TenantsEdit;
 use App\Livewire\Tenants\Index as TenantsIndex;
@@ -93,6 +95,10 @@ Route::middleware('auth')->group(function () {
     Route::middleware('superadmin')->group(function () {
         // Accounts management
         Route::get('/accounts', AccountsIndex::class)->name('accounts.index');
+
+        // Realtors management
+        Route::get('/realtors', RealtorsIndex::class)->name('realtors.index');
+        Route::get('/realtors/export', [RealtorController::class, 'export'])->name('realtors.export');
 
         // Account impersonation
         Route::get('/impersonate/{user}', [AccountImpersonationController::class, 'impersonate'])->name('impersonate');

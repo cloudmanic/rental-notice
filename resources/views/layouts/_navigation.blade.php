@@ -65,6 +65,8 @@
                             @if(auth()->user() && auth()->user()->type === \App\Models\User::TYPE_SUPER_ADMIN)
                             <a wire:navigate href="{{ route('accounts.index') }}"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('accounts.*') ? 'bg-gray-100' : '' }}">Accounts</a>
+                            <a wire:navigate href="{{ route('realtors.index') }}"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('realtors.*') ? 'bg-gray-100' : '' }}">Realtors</a>
                             @endif
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -106,6 +108,8 @@
                 @if(auth()->user() && auth()->user()->type === \App\Models\User::TYPE_SUPER_ADMIN)
                 <a wire:navigate href="{{ route('accounts.index') }}"
                     class="block pl-3 pr-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-50 {{ request()->routeIs('accounts.*') ? 'bg-gray-50 text-gray-800' : '' }}">Accounts</a>
+                <a wire:navigate href="{{ route('realtors.index') }}"
+                    class="block pl-3 pr-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-50 {{ request()->routeIs('realtors.*') ? 'bg-gray-50 text-gray-800' : '' }}">Realtors</a>
                 @endif
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
