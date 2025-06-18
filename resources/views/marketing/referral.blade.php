@@ -53,7 +53,7 @@ $discountBannerText = "<span class=\"font-bold\">" . $possessiveFirstName . "</s
 
 <!-- CTA Section -->
 <x-marketing.cta-section 
-    title="{{ $ctaTitle }}"
+    title="{!! $ctaTitle !!}"
     description="Join <span class='font-semibold'>{{ $referrer->first_name }} {{ $referrer->last_name }}</span> and hundreds of other Oregon landlords who trust us for their past-due rent notices."
     buttonText="{{ $buttonText }}"
 />
