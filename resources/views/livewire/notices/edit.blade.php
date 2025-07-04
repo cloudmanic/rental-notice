@@ -92,7 +92,18 @@
                 <div class="mb-3">
                     @if(count($selectedTenants) > 0)
                     <div class="bg-gray-50 rounded-md p-3 mb-3">
-                        <h3 class="text-sm font-medium text-gray-700 mb-2">Selected Tenants:</h3>
+                        <h3 class="text-sm font-medium text-gray-700 mb-2">
+                            Selected Tenants ({{ count($selectedTenants) }}/6):
+                        </h3>
+                        @if(count($selectedTenants) >= 5)
+                        <div class="mb-2 text-xs text-amber-600">
+                            @if(count($selectedTenants) == 6)
+                            You have reached the maximum of 6 tenants.
+                            @else
+                            You can select {{ 6 - count($selectedTenants) }} more tenant(s).
+                            @endif
+                        </div>
+                        @endif
                         <ul class="space-y-2">
                             @foreach($selectedTenants as $tenant)
                             <li class="flex items-center justify-between">
@@ -136,12 +147,21 @@
                         <div
                             class="absolute z-10 mt-2 w-full bg-white shadow-lg rounded-md border border-gray-300 max-h-60 overflow-y-auto">
                             @foreach($tenants as $tenant)
+                            @if(count($selectedTenants) >= 6)
+                            <div class="px-4 py-2 bg-gray-100 cursor-not-allowed opacity-60">
+                                <div class="font-medium">{{ $tenant->full_name }}</div>
+                                <div class="text-xs text-gray-500">{{ $tenant->email }}</div>
+                                <div class="text-xs text-gray-500">{{ $tenant->full_address }}</div>
+                                <div class="text-xs text-red-500 mt-1">Maximum tenant limit reached</div>
+                            </div>
+                            @else
                             <div wire:click="addTenant({{ $tenant->id }})"
                                 class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                                 <div class="font-medium">{{ $tenant->full_name }}</div>
                                 <div class="text-xs text-gray-500">{{ $tenant->email }}</div>
                                 <div class="text-xs text-gray-500">{{ $tenant->full_address }}</div>
                             </div>
+                            @endif
                             @endforeach
                         </div>
                         @endif

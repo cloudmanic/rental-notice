@@ -329,7 +329,7 @@ class Create extends Component
                 },
             ],
             'notice.agent_id' => 'required|exists:agents,id',
-            'selectedTenants' => 'required|array|min:1',
+            'selectedTenants' => 'required|array|min:1|max:6',
             'notice.past_due_rent' => 'required|numeric|min:0|max:99999.99',
             'notice.late_charges' => 'required|numeric|min:0|max:99999.99',
             'notice.other_1_title' => 'nullable|string|max:255',
@@ -346,6 +346,7 @@ class Create extends Component
         ], [
             'selectedTenants.required' => 'Please select at least one tenant.',
             'selectedTenants.min' => 'Please select at least one tenant.',
+            'selectedTenants.max' => 'You cannot select more than 6 tenants.',
         ]);
 
         // Get the notice type for pricing
@@ -566,6 +567,13 @@ class Create extends Component
             'Tenant'
         );
 
+        // Check if we already have 6 tenants selected before adding the new one
+        if (count($this->selectedTenants) >= 6) {
+            session()->flash('message', 'You cannot select more than 6 tenants.');
+            session()->flash('messageType', 'error');
+            return redirect()->route('notices.create');
+        }
+
         // Add the new tenant to the selected tenants array
         $this->selectedTenants[] = [
             'id' => $tenant->id,
@@ -630,6 +638,13 @@ class Create extends Component
     {
         $tenant = Tenant::find($id);
         if (! $tenant) {
+            return;
+        }
+
+        // Check if we already have 6 tenants selected
+        if (count($this->selectedTenants) >= 6) {
+            session()->flash('message', 'You cannot select more than 6 tenants.');
+            session()->flash('messageType', 'error');
             return;
         }
 

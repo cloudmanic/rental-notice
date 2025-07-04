@@ -204,6 +204,90 @@ class CreateTest extends TestCase
             ->assertDontSee('If you are serving notice to someone who is late this month');
     }
 
+    /**
+     * Test that users can add up to 6 tenants.
+     *
+     * @return void
+     */
+    public function test_can_add_up_to_six_tenants()
+    {
+        // Create 6 tenants
+        $tenants = Tenant::factory()->count(6)->create([
+            'account_id' => $this->account->id,
+        ]);
+
+        $component = Livewire::actingAs($this->user)
+            ->test(Create::class);
+
+        // Add each tenant
+        foreach ($tenants as $tenant) {
+            $component->call('addTenant', $tenant->id);
+        }
+
+        // Verify all 6 tenants are selected
+        $component->assertCount('selectedTenants', 6);
+    }
+
+    /**
+     * Test that users cannot add more than 6 tenants.
+     *
+     * @return void
+     */
+    public function test_cannot_add_more_than_six_tenants()
+    {
+        // Create 7 tenants
+        $tenants = Tenant::factory()->count(7)->create([
+            'account_id' => $this->account->id,
+        ]);
+
+        $component = Livewire::actingAs($this->user)
+            ->test(Create::class);
+
+        // Add first 6 tenants
+        foreach ($tenants->take(6) as $tenant) {
+            $component->call('addTenant', $tenant->id);
+        }
+
+        // Try to add 7th tenant - should be prevented
+        $component->call('addTenant', $tenants->last()->id);
+
+        // Verify only 6 tenants are selected
+        $component->assertCount('selectedTenants', 6);
+    }
+
+    /**
+     * Test validation fails when submitting with more than 6 tenants.
+     *
+     * @return void
+     */
+    public function test_validation_fails_with_more_than_six_tenants()
+    {
+        // Create agent and tenants
+        $agent = Agent::factory()->create(['account_id' => $this->account->id]);
+        $tenants = Tenant::factory()->count(7)->create([
+            'account_id' => $this->account->id,
+        ]);
+
+        $component = Livewire::actingAs($this->user)
+            ->test(Create::class)
+            ->set('notice.notice_type_id', $this->noticeType10Day->id)
+            ->set('notice.agent_id', $agent->id)
+            ->set('notice.past_due_rent', 1000)
+            ->set('notice.late_charges', 50);
+
+        // Manually set more than 6 tenants to test validation
+        $selectedTenants = $tenants->map(function ($tenant) {
+            return [
+                'id' => $tenant->id,
+                'name' => $tenant->full_name,
+            ];
+        })->toArray();
+
+        $component->set('selectedTenants', $selectedTenants)
+            ->call('createNotice')
+            ->assertHasErrors(['selectedTenants' => 'max']);
+    }
+
     protected function tearDown(): void
     {
         // Reset the test time
