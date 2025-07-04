@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Console\Commands;
 
-use App\Models\Referrer;
 use App\Models\RealtorList;
+use App\Models\Referrer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -189,7 +189,7 @@ class ImportRealtorsToReferrersTest extends TestCase
         // New referrer should be created with random number suffix
         $newReferrer = Referrer::where('email', 'new.test.user@example.com')->first();
         $this->assertNotNull($newReferrer);
-        
+
         // Should match pattern: test-user-{4 digit number}
         $this->assertMatchesRegularExpression('/^test-user-\d{4}$/', $newReferrer->slug);
     }
