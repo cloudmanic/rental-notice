@@ -44,6 +44,7 @@ class Notice extends Model
         'draft_pdf',
         'final_pdf',
         'certificate_pdf',
+        'reminder_sent_at',
     ];
 
     protected $casts = [
@@ -57,6 +58,7 @@ class Notice extends Model
         'other_5_price' => 'decimal:2',
         'payment_other_means' => 'boolean',
         'status' => 'string',
+        'reminder_sent_at' => 'datetime',
     ];
 
     public function account(): BelongsTo
