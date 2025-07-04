@@ -14,7 +14,7 @@ class SendNoticeReminders extends Command
      *
      * @var string
      */
-    protected $signature = 'notice:send-reminders {--days=3 : Number of days after creation to send reminder}';
+    protected $signature = 'notice:send-reminders {--days=1 : Number of days after creation to send reminder}';
 
     /**
      * The console command description.
