@@ -179,6 +179,13 @@ class Edit extends Component
             return;
         }
 
+        // Check if we already have 6 tenants selected
+        if (count($this->selectedTenants) >= 6) {
+            session()->flash('message', 'You cannot select more than 6 tenants.');
+            session()->flash('message-type', 'error');
+            return;
+        }
+
         // Check if this tenant is already selected
         if (! in_array($id, array_column($this->selectedTenants, 'id'))) {
             $this->selectedTenants[] = [
@@ -225,7 +232,7 @@ class Edit extends Component
             //     },
             // ],
             'notice.agent_id' => 'required|exists:agents,id',
-            'selectedTenants' => 'required|array|min:1',
+            'selectedTenants' => 'required|array|min:1|max:6',
             'notice.past_due_rent' => 'required|numeric|min:0|max:99999.99',
             'notice.late_charges' => 'required|numeric|min:0|max:99999.99',
             'notice.other_1_title' => 'nullable|string|max:255',
@@ -242,6 +249,7 @@ class Edit extends Component
         ], [
             'selectedTenants.required' => 'Please select at least one tenant.',
             'selectedTenants.min' => 'Please select at least one tenant.',
+            'selectedTenants.max' => 'You cannot select more than 6 tenants.',
         ]);
 
         // Get the notice model from database
