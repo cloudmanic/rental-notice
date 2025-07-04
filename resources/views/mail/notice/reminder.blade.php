@@ -141,6 +141,10 @@
                 <div class="notice-box">
                     <h3>Action Required</h3>
                     <p>To proceed with serving your notice, please complete your payment as soon as possible. Once payment is received, we will begin processing your notice for service.</p>
+                    
+                    <a href="{{ route('notices.show', $notice) }}" class="payment-button" style="display: inline-block; background-color: #4c51bf; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; margin: 20px 0; font-weight: bold;">
+                        View Notice Details
+                    </a>
                 </div>
 
                 <p>Thank you for using {{ config('constants.oregonpastduerent_com.company_name') }}.</p>
