@@ -17,7 +17,7 @@ class ImportRealtorsToReferrersSlugTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->command = new ImportRealtorsToReferrers();
+        $this->command = new ImportRealtorsToReferrers;
     }
 
     /**
@@ -26,7 +26,7 @@ class ImportRealtorsToReferrersSlugTest extends TestCase
     public function test_slug_generation_strategy_1_firstname_lastname()
     {
         $slug = $this->callGenerateSlugMethod('John', 'Doe');
-        
+
         $this->assertEquals('john-doe', $slug);
     }
 
@@ -46,7 +46,7 @@ class ImportRealtorsToReferrersSlugTest extends TestCase
         ]);
 
         $slug = $this->callGenerateSlugMethod('John', 'Doe');
-        
+
         $this->assertEquals('doe-john', $slug);
     }
 
@@ -75,7 +75,7 @@ class ImportRealtorsToReferrersSlugTest extends TestCase
         ]);
 
         $slug = $this->callGenerateSlugMethod('John', 'Doe');
-        
+
         $this->assertEquals('doe', $slug);
     }
 
@@ -113,7 +113,7 @@ class ImportRealtorsToReferrersSlugTest extends TestCase
         ]);
 
         $slug = $this->callGenerateSlugMethod('John', 'Doe');
-        
+
         $this->assertEquals('john', $slug);
     }
 
@@ -160,10 +160,10 @@ class ImportRealtorsToReferrersSlugTest extends TestCase
         ]);
 
         $slug = $this->callGenerateSlugMethod('John', 'Doe');
-        
+
         // Should match pattern: john-doe-{4 digit number}
         $this->assertMatchesRegularExpression('/^john-doe-\d{4}$/', $slug);
-        
+
         // Verify the slug is unique
         $this->assertFalse(Referrer::where('slug', $slug)->exists());
     }
@@ -174,17 +174,17 @@ class ImportRealtorsToReferrersSlugTest extends TestCase
     public function test_slug_generation_handles_special_characters()
     {
         $testCases = [
-            ["John O'Connor", "Smith-Jones", "john-oconnor-smith-jones"],
-            ["Mary-Jane", "O'Sullivan", "mary-jane-osullivan"],
-            ["José", "García", "jose-garcia"],
-            ["Anne-Marie", "Van Der Berg", "anne-marie-van-der-berg"],
-            ["Jean-Claude", "St. Pierre", "jean-claude-st-pierre"],
-            ["O'Malley", "McDonald's", "omalley-mcdonalds"],
+            ["John O'Connor", 'Smith-Jones', 'john-oconnor-smith-jones'],
+            ['Mary-Jane', "O'Sullivan", 'mary-jane-osullivan'],
+            ['José', 'García', 'jose-garcia'],
+            ['Anne-Marie', 'Van Der Berg', 'anne-marie-van-der-berg'],
+            ['Jean-Claude', 'St. Pierre', 'jean-claude-st-pierre'],
+            ["O'Malley", "McDonald's", 'omalley-mcdonalds'],
         ];
 
         foreach ($testCases as [$firstName, $lastName, $expectedSlug]) {
             $slug = $this->callGenerateSlugMethod($firstName, $lastName);
-            $this->assertEquals($expectedSlug, $slug, 
+            $this->assertEquals($expectedSlug, $slug,
                 "Expected '{$expectedSlug}' for '{$firstName} {$lastName}', got '{$slug}'");
         }
     }
@@ -195,11 +195,11 @@ class ImportRealtorsToReferrersSlugTest extends TestCase
     public function test_slug_generation_with_edge_case_names()
     {
         $testCases = [
-            ["John", "  ", "john-"], // Whitespace in last name
-            ["  ", "Doe", "-doe"], // Whitespace in first name
-            ["A", "B", "a-b"], // Single characters
-            ["123John", "456Doe", "123john-456doe"], // Numbers in names
-            ["John!!!", "Doe???", "john-doe"], // Special punctuation
+            ['John', '  ', 'john-'], // Whitespace in last name
+            ['  ', 'Doe', '-doe'], // Whitespace in first name
+            ['A', 'B', 'a-b'], // Single characters
+            ['123John', '456Doe', '123john-456doe'], // Numbers in names
+            ['John!!!', 'Doe???', 'john-doe'], // Special punctuation
         ];
 
         foreach ($testCases as [$firstName, $lastName, $expectedSlug]) {
@@ -238,7 +238,7 @@ class ImportRealtorsToReferrersSlugTest extends TestCase
             $slug = $this->callGenerateSlugMethod('Test', 'User');
             $this->assertNotContains($slug, $generatedSlugs, "Duplicate slug generated: {$slug}");
             $generatedSlugs[] = $slug;
-            
+
             // Create the referrer to ensure next iteration gets a different slug
             Referrer::create([
                 'first_name' => "Test{$i}",
@@ -262,11 +262,11 @@ class ImportRealtorsToReferrersSlugTest extends TestCase
     public function test_slug_generation_with_unicode_characters()
     {
         $testCases = [
-            ["José", "García", "jose-garcia"],
-            ["François", "Müller", "francois-muller"],
-            ["Søren", "Åström", "soren-astrom"],
-            ["Ñoño", "Peña", "nono-pena"],
-            ["Владимир", "Путин", "vladimir-putin"], // Cyrillic
+            ['José', 'García', 'jose-garcia'],
+            ['François', 'Müller', 'francois-muller'],
+            ['Søren', 'Åström', 'soren-astrom'],
+            ['Ñoño', 'Peña', 'nono-pena'],
+            ['Владимир', 'Путин', 'vladimir-putin'], // Cyrillic
         ];
 
         foreach ($testCases as [$firstName, $lastName, $expectedSlug]) {
@@ -282,10 +282,10 @@ class ImportRealtorsToReferrersSlugTest extends TestCase
     public function test_slug_generation_case_insensitive()
     {
         $testCases = [
-            ["JOHN", "DOE", "john-doe"],
-            ["john", "doe", "john-doe"],
-            ["John", "Doe", "john-doe"],
-            ["jOhN", "DoE", "john-doe"],
+            ['JOHN', 'DOE', 'john-doe'],
+            ['john', 'doe', 'john-doe'],
+            ['John', 'Doe', 'john-doe'],
+            ['jOhN', 'DoE', 'john-doe'],
         ];
 
         foreach ($testCases as [$firstName, $lastName, $expectedSlug]) {
@@ -324,15 +324,15 @@ class ImportRealtorsToReferrersSlugTest extends TestCase
 
         // Should complete within reasonable time (1 second)
         $this->assertLessThan(1, $end - $start, 'Slug generation should complete within 1 second');
-        
+
         // Should generate a unique slug not in the 1000-1050 range
         $this->assertMatchesRegularExpression('/^test-user-\d{4}$/', $slug);
         $this->assertFalse(Referrer::where('slug', $slug)->exists());
-        
+
         // Extract the number and ensure it's not in our conflict range
         preg_match('/test-user-(\d{4})/', $slug, $matches);
         $number = (int) $matches[1];
-        $this->assertTrue($number < 1000 || $number > 1050, 
+        $this->assertTrue($number < 1000 || $number > 1050,
             "Generated number {$number} should not be in conflict range 1000-1050");
     }
 
@@ -344,7 +344,7 @@ class ImportRealtorsToReferrersSlugTest extends TestCase
         $reflection = new ReflectionClass($this->command);
         $method = $reflection->getMethod('generateCustomUniqueSlug');
         $method->setAccessible(true);
-        
+
         return $method->invokeArgs($this->command, [$firstName, $lastName]);
     }
 }

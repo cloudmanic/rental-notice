@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Referrer;
 use App\Models\RealtorList;
+use App\Models\Referrer;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
@@ -46,6 +46,7 @@ class ImportRealtorsToReferrers extends Command
                         if (Referrer::where('email', $realtor->email)->exists()) {
                             $this->warn("Skipping {$realtor->email} - already exists as referrer");
                             $skippedCount++;
+
                             continue;
                         }
 
@@ -72,7 +73,7 @@ class ImportRealtorsToReferrers extends Command
             });
 
         $this->newLine();
-        $this->info("Import completed!");
+        $this->info('Import completed!');
         $this->table(['Metric', 'Count'], [
             ['Imported', $importedCount],
             ['Skipped (already exists)', $skippedCount],
@@ -92,34 +93,34 @@ class ImportRealtorsToReferrers extends Command
         $lastNameSlug = Str::slug($lastName);
 
         // Strategy 1: firstname-lastname
-        $slug = $firstNameSlug . '-' . $lastNameSlug;
-        if (!Referrer::where('slug', $slug)->exists()) {
+        $slug = $firstNameSlug.'-'.$lastNameSlug;
+        if (! Referrer::where('slug', $slug)->exists()) {
             return $slug;
         }
 
         // Strategy 2: lastname-firstname
-        $slug = $lastNameSlug . '-' . $firstNameSlug;
-        if (!Referrer::where('slug', $slug)->exists()) {
+        $slug = $lastNameSlug.'-'.$firstNameSlug;
+        if (! Referrer::where('slug', $slug)->exists()) {
             return $slug;
         }
 
         // Strategy 3: lastname only
         $slug = $lastNameSlug;
-        if (!Referrer::where('slug', $slug)->exists()) {
+        if (! Referrer::where('slug', $slug)->exists()) {
             return $slug;
         }
 
         // Strategy 4: firstname only
         $slug = $firstNameSlug;
-        if (!Referrer::where('slug', $slug)->exists()) {
+        if (! Referrer::where('slug', $slug)->exists()) {
             return $slug;
         }
 
         // Strategy 5: firstname-lastname-{random number}
-        $baseSlug = $firstNameSlug . '-' . $lastNameSlug;
+        $baseSlug = $firstNameSlug.'-'.$lastNameSlug;
         do {
             $randomNumber = random_int(1000, 9999);
-            $slug = $baseSlug . '-' . $randomNumber;
+            $slug = $baseSlug.'-'.$randomNumber;
         } while (Referrer::where('slug', $slug)->exists());
 
         return $slug;
