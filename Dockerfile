@@ -51,6 +51,9 @@ RUN apt-get update \
 
 RUN go install github.com/pdfcpu/pdfcpu/cmd/pdfcpu@v0.9.1 && cp /root/go/bin/pdfcpu /usr/local/bin/pdfcpu
 
+# Install Tailscale so we can reach the print server over our private tailnet
+RUN curl -fsSL https://tailscale.com/install.sh | sh
+
 # 2. Copy config files to proper locations
 COPY .fly/nginx/ /etc/nginx/
 COPY .fly/fpm/ /etc/php/${PHP_VERSION}/fpm/

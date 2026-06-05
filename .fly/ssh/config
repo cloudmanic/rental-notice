@@ -1,0 +1,10 @@
+# Copyright (c) 2026 Cloudmanic Labs, LLC. All rights reserved.
+# Date: 2026-06-05
+#
+# Accept host keys automatically on first connection. The print server is
+# reached over our Tailscale tailnet, which already authenticates the
+# machine, so trust-on-first-use is safe here. Without this, the queue
+# worker's non-interactive scp/ssh would fail host-key verification when
+# the print server host changes (e.g. public DNS -> Tailscale IP).
+Host *
+    StrictHostKeyChecking accept-new
