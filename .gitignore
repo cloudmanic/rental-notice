@@ -22,5 +22,6 @@ yarn-error.log
 /.vscode
 /.zed
 .DS_STORE
-.fly/ssh/id_ed25519
+.fly/ssh/id_*
+.fly/ssh/known_hosts
 .env.dusk.local
