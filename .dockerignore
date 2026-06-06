@@ -26,3 +26,7 @@ fly.toml
 **/.DS_Store
 **/Thumbs.db
 public/hot
+
+# SSH keys are delivered via Fly secret at boot (.fly/scripts/ssh-key.sh),
+# never baked into the image
+.fly/ssh/id_*

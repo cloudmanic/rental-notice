@@ -86,13 +86,10 @@ jobs:
     concurrency: deploy-group # optional: ensure only one action runs at a time
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Setup SSH key
-        run: |
-          mkdir -p .fly/ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > .fly/ssh/id_ed25519
-          chmod 600 .fly/ssh/id_ed25519
-      
+
+      # The print server SSH key is no longer baked into the image at build
+      # time — it is delivered at boot from the PRINT_SERVER_SSH_KEY_B64 Fly
+      # secret via .fly/scripts/ssh-key.sh
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only
         env:
