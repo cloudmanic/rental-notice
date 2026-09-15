@@ -6,8 +6,10 @@ use App\Jobs\SubscribeUserToSendyJob;
 use App\Models\Account;
 use App\Models\User;
 use App\Notifications\UserRegistered;
+use App\Rules\Turnstile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Queue;
 use PHPUnit\Framework\Attributes\Test;
@@ -226,5 +228,66 @@ class RegistrationTest extends TestCase
         Queue::assertPushed(SubscribeUserToSendyJob::class, function ($job) use ($user) {
             return $job->user->id === $user->id;
         });
+    }
+
+    #[Test]
+    public function registration_is_blocked_when_the_turnstile_check_fails()
+    {
+        config([
+            'services.turnstile.site_key' => 'test-site-key',
+            'services.turnstile.secret_key' => 'test-secret-key',
+        ]);
+        Http::fake([Turnstile::VERIFY_URL => Http::response(['success' => false])]);
+
+        $response = $this->post(route('register'), [
+            'first_name' => 'Spam',
+            'last_name' => 'Bot',
+            'email' => 'spam@example.com',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+            Turnstile::FIELD => 'bad-token',
+        ]);
+
+        $response->assertSessionHasErrors([Turnstile::FIELD]);
+        $this->assertDatabaseCount('users', 0);
+        $this->assertDatabaseCount('accounts', 0);
+        $this->assertGuest();
+    }
+
+    #[Test]
+    public function registration_works_when_the_turnstile_check_passes()
+    {
+        config([
+            'services.turnstile.site_key' => 'test-site-key',
+            'services.turnstile.secret_key' => 'test-secret-key',
+        ]);
+        Http::fake([Turnstile::VERIFY_URL => Http::response(['success' => true])]);
+
+        $response = $this->post(route('register'), [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'email' => 'john.doe@example.com',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+            Turnstile::FIELD => 'good-token',
+        ]);
+
+        $response->assertRedirect(route('dashboard'));
+        $this->assertDatabaseHas('users', ['email' => 'john.doe@example.com']);
+    }
+
+    #[Test]
+    public function register_page_shows_the_turnstile_widget_only_when_enabled()
+    {
+        $this->get(route('register'))->assertDontSee('cf-turnstile', false);
+
+        config([
+            'services.turnstile.site_key' => 'test-site-key',
+            'services.turnstile.secret_key' => 'test-secret-key',
+        ]);
+
+        $this->get(route('register'))
+            ->assertSee('class="cf-turnstile"', false)
+            ->assertSee('data-sitekey="test-site-key"', false);
     }
 }

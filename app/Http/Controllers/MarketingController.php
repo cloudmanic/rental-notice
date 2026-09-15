@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ContactFormSubmission;
+use App\Rules\Turnstile;
 use App\Services\PricingService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Mail;
 
 class MarketingController extends Controller
@@ -96,11 +98,12 @@ class MarketingController extends Controller
             'email' => 'required|email|max:255',
             'subject' => 'required|string|max:255',
             'message' => 'required|string|max:5000',
+            Turnstile::FIELD => [new Turnstile],
         ]);
 
         // Send email to support
         Mail::to(config('constants.oregonpastduerent_com.support_email'))
-            ->send(new ContactFormSubmission($validated));
+            ->send(new ContactFormSubmission(Arr::except($validated, Turnstile::FIELD)));
 
         return redirect()->route('marketing.contact')->with('success', 'Thank you for your message! We will get back to you as soon as possible.');
     }
