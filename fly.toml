@@ -34,6 +34,7 @@ primary_region = 'sea'
   AWS_BUCKET = 'rental-notice'
   PRINT_SERVER_PRINTER = 'Brother_HL_L2405W'
   PDFTK_PATH = '/usr/bin/pdftk'
+  TURNSTILE_SITE_KEY = '0x4AAAAAAE2fDPfk12upH4yc'
 
 [http_service]
   internal_port = 8080

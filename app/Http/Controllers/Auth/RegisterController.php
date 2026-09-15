@@ -9,6 +9,7 @@ use App\Models\Referral;
 use App\Models\Referrer;
 use App\Models\User;
 use App\Notifications\UserRegistered;
+use App\Rules\Turnstile;
 use App\Services\ActivityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +31,7 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed', Password::defaults()],
             'company_name' => ['nullable', 'string', 'max:255'],
+            Turnstile::FIELD => [new Turnstile],
         ]);
 
         // Start database transaction
