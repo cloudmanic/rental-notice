@@ -118,7 +118,7 @@ Litestream logs are available at:
 
 # Sysadmin Notes
 
--   Fly.io restricts where the PHP app can access via `open_basedir`. So in our `Dockerfile` we added this line `sed -i 's|php_admin_value\[open_basedir\] = /var/www/html:/dev/stdout:/tmp|php_admin_value[open_basedir] = /var/www/html:/dev/stdout:/tmp:/data/rental-notice.sqlite|' /etc/php/8.2/fpm/pool.d/www.conf`. This way we can access the sqlite database file.
+-   Fly.io restricts where the PHP app can access via `open_basedir`. So in our `Dockerfile` we added this line `sed -i 's|php_admin_value\[open_basedir\] = /var/www/html:/dev/stdout:/tmp|php_admin_value[open_basedir] = /var/www/html:/dev/stdout:/tmp:/data/rental-notice.sqlite|' /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf`. This way we can access the sqlite database file.
 
 # User Types
 
